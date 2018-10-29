@@ -12,6 +12,6 @@ Founder, Framework and Architecture: Dr. KAZI MASUDUL ALAM, Associate Professor,
 
 Development Contributors :
 --------------------------
-Naeema Binthe Ashraf (160231)
-Md. Lutful Hasan (160234)
-Mahfujur Rahman Afnan (160235)
+Naeema Binthe Ashraf (160231) 
+Md. Lutful Hasan (160234) 
+Mahfujur Rahman Afnan (160235) 
