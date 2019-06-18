@@ -40,7 +40,7 @@ if(isset($_POST['my_registration']))
     $Term = $_DB->secureInput($_POST['term']);
   
     $Result_Search_Course = $_CourseBAO->
-                            searchCoursesOfStudent_Status($StudentID,$Session,$Year,$Term,'registered');
+                            searchCoursesOfStudent($StudentID,$Session,$Year,$Term);
 
  
     if($Result_Search_Course->getIsSuccess()){

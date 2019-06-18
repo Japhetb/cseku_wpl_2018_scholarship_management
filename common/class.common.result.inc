@@ -64,6 +64,8 @@ class GradeSetup{
     private $_ID;
     private $_Grades;
     private $_Ranges;
+    private $_Cgpa;
+    private $_IsRetake;
     private $_IsDefault;
 
     public function setID ( $ID ) {
@@ -99,6 +101,22 @@ class GradeSetup{
         return $this->_IsDefault;
     }
 
+
+    public function setCgpa($Cgpa){
+        $this->_Cgpa=$Cgpa;
+    }
+    public function getCgpa(){
+        return $this->_Cgpa;
+    }
+
+
+    public function setIsRetake($IsRetake){
+        $this->_IsRetake=$IsRetake;
+    }
+    public function getIsRetake(){
+        return $this->_IsRetake;
+    }
+
 }
 
 class MarksEntry{
@@ -115,6 +133,7 @@ class MarksEntry{
     private $_MarksTotal;
 
     private $_Status;
+    private $_IsRetake;
 
     private $_HeaderID;
     private $_HeaderName;
@@ -122,7 +141,8 @@ class MarksEntry{
 
     private $_Grades;
     private $_GradeRanges;
-    private $_FinalGrade;  
+    private $_FinalGrade;
+    private $_GradePoint; 
 
     public function setID ( $ID ) {
         $this->_ID = $ID;
@@ -263,8 +283,21 @@ class MarksEntry{
     }
 
 
+    public function setIsRetake( $IsRetake ) {
+        $this->_IsRetake = $IsRetake;
+    }
+    public function getIsRetake() {
+        return $this->_IsRetake;
+    }
+
+
+    public function setGradePoint( $GradePoint ) {
+        $this->_GradePoint = $GradePoint;
+    }
+    public function getGradePoint() {
+        return $this->_GradePoint;
+    }
 
 }
-
 
 ?>

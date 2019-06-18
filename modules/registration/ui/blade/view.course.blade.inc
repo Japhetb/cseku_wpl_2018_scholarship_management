@@ -21,6 +21,8 @@ if(isset($_POST['save']))
      $Course->setCredit($_POST['txtcrdit']);
      $Course->setCourseTypeID($_POST['coursetype']);
      $Course->setDisciplineID($_POST['discipline']);
+     $Course->setPrequisite($_POST['prequsite']);
+
      
      if(!isset($_POST['ISdeleted'])||$_POST['ISdeleted'] == "")
      {
@@ -53,6 +55,7 @@ if(isset($_GET['edit']))
 	$Course = new Course();	
 	$Course->setID($_GET['edit']);	
 	$getROW = $_CourseBAO->readCourse($Course)->getResultObject(); //reading the Course object from the result object
+    echo $getROW->getPrequisite();
 }
 
 /*updating an existing Course information*/
@@ -67,6 +70,8 @@ if(isset($_POST['update']))
     $Course->setCredit($_POST['txtcrdit']);
     $Course->setCourseTypeID($_POST['coursetype']);
     $Course->setDisciplineID($_POST['discipline']);
+    $Course->setPrequisite($_POST['prequsite']);
+
     echo '<br> checkbox'.$_POST['ISdeleted'];
     if($_POST['ISdeleted'] == "")
     {

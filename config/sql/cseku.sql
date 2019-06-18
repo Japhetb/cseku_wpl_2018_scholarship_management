@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.4
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jul 24, 2018 at 05:36 AM
--- Server version: 5.7.14
--- PHP Version: 7.0.10
+-- Host: 127.0.0.1:3306
+-- Generation Time: Feb 25, 2019 at 06:47 AM
+-- Server version: 5.7.24
+-- PHP Version: 7.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -23,43 +25,34 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jms_job`
---
-
-CREATE TABLE `jms_job` (
-  `ID` varchar(40) NOT NULL,
-  `Title` varchar(100) NOT NULL,
-  `Details` varchar(1000) NOT NULL,
-  `LastDateOfApplication` date NOT NULL,
-  `Salary` float NOT NULL,
-  `Qualification` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `reg_course`
 --
 
-CREATE TABLE `reg_course` (
+DROP TABLE IF EXISTS `reg_course`;
+CREATE TABLE IF NOT EXISTS `reg_course` (
   `ID` varchar(40) NOT NULL,
   `CourseNo` varchar(40) NOT NULL,
   `Title` varchar(100) NOT NULL,
   `Credit` double NOT NULL,
   `CourseTypeID` varchar(40) NOT NULL,
   `DisciplineID` varchar(40) NOT NULL,
-  `IsDeleted` tinyint(1) NOT NULL
+  `PrequisiteID` varchar(40) DEFAULT NULL,
+  `IsDeleted` tinyint(1) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `reg_course`
 --
 
-INSERT INTO `reg_course` (`ID`, `CourseNo`, `Title`, `Credit`, `CourseTypeID`, `DisciplineID`, `IsDeleted`) VALUES
-('{2A038C6A-B6DA-408D-8458-7493D4EE5D6C}', 'cse-3200', 'Web Programming Lab', 1.5, '{EF5CA3BF-A886-4450-ABC4-DED45C7600C0}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 0),
-('{53650FB7-D76E-459D-8B56-BC7A4919C0F6}', 'cse-4112', 'Computer Networks Lab', 1.5, '{EF5CA3BF-A886-4450-ABC4-DED45C7600C0}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5} ', 0),
-('{683A3D91-D124-44AF-82A3-FB43837A4392}', 'cse-4111', 'Computer Networks', 3, '{3DC4DDE5-514F-4BE4-8682-37EA32C3FDB7}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 0),
-('{B17BDB32-6D88-4537-9545-65D940E17EEF}', 'cse-2115', 'Advanced Programming Lab', 1.5, '{EF5CA3BF-A886-4450-ABC4-DED45C7600C0}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5} ', 0);
+INSERT INTO `reg_course` (`ID`, `CourseNo`, `Title`, `Credit`, `CourseTypeID`, `DisciplineID`, `PrequisiteID`, `IsDeleted`) VALUES
+('{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', 'CSE 1103', 'Structered Programming', 3, '{3DC4DDE5-514F-4BE4-8682-37EA32C3FDB7}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', NULL, 0),
+('{24B98067-01EA-4B04-B815-3910BBAB2C29}', 'ece 3206', 'Data communication', 3, '{3DC4DDE5-514F-4BE4-8682-37EA32C3FDB7}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', NULL, 0),
+('{2A038C6A-B6DA-408D-8458-7493D4EE5D6C}', 'cse-3200', 'Web Programming Lab', 1.5, '{EF5CA3BF-A886-4450-ABC4-DED45C7600C0}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5} ', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D} ', 0),
+('{53650FB7-D76E-459D-8B56-BC7A4919C0F6}', 'cse-4112', 'Computer Networks Lab', 1.5, '{EF5CA3BF-A886-4450-ABC4-DED45C7600C0}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5} ', NULL, 0),
+('{683A3D91-D124-44AF-82A3-FB43837A4392}', 'cse-4111', 'Computer Networks', 3, '{3DC4DDE5-514F-4BE4-8682-37EA32C3FDB7}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5} ', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664} ', 0),
+('{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', 'CSE 1104', 'Structured Programming Laboratory', 1.5, '{EF5CA3BF-A886-4450-ABC4-DED45C7600C0}', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5} ', NULL, 0),
+('{B17BDB32-6D88-4537-9545-65D940E17EEF}', 'cse-2115', 'Advanced Programming Lab', 1.5, '{EF5CA3BF-A886-4450-ABC4-DED45C7600C0}', '{0CF37516-06FE-41CD-93AD-D2D1652509D6} ', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664} ', 1);
 
 -- --------------------------------------------------------
 
@@ -67,7 +60,8 @@ INSERT INTO `reg_course` (`ID`, `CourseNo`, `Title`, `Credit`, `CourseTypeID`, `
 -- Table structure for table `reg_course_resource`
 --
 
-CREATE TABLE `reg_course_resource` (
+DROP TABLE IF EXISTS `reg_course_resource`;
+CREATE TABLE IF NOT EXISTS `reg_course_resource` (
   `CourseID` varchar(40) NOT NULL,
   `ResourceID` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -78,9 +72,11 @@ CREATE TABLE `reg_course_resource` (
 -- Table structure for table `reg_course_sessional_type`
 --
 
-CREATE TABLE `reg_course_sessional_type` (
+DROP TABLE IF EXISTS `reg_course_sessional_type`;
+CREATE TABLE IF NOT EXISTS `reg_course_sessional_type` (
   `ID` varchar(40) NOT NULL,
-  `Name` varchar(50) NOT NULL
+  `Name` varchar(50) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -101,7 +97,8 @@ INSERT INTO `reg_course_sessional_type` (`ID`, `Name`) VALUES
 -- Table structure for table `reg_course_student_registration`
 --
 
-CREATE TABLE `reg_course_student_registration` (
+DROP TABLE IF EXISTS `reg_course_student_registration`;
+CREATE TABLE IF NOT EXISTS `reg_course_student_registration` (
   `ID` varchar(40) NOT NULL,
   `Regs_TeacherID` varchar(40) DEFAULT NULL,
   `StudentID` varchar(40) NOT NULL,
@@ -109,21 +106,21 @@ CREATE TABLE `reg_course_student_registration` (
   `SessionID` varchar(40) DEFAULT NULL,
   `YearID` varchar(40) DEFAULT NULL,
   `TermID` varchar(40) DEFAULT NULL,
-  `IsRetake` tinyint(1) DEFAULT NULL,
-  `Status` varchar(20) NOT NULL
+  `IsRetake` tinyint(1) DEFAULT '0',
+  `PreRetake` tinyint(1) NOT NULL DEFAULT '0',
+  `Status` varchar(20) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `reg_course_student_registration`
 --
 
-INSERT INTO `reg_course_student_registration` (`ID`, `Regs_TeacherID`, `StudentID`, `CourseID`, `SessionID`, `YearID`, `TermID`, `IsRetake`, `Status`) VALUES
-('{31FDEF1E-F280-436A-AFD3-A48BA772D23D}', 'mkazi078@uottawa.ca', 'kashif@gmail.com', '{683A3D91-D124-44AF-82A3-FB43837A4392}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', NULL, 'registered'),
-('{3CA3ABF7-7FF8-4A32-B328-235861061B72}', 'mkazi078@uottawa.ca', 'zahid@gmail.com', '{683A3D91-D124-44AF-82A3-FB43837A4392}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', NULL, 'registered'),
-('{B7F17833-430E-489A-9CA6-E9BBE0EFA0FD}', 'mkazi078@uottawa.ca', 'kashif@gmail.com', '{53650FB7-D76E-459D-8B56-BC7A4919C0F6}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', NULL, 'registered'),
-('{B8B362F3-D164-4082-AA6C-08F3EC73E2A8}', 'mkazi078@uottawa.ca', 'aysha@gmail.com', '{53650FB7-D76E-459D-8B56-BC7A4919C0F6}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', NULL, 'registered'),
-('{C8AE75F9-1644-48C5-87D0-4AFEC777C122}', 'mkazi078@uottawa.ca', 'zahid@gmail.com', '{53650FB7-D76E-459D-8B56-BC7A4919C0F6}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', NULL, 'submitted'),
-('{DBE4ED93-4A97-41CF-B8E3-5E42AEC0246F}', 'mkazi078@uottawa.ca', 'aysha@gmail.com', '{683A3D91-D124-44AF-82A3-FB43837A4392}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', NULL, 'registered');
+INSERT INTO `reg_course_student_registration` (`ID`, `Regs_TeacherID`, `StudentID`, `CourseID`, `SessionID`, `YearID`, `TermID`, `IsRetake`, `PreRetake`, `Status`) VALUES
+('{27D9E7CA-3B47-4FA6-8014-796F69E06B79}', 'mkazi078@uottawa.ca', 'lotif@gmail.com', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', '{2FFA4D56-743A-47AF-9DDF-1EA28CA43251}', '{EA335D18-A1A8-4D15-9C7B-4A4700AD4543}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 0, 1, 'registered'),
+('{C2E9EB00-1751-4C91-8854-676FEC952714}', 'mkazi078@uottawa.ca', 'lotif@gmail.com', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 0, 0, 'registered'),
+('{DFD4D9FF-DCA1-41CF-BC95-D604B237CB67}', 'mkazi078@uottawa.ca', 'rokeya@gmail.com', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 0, 0, 'registered'),
+('{F2CF29E3-A0C8-4659-B5BA-638532427A8A}', 'mkazi078@uottawa.ca', 'lotif@gmail.com', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 1, 0, 'failed');
 
 -- --------------------------------------------------------
 
@@ -131,14 +128,16 @@ INSERT INTO `reg_course_student_registration` (`ID`, `Regs_TeacherID`, `StudentI
 -- Table structure for table `reg_course_teacher`
 --
 
-CREATE TABLE `reg_course_teacher` (
+DROP TABLE IF EXISTS `reg_course_teacher`;
+CREATE TABLE IF NOT EXISTS `reg_course_teacher` (
   `ID` varchar(40) NOT NULL,
   `CourseID` varchar(40) NOT NULL,
   `TeacherID` varchar(40) NOT NULL,
   `SessionID` varchar(40) NOT NULL,
   `YearID` varchar(40) NOT NULL,
   `TermID` varchar(40) NOT NULL,
-  `NoOfTests` int(10) DEFAULT NULL
+  `NoOfTests` int(10) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -146,8 +145,10 @@ CREATE TABLE `reg_course_teacher` (
 --
 
 INSERT INTO `reg_course_teacher` (`ID`, `CourseID`, `TeacherID`, `SessionID`, `YearID`, `TermID`, `NoOfTests`) VALUES
-('{0BA78ECC-A6E7-4EA8-9BFA-6C599F88F76D}', '{53650FB7-D76E-459D-8B56-BC7A4919C0F6}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 5),
-('{C4490FFA-154B-45FE-9773-744B3E6FDFF7}', '{683A3D91-D124-44AF-82A3-FB43837A4392}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 3);
+('{03BC7D61-45DF-4714-B30F-FE48BF508443}', '{24B98067-01EA-4B04-B815-3910BBAB2C29}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{A21965E4-4FE4-43AC-A77F-DABAC9B356F2}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 4),
+('{8872B54C-23D7-4358-A7F7-E2C245C14FB9}', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 4),
+('{B504FC3B-18CB-4E2F-84BD-8C1229CBA920}', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', 'avi@gmail.com', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 3),
+('{FDDB9AAF-1495-49CC-A682-CE2DF2C8A561}', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', 'avi@gmail.com', '{2FFA4D56-743A-47AF-9DDF-1EA28CA43251}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', 3);
 
 -- --------------------------------------------------------
 
@@ -155,12 +156,14 @@ INSERT INTO `reg_course_teacher` (`ID`, `CourseID`, `TeacherID`, `SessionID`, `Y
 -- Table structure for table `reg_course_teacher_registration`
 --
 
-CREATE TABLE `reg_course_teacher_registration` (
+DROP TABLE IF EXISTS `reg_course_teacher_registration`;
+CREATE TABLE IF NOT EXISTS `reg_course_teacher_registration` (
   `ID` varchar(40) NOT NULL,
   `TeacherID` varchar(40) NOT NULL,
   `SessionID` varchar(40) NOT NULL,
   `YearID` varchar(40) NOT NULL,
-  `TermID` varchar(40) NOT NULL
+  `TermID` varchar(40) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -168,7 +171,7 @@ CREATE TABLE `reg_course_teacher_registration` (
 --
 
 INSERT INTO `reg_course_teacher_registration` (`ID`, `TeacherID`, `SessionID`, `YearID`, `TermID`) VALUES
-('{4D389527-643B-4B05-80AB-E05A6EF8DE2A}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{EA335D18-A1A8-4D15-9C7B-4A4700AD4543}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}');
+('{CC494F52-1D3F-4877-BD28-91DF69556A2B}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}');
 
 -- --------------------------------------------------------
 
@@ -176,10 +179,12 @@ INSERT INTO `reg_course_teacher_registration` (`ID`, `TeacherID`, `SessionID`, `
 -- Table structure for table `reg_course_type`
 --
 
-CREATE TABLE `reg_course_type` (
+DROP TABLE IF EXISTS `reg_course_type`;
+CREATE TABLE IF NOT EXISTS `reg_course_type` (
   `ID` varchar(40) NOT NULL,
   `Name` varchar(30) NOT NULL,
-  `SessionalTypeID` varchar(40) NOT NULL
+  `SessionalTypeID` varchar(40) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -197,9 +202,11 @@ INSERT INTO `reg_course_type` (`ID`, `Name`, `SessionalTypeID`) VALUES
 -- Table structure for table `reg_registration_session`
 --
 
-CREATE TABLE `reg_registration_session` (
+DROP TABLE IF EXISTS `reg_registration_session`;
+CREATE TABLE IF NOT EXISTS `reg_registration_session` (
   `ID` varchar(40) NOT NULL,
-  `Name` varchar(30) NOT NULL
+  `Name` varchar(30) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -209,6 +216,7 @@ CREATE TABLE `reg_registration_session` (
 INSERT INTO `reg_registration_session` (`ID`, `Name`) VALUES
 ('{05DA37EB-6C62-45E9-A0E3-7C5C6943F6AD}', '2012-2013'),
 ('{1399EEA3-B939-4155-B9F3-4DAD4928C4D5}', '2014-2015'),
+('{2FFA4D56-743A-47AF-9DDF-1EA28CA43251}', '2017-2018'),
 ('{65C2BA57-7231-497A-A5A7-90912259684C}', '2011-2012'),
 ('{A36A7057-CDB5-4E10-9E61-CCC85C74460E}', '2013-2014'),
 ('{DFF9E45F-6954-46A1-9088-D930EE460C3F}', '2015-2016'),
@@ -220,9 +228,11 @@ INSERT INTO `reg_registration_session` (`ID`, `Name`) VALUES
 -- Table structure for table `reg_term`
 --
 
-CREATE TABLE `reg_term` (
+DROP TABLE IF EXISTS `reg_term`;
+CREATE TABLE IF NOT EXISTS `reg_term` (
   `ID` varchar(40) NOT NULL,
-  `Name` varchar(20) NOT NULL
+  `Name` varchar(20) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -240,9 +250,11 @@ INSERT INTO `reg_term` (`ID`, `Name`) VALUES
 -- Table structure for table `reg_year`
 --
 
-CREATE TABLE `reg_year` (
+DROP TABLE IF EXISTS `reg_year`;
+CREATE TABLE IF NOT EXISTS `reg_year` (
   `ID` varchar(40) NOT NULL,
-  `Name` varchar(20) NOT NULL
+  `Name` varchar(20) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -257,6 +269,7 @@ INSERT INTO `reg_year` (`ID`, `Name`) VALUES
 ('{A21965E4-4FE4-43AC-A77F-DABAC9B356F2}', '3rd'),
 ('{ADBEDD3E-D8EA-47AA-A068-C4C703DB4AE6}', 'MSc 2nd'),
 ('{B9D6CC05-7AD4-4666-80AB-80797A872743}', 'Phd 2nd'),
+('{BB760927-4174-47E8-B68F-ACB8AA381B41}', '5th'),
 ('{CBE08035-94CD-4610-B4E2-A0E844184056}', 'Phd 4th'),
 ('{E3823AA6-6BE5-4A07-93EA-FA59DE4F616F}', 'Phd 3rd'),
 ('{EA335D18-A1A8-4D15-9C7B-4A4700AD4543}', '2nd');
@@ -267,9 +280,10 @@ INSERT INTO `reg_year` (`ID`, `Name`) VALUES
 -- Table structure for table `rms_course_marks_result`
 --
 
-CREATE TABLE `rms_course_marks_result` (
+DROP TABLE IF EXISTS `rms_course_marks_result`;
+CREATE TABLE IF NOT EXISTS `rms_course_marks_result` (
   `ID` varchar(40) NOT NULL,
-  `CourseNo` varchar(40) NOT NULL,
+  `CourseID` varchar(40) NOT NULL,
   `TeacherID` varchar(40) DEFAULT NULL,
   `SessionID` varchar(40) NOT NULL,
   `YearID` varchar(40) NOT NULL,
@@ -277,15 +291,19 @@ CREATE TABLE `rms_course_marks_result` (
   `StudentID` varchar(40) NOT NULL,
   `MarksID` varchar(40) NOT NULL,
   `MarksValue` varchar(200) NOT NULL,
-  `Status` varchar(40) DEFAULT NULL
+  `Status` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `rms_course_marks_result`
 --
 
-INSERT INTO `rms_course_marks_result` (`ID`, `CourseNo`, `TeacherID`, `SessionID`, `YearID`, `TermID`, `StudentID`, `MarksID`, `MarksValue`, `Status`) VALUES
-('{44C3C858-AFC6-4592-B160-10B921BF381C}', 'cse-4111', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '020202', '{7E24DC07-CD2C-4360-A6E9-05A363C2EA08}', '10,25,25,25', '');
+INSERT INTO `rms_course_marks_result` (`ID`, `CourseID`, `TeacherID`, `SessionID`, `YearID`, `TermID`, `StudentID`, `MarksID`, `MarksValue`, `Status`) VALUES
+('{357EFB93-A3A6-4044-A305-206F30EF9841}', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160212', '{7E24DC07-CD2C-4360-A6E9-05A363C2EA08}', '8,20,20,10', ''),
+('{4C7C80C2-8570-4895-B44D-67AA017F2EB0}', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', 'avi@gmail.com', '{2FFA4D56-743A-47AF-9DDF-1EA28CA43251}', '{EA335D18-A1A8-4D15-9C7B-4A4700AD4543}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160212', '{236BBFE8-E4CF-4EEF-9C54-AD83FEF42ADB}', '10,50,25', ''),
+('{A8BBB47F-B9B8-4E93-A137-39240B5842FC}', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', 'avi@gmail.com', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160212', '{236BBFE8-E4CF-4EEF-9C54-AD83FEF42ADB}', '5,20,10', ''),
+('{F20DC6E0-95C7-40A0-9F09-04BF5C55618C}', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160210', '{7E24DC07-CD2C-4360-A6E9-05A363C2EA08}', '10,28,25,25', '');
 
 -- --------------------------------------------------------
 
@@ -293,9 +311,10 @@ INSERT INTO `rms_course_marks_result` (`ID`, `CourseNo`, `TeacherID`, `SessionID
 -- Table structure for table `rms_course_marks_result_publish`
 --
 
-CREATE TABLE `rms_course_marks_result_publish` (
+DROP TABLE IF EXISTS `rms_course_marks_result_publish`;
+CREATE TABLE IF NOT EXISTS `rms_course_marks_result_publish` (
   `ID` varchar(40) NOT NULL,
-  `CourseNo` varchar(40) NOT NULL,
+  `CourseID` varchar(40) NOT NULL,
   `TeacherID` varchar(40) DEFAULT NULL,
   `SessionID` varchar(40) NOT NULL,
   `YearID` varchar(40) NOT NULL,
@@ -308,8 +327,21 @@ CREATE TABLE `rms_course_marks_result_publish` (
   `MarksTotal` varchar(20) NOT NULL,
   `Grades` varchar(200) NOT NULL,
   `GradeRanges` varchar(300) NOT NULL,
-  `FinalGrade` varchar(20) NOT NULL
+  `FinalGrade` varchar(20) NOT NULL,
+  `GradePoint` double NOT NULL,
+  `IsRetake` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `rms_course_marks_result_publish`
+--
+
+INSERT INTO `rms_course_marks_result_publish` (`ID`, `CourseID`, `TeacherID`, `SessionID`, `YearID`, `TermID`, `StudentID`, `HeaderID`, `HeaderName`, `HeaderMax`, `MarksValue`, `MarksTotal`, `Grades`, `GradeRanges`, `FinalGrade`, `GradePoint`, `IsRetake`) VALUES
+('{8A2C3585-D74F-4E27-B2AA-596CBF89E41F}', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', 'avi@gmail.com', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160212', 'att,assess,viva', 'Attendance,Assessment,Viva', '10,60,30', '5,20,10', '35', 'F,D,C,C+,B-,B,B+,A-,A,A+', '0-39,40-44,45-49,50-54,55-59,60-64,65-69,70-74,75-79,80-100', 'F', 0, 0),
+('{93578272-8B2F-4913-9290-AFD706073FCE}', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160210', 'att,assess,seca,secb', 'Attendance,Assessment,Section A,Section B', '10,30,30,30,30', '10,28,25,25', '88', 'F,D,C,C+,B-,B,B+,A-,A,A+', '0-39,40-44,45-49,50-54,55-59,60-64,65-69,70-74,75-79,80-100', 'A+', 4, 0),
+('{B55CE2EF-8FA0-4B65-8CCB-D56781AC0281}', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', 'avi@gmail.com', '{2FFA4D56-743A-47AF-9DDF-1EA28CA43251}', '{EA335D18-A1A8-4D15-9C7B-4A4700AD4543}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160212', 'att,assess,viva', 'Attendance,Assessment,Viva', '10,60,30', '10,50,25', '85', 'F,D,C,C+,B-,B,B+,A-,A,A+', '0-39,40-44,45-49,50-54,55-59,60-64,65-69,70-74,75-79,80-100', 'A', 3.75, 1),
+('{B9976440-6CE3-4F51-B6CF-E0D5842A889B}', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160212', 'att,assess,seca,secb', 'Attendance,Assessment,Section A,Section B', '10,30,30,30,30', '8,20,20,10', '58', 'F,D,C,C+,B-,B,B+,A-,A,A+', '0-39,40-44,45-49,50-54,55-59,60-64,65-69,70-74,75-79,80-100', 'B-', 2.75, 0);
 
 -- --------------------------------------------------------
 
@@ -317,27 +349,26 @@ CREATE TABLE `rms_course_marks_result_publish` (
 -- Table structure for table `rms_course_marks_tests`
 --
 
-CREATE TABLE `rms_course_marks_tests` (
+DROP TABLE IF EXISTS `rms_course_marks_tests`;
+CREATE TABLE IF NOT EXISTS `rms_course_marks_tests` (
   `ID` varchar(40) NOT NULL,
-  `CourseNo` varchar(40) NOT NULL,
+  `CourseID` varchar(40) NOT NULL,
   `TeacherID` varchar(40) NOT NULL,
   `SessionID` varchar(40) NOT NULL,
   `YearID` varchar(40) NOT NULL,
   `TermID` varchar(40) NOT NULL,
   `StudentID` varchar(40) NOT NULL,
-  `MarksValue` varchar(200) NOT NULL
+  `MarksValue` varchar(200) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `rms_course_marks_tests`
 --
 
-INSERT INTO `rms_course_marks_tests` (`ID`, `CourseNo`, `TeacherID`, `SessionID`, `YearID`, `TermID`, `StudentID`, `MarksValue`) VALUES
-('{037E6C4F-CAAE-4587-B3E1-1CC6E59101A4}', 'cse-4111', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '020203', '12,20,20'),
-('{222F2596-5F55-442C-80EA-F5AE7F466C70}', 'cse-4111', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '020202', '15,25,20'),
-('{71D63076-9096-4CAA-8D6D-782A25B076A7}', 'cse-4111', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '020208', '15,20,20'),
-('{B6BB339D-E40B-4CC4-8D34-07017EE2BE44}', 'cse-4112', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '020208', '10,30,30,0,0'),
-('{DBF1823F-0DF9-4E8F-9233-5AB1545BC1B7}', 'cse-4112', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{6780C884-E112-4F58-9503-E2110B615547}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '020202', '20,20,20,0,0');
+INSERT INTO `rms_course_marks_tests` (`ID`, `CourseID`, `TeacherID`, `SessionID`, `YearID`, `TermID`, `StudentID`, `MarksValue`) VALUES
+('{2008BCA1-57CD-4F6F-8C7F-BAAEA680C27D}', '{7DFAB7F9-0C4F-4098-9140-0D89ABDD0A3D}', 'avi@gmail.com', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160212', '10,10,10'),
+('{F747C284-82BC-4563-969A-2CF6523F2C7D}', '{1CD0842E-9FCF-4F58-BB6B-FB7E7B73E664}', 'mkazi078@uottawa.ca', '{E11A301F-E0B9-47A5-AA3C-FB0B656B2A2A}', '{9F3A6CBC-0115-4EC2-ABB3-8CCA431F6C2B}', '{F9121C67-1E89-4F0B-80AA-89FD3B6BD665}', '160210', '13,X,X,X,X,X,X');
 
 -- --------------------------------------------------------
 
@@ -345,19 +376,25 @@ INSERT INTO `rms_course_marks_tests` (`ID`, `CourseNo`, `TeacherID`, `SessionID`
 -- Table structure for table `rms_grade_setup`
 --
 
-CREATE TABLE `rms_grade_setup` (
+DROP TABLE IF EXISTS `rms_grade_setup`;
+CREATE TABLE IF NOT EXISTS `rms_grade_setup` (
   `ID` varchar(40) NOT NULL,
   `Grades` varchar(200) NOT NULL,
   `Ranges` varchar(300) NOT NULL,
-  `IsDefault` tinyint(1) NOT NULL
+  `Cgpa` varchar(300) NOT NULL,
+  `IsRetake` tinyint(1) DEFAULT '0',
+  `IsDefault` tinyint(1) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `rms_grade_setup`
 --
 
-INSERT INTO `rms_grade_setup` (`ID`, `Grades`, `Ranges`, `IsDefault`) VALUES
-('{FC3DBA75-AF9C-4533-825E-D8A01D076F60}', 'F,E,D,C,C+,B,B+,A-,A,A+', '0-39,40-44,45-49,50-54,55-59,60-64,65-69,70-74,75-79,80-100', 1);
+INSERT INTO `rms_grade_setup` (`ID`, `Grades`, `Ranges`, `Cgpa`, `IsRetake`, `IsDefault`) VALUES
+('{77E5B72E-93A8-4F4C-8FEC-0D6EBE396CDD}', 'F,D,D,C,C+,B-,B,B+,A-,A', '0-39,40-44,45-49,50-54,55-59,60-64,65-69,70-74,75-79,80-100', '0.00,2.00,2.00,2.25,2.50,2.75,3.00,3.25,3.50,3.75', 1, 0),
+('{FC3DBA75-AF9C-4533-825E-D8A01D076F60}', 'F,E,D,C,C+,B,B+,A-,A,A+', '0-39,40-44,45-49,50-54,55-59,60-64,65-69,70-74,75-79,80-100', '0.00,2.00,2.25,2.50,2.75,3.00,3.25,3.50,3.75,4.00', 0, 0),
+('{FF75A9CD-E512-439C-AED2-9B176C8E68F1}', 'F,D,C,C+,B-,B,B+,A-,A,A+', '0-39,40-44,45-49,50-54,55-59,60-64,65-69,70-74,75-79,80-100', '0.00,2.00,2.25,2.50,2.75,3.00,3.25,3.50,3.75,4.00', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -365,13 +402,15 @@ INSERT INTO `rms_grade_setup` (`ID`, `Grades`, `Ranges`, `IsDefault`) VALUES
 -- Table structure for table `rms_marks_setup`
 --
 
-CREATE TABLE `rms_marks_setup` (
+DROP TABLE IF EXISTS `rms_marks_setup`;
+CREATE TABLE IF NOT EXISTS `rms_marks_setup` (
   `ID` varchar(40) NOT NULL,
   `CourseTypeID` varchar(40) NOT NULL,
   `HeaderID` varchar(200) NOT NULL,
   `HeaderName` varchar(200) NOT NULL,
   `HeaderMax` varchar(200) NOT NULL,
-  `IsDefault` tinyint(1) NOT NULL
+  `IsDefault` tinyint(1) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -385,14 +424,109 @@ INSERT INTO `rms_marks_setup` (`ID`, `CourseTypeID`, `HeaderID`, `HeaderName`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tms_assign`
+--
+
+DROP TABLE IF EXISTS `tms_assign`;
+CREATE TABLE IF NOT EXISTS `tms_assign` (
+  `id` varchar(40) NOT NULL,
+  `assign_to` varchar(40) NOT NULL,
+  `assign_by` varchar(40) NOT NULL,
+  `assing_date` date NOT NULL,
+  `comment` varchar(1000) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tms_assign`
+--
+
+INSERT INTO `tms_assign` (`id`, `assign_to`, `assign_by`, `assing_date`, `comment`, `status`) VALUES
+('24', 'naeema@gmail.com', 'ryhan@gmail.com', '2018-09-25', 'TEST2                               \r\n                ', 0),
+('24', 'naeema@gmail.com', 'ryhan@gmail.com', '2018-10-01', '                 test                ', 1),
+('24', 'ryhan@gmail.com', 'ryhan@gmail.com', '2018-10-01', 'Test                          \r\n                ', 0),
+('25', 'naeema@gmail.com', 'ryhan@gmail.com', '2018-10-08', 'Do the task very carefully                 \r\n                ', 1),
+('27', 'naeema@gmail.com', 'ryhan@gmail.com', '2018-09-25', 'test\r\n                                  \r\n                ', 0),
+('27', 'ryhan@gmail.com', 'naeema@gmail.com', '2018-09-25', '\r\n       tesy2                          \r\n                ', 1),
+('28', 'ryhan@gmail.com', 'naeema@gmail.com', '2018-09-30', '\r\n          test                       \r\n                ', 1),
+('32', 'ryhan@gmail.com', 'naeema@gmail.com', '2018-10-08', 'TEST               \r\n                ', 1),
+('33', 'ryhan@gmail.com', 'naeema@gmail.com', '2018-10-08', 'TEST2                \r\n                ', 1),
+('34', 'ryhan@gmail.com', 'ryhan@gmail.com', '2018-10-09', 'Study more and more               \r\n                ', 1),
+('35', 'ryhan@gmail.com', 'avi@gmail.com', '2018-10-09', '  Do study                \r\n                ', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tms_task`
+--
+
+DROP TABLE IF EXISTS `tms_task`;
+CREATE TABLE IF NOT EXISTS `tms_task` (
+  `id` varchar(40) NOT NULL,
+  `task_name` varchar(20) NOT NULL,
+  `task_creator` varchar(40) NOT NULL,
+  `task_category` varchar(20) NOT NULL,
+  `date_of_assign` date NOT NULL,
+  `date_of_submission` date NOT NULL,
+  `last_date_of_update` date NOT NULL,
+  `progress` int(11) NOT NULL DEFAULT '0',
+  `details` varchar(1000) NOT NULL,
+  `attachment` varchar(400) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tms_task`
+--
+
+INSERT INTO `tms_task` (`id`, `task_name`, `task_creator`, `task_category`, `date_of_assign`, `date_of_submission`, `last_date_of_update`, `progress`, `details`, `attachment`) VALUES
+('1539613941', 'Class Test', 'ryhan@gmail.com', 'Study', '2018-10-15', '2018-10-26', '2018-10-15', 0, ';ljlj', '1539613941'),
+('1539614267', 'Class Test', 'ryhan@gmail.com', 'Office', '2018-10-15', '2018-10-20', '2018-10-15', 0, 'tem,s', '1539614267.pdf'),
+('24', 'test11', 'ryhan@gmail.com', 'Study', '2018-09-17', '2018-10-26', '2018-10-08', 11, 'DIP', '0'),
+('25', 'Class Test', 'ryhan@gmail.com', 'Study', '2018-09-17', '2018-10-29', '2018-10-08', 6, 'DIP Class test', '0'),
+('26', 'test11', 'ryhan@gmail.com', 'Study', '2018-08-09', '2018-10-26', '2018-10-08', 7, 'update date test', '0'),
+('27', 'Solve the 5x5x5 cube', 'ryhan@gmail.com', 'Study', '2018-09-25', '2018-10-27', '2018-10-09', 3, 'You Have to solve the cube in 30 Minutes', '0'),
+('32', 'test11111133', 'naeema@gmail.com', 'Appointment', '2018-10-08', '2018-10-31', '2018-10-09', 0, 'TEST', '0'),
+('33', 'test2', 'naeema@gmail.com', 'Study', '2018-10-08', '2018-10-31', '2018-10-08', 0, 'TEST2', '0'),
+('35', 'Class Test', 'avi@gmail.com', 'Study', '2018-10-09', '2018-10-30', '2018-10-09', 0, 'Class TEST', '0'),
+('36', 'test11', '160230', 'hh', '2018-10-11', '2018-10-18', '2018-10-18', 0, 'lll', '0'),
+('53', 'test11', '160230', 'hh', '2018-10-10', '2018-10-10', '2018-10-12', 0, ';lk;lkj', NULL),
+('75', 'test', 'ryhan@gmail.com', 'Programming Contest', '2018-10-15', '2018-10-26', '2018-10-15', 0, 'kkkkk', '1539613080');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tms_task_category`
+--
+
+DROP TABLE IF EXISTS `tms_task_category`;
+CREATE TABLE IF NOT EXISTS `tms_task_category` (
+  `id` int(11) NOT NULL,
+  `task_type` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tms_task_category`
+--
+
+INSERT INTO `tms_task_category` (`id`, `task_type`) VALUES
+(1, 'Study'),
+(2, 'Office'),
+(3, 'Appointment'),
+(4, 'Programming Contest');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ums_discipline`
 --
 
-CREATE TABLE `ums_discipline` (
+DROP TABLE IF EXISTS `ums_discipline`;
+CREATE TABLE IF NOT EXISTS `ums_discipline` (
   `ID` varchar(40) NOT NULL,
   `Name` varchar(50) NOT NULL,
   `ShortCode` varchar(20) DEFAULT NULL,
-  `SchoolID` varchar(40) DEFAULT NULL
+  `SchoolID` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -414,142 +548,164 @@ INSERT INTO `ums_discipline` (`ID`, `Name`, `ShortCode`, `SchoolID`) VALUES
 -- Table structure for table `ums_permission`
 --
 
-CREATE TABLE `ums_permission` (
-  `TableID` int(11) NOT NULL,
+DROP TABLE IF EXISTS `ums_permission`;
+CREATE TABLE IF NOT EXISTS `ums_permission` (
+  `TableID` int(11) NOT NULL AUTO_INCREMENT,
   `ID` varchar(100) NOT NULL,
   `Name` varchar(100) NOT NULL,
-  `Category` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `Category` varchar(100) NOT NULL,
+  PRIMARY KEY (`TableID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4973 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ums_permission`
 --
 
 INSERT INTO `ums_permission` (`TableID`, `ID`, `Name`, `Category`) VALUES
-(565, 'COURSE_C', 'COURSE_C', 'COURSE'),
-(566, 'COURSE_R', 'COURSE_R', 'COURSE'),
-(567, 'COURSE_U', 'COURSE_U', 'COURSE'),
-(568, 'COURSE_D', 'COURSE_D', 'COURSE'),
-(569, 'COURSE_TYPE_C', 'COURSE_TYPE_C', 'COURSE TYPE'),
-(570, 'COURSE_TYPE_R', 'COURSE_TYPE_R', 'COURSE TYPE'),
-(571, 'COURSE_TYPE_U', 'COURSE_TYPE_U', 'COURSE TYPE'),
-(572, 'COURSE_TYPE_D', 'COURSE_TYPE_D', 'COURSE TYPE'),
-(573, 'COURSE_SESSIONAL_TYPE_C', 'COURSE_SESSIONAL_TYPE_C', 'COURSE SESSIONAL TYPE'),
-(574, 'COURSE_SESSIONAL_TYPE_R', 'COURSE_SESSIONAL_TYPE_R', 'COURSE SESSIONAL TYPE'),
-(575, 'COURSE_SESSIONAL_TYPE_U', 'COURSE_SESSIONAL_TYPE_U', 'COURSE SESSIONAL TYPE'),
-(576, 'COURSE_SESSIONAL_TYPE_D', 'COURSE_SESSIONAL_TYPE_D', 'COURSE SESSIONAL TYPE'),
-(577, 'CLUB_C', 'CLUB_C', 'CLUB'),
-(578, 'CLUB_R', 'CLUB_R', 'CLUB'),
-(579, 'CLUB_U', 'CLUB_U', 'CLUB'),
-(580, 'CLUB_D', 'CLUB_D', 'CLUB'),
-(581, 'DISCUSSION_C', 'DISCUSSION_C', 'DISCUSSION'),
-(582, 'DISCUSSION_R', 'DISCUSSION_R', 'DISCUSSION'),
-(583, 'DISCUSSION_U', 'DISCUSSION_U', 'DISCUSSION'),
-(584, 'DISCUSSION_D', 'DISCUSSION_D', 'DISCUSSION'),
-(585, 'DISCUSSION_CAT_C', 'DISCUSSION_CAT_C', 'DISCUSSION CATEGORY'),
-(586, 'DISCUSSION_CAT_R', 'DISCUSSION_CAT_R', 'DISCUSSION CATEGORY'),
-(587, 'DISCUSSION_CAT_U', 'DISCUSSION_CAT_U', 'DISCUSSION CATEGORY'),
-(588, 'DISCUSSION_CAT_D', 'DISCUSSION_CAT_D', 'DISCUSSION CATEGORY'),
-(589, 'DISCUSSION_COMMENT_C', 'DISCUSSION_COMMENT_C', 'DISCUSSION COMMENT'),
-(590, 'DISCUSSION_COMMENT_R', 'DISCUSSION_COMMENT_R', 'DISCUSSION COMMENT'),
-(591, 'DISCUSSION_COMMENT_U', 'DISCUSSION_COMMENT_U', 'DISCUSSION COMMENT'),
-(592, 'DISCUSSION_COMMENT_D', 'DISCUSSION_COMMENT_D', 'DISCUSSION COMMENT'),
-(593, 'DISCIPLINE_C', 'DISCIPLINE_C', 'DISCIPLINE'),
-(594, 'DISCIPLINE_R', 'DISCIPLINE_R', 'DISCIPLINE'),
-(595, 'DISCIPLINE_U', 'DISCIPLINE_U', 'DISCIPLINE'),
-(596, 'DISCIPLINE_D', 'DISCIPLINE_D', 'DISCIPLINE'),
-(597, 'FILE_C', 'FILE_C', 'FILE'),
-(598, 'FILE_R', 'FILE_R', 'FILE'),
-(599, 'FILE_U', 'FILE_U', 'FILE'),
-(600, 'FILE_D', 'FILE_D', 'FILE'),
-(601, 'PERMISSION_C', 'PERMISSION_C', 'PERMISSION'),
-(602, 'PERMISSION_R', 'PERMISSION_R', 'PERMISSION'),
-(603, 'PERMISSION_U', 'PERMISSION_U', 'PERMISSION'),
-(604, 'PERMISSION_D', 'PERMISSION_D', 'PERMISSION'),
-(605, 'POSITION_C', 'POSITION_C', 'POSITION'),
-(606, 'POSITION_R', 'POSITION_R', 'POSITION'),
-(607, 'POSITION_U', 'POSITION_U', 'POSITION'),
-(608, 'POSITION_D', 'POSITION_D', 'POSITION'),
-(609, 'PROJECT_C', 'PROJECT_C', 'PROJECT'),
-(610, 'PROJECT_R', 'PROJECT_R', 'PROJECT'),
-(611, 'PROJECT_U', 'PROJECT_U', 'PROJECT'),
-(612, 'PROJECT_D', 'PROJECT_D', 'PROJECT'),
-(613, 'QUESTION_C', 'QUESTION_C', 'QUESTION'),
-(614, 'QUESTION_R', 'QUESTION_R', 'QUESTION'),
-(615, 'QUESTION_U', 'QUESTION_U', 'QUESTION'),
-(616, 'QUESTION_D', 'QUESTION_D', 'QUESTION'),
-(617, 'REGISTRATION_C', 'REGISTRATION_C', 'REGISTRATION'),
-(618, 'REGISTRATION_R', 'REGISTRATION_R', 'REGISTRATION'),
-(619, 'REGISTRATION_U', 'REGISTRATION_U', 'REGISTRATION'),
-(620, 'REGISTRATION_D', 'REGISTRATION_D', 'REGISTRATION'),
-(621, 'RESULT_C', 'RESULT_C', 'RESULT'),
-(622, 'RESULT_R', 'RESULT_R', 'RESULT'),
-(623, 'RESULT_U', 'RESULT_U', 'RESULT'),
-(624, 'RESULT_D', 'RESULT_D', 'RESULT'),
-(625, 'ATTENDANCE_C', 'ATTENDANCE_C', 'ATTENDANCE'),
-(626, 'ATTENDANCE_R', 'ATTENDANCE_R', 'ATTENDANCE'),
-(627, 'ATTENDANCE_U', 'ATTENDANCE_U', 'ATTENDANCE'),
-(628, 'ATTENDANCE_D', 'ATTENDANCE_D', 'ATTENDANCE'),
-(629, 'MARKS_SETUP_C', 'MARKS_SETUP_C', 'MARKS_SETUP'),
-(630, 'MARKS_SETUP_R', 'MARKS_SETUP_R', 'MARKS_SETUP'),
-(631, 'MARKS_SETUP_U', 'MARKS_SETUP_U', 'MARKS_SETUP'),
-(632, 'MARKS_SETUP_D', 'MARKS_SETUP_D', 'MARKS_SETUP'),
-(633, 'GRADE_SETUP_C', 'GRADE_SETUP_C', 'GRADE_SETUP'),
-(634, 'GRADE_SETUP_R', 'GRADE_SETUP_R', 'GRADE_SETUP'),
-(635, 'GRADE_SETUP_U', 'GRADE_SETUP_U', 'GRADE_SETUP'),
-(636, 'GRADE_SETUP_D', 'GRADE_SETUP_D', 'GRADE_SETUP'),
-(637, 'ROLE_C', 'ROLE_C', 'ROLE'),
-(638, 'ROLE_R', 'ROLE_R', 'ROLE'),
-(639, 'ROLE_U', 'ROLE_U', 'ROLE'),
-(640, 'ROLE_D', 'ROLE_D', 'ROLE'),
-(641, 'SCHOOL_C', 'SCHOOL_C', 'SCHOOL'),
-(642, 'SCHOOL_R', 'SCHOOL_R', 'SCHOOL'),
-(643, 'SCHOOL_U', 'SCHOOL_U', 'SCHOOL'),
-(644, 'SCHOOL_D', 'SCHOOL_D', 'SCHOOL'),
-(645, 'SESSION_C', 'SESSION_C', 'SESSION'),
-(646, 'SESSION_R', 'SESSION_R', 'SESSION'),
-(647, 'SESSION_U', 'SESSION_U', 'SESSION'),
-(648, 'SESSION_D', 'SESSION_D', 'SESSION'),
-(649, 'SURVEY_C', 'SURVEY_C', 'SURVEY'),
-(650, 'SURVEY_R', 'SURVEY_R', 'SURVEY'),
-(651, 'SURVEY_U', 'SURVEY_U', 'SURVEY'),
-(652, 'SURVEY_D', 'SURVEY_D', 'SURVEY'),
-(653, 'SURVEY_QUESTION_C', 'SURVEY_QUESTION_C', 'SURVEY QUESTION'),
-(654, 'SURVEY_QUESTION_R', 'SURVEY_QUESTION_R', 'SURVEY QUESTION'),
-(655, 'SURVEY_QUESTION_U', 'SURVEY_QUESTION_U', 'SURVEY QUESTION'),
-(656, 'SURVEY_QUESTION_D', 'SURVEY_QUESTION_D', 'SURVEY QUESTION'),
-(657, 'SURVEY_QUESTION_TYPE_C', 'SURVEY_QUESTION_TYPE_C', 'SURVEY QUESTION TYPE'),
-(658, 'SURVEY_QUESTION_TYPE_R', 'SURVEY_QUESTION_TYPE_R', 'SURVEY QUESTION TYPE'),
-(659, 'SURVEY_QUESTION_TYPE_U', 'SURVEY_QUESTION_TYPE_U', 'SURVEY QUESTION TYPE'),
-(660, 'SURVEY_QUESTION_TYPE_D', 'SURVEY_QUESTION_TYPE_D', 'SURVEY QUESTION TYPE'),
-(661, 'SURVEY_QUESTION_FILLUP_C', 'SURVEY_QUESTION_FILLUP_C', 'SURVEY QUESTION FILLUP'),
-(662, 'SURVEY_QUESTION_FILLUP_R', 'SURVEY_QUESTION_FILLUP_R', 'SURVEY QUESTION FILLUP'),
-(663, 'SURVEY_QUESTION_FILLUP_U', 'SURVEY_QUESTION_FILLUP_U', 'SURVEY QUESTION FILLUP'),
-(664, 'SURVEY_QUESTION_FILLUP_D', 'SURVEY_QUESTION_FILLUP_D', 'SURVEY QUESTION FILLUP'),
-(665, 'TERM_C', 'TERM_C', 'TERM'),
-(666, 'TERM_R', 'TERM_R', 'TERM'),
-(667, 'TERM_U', 'TERM_U', 'TERM'),
-(668, 'TERM_D', 'TERM_D', 'TERM'),
-(669, 'USER_C', 'USER_C', 'USER'),
-(670, 'USER_R', 'USER_R', 'USER'),
-(671, 'USER_U', 'USER_U', 'USER'),
-(672, 'USER_D', 'USER_D', 'USER'),
-(673, 'YEAR_C', 'YEAR_C', 'YEAR'),
-(674, 'YEAR_R', 'YEAR_R', 'YEAR'),
-(675, 'YEAR_U', 'YEAR_U', 'YEAR'),
-(676, 'YEAR_D', 'YEAR_D', 'YEAR'),
-(677, 'VIDEO_C', 'VIDEO_C', 'VIDEO'),
-(678, 'VIDEO_R', 'VIDEO_R', 'VIDEO'),
-(679, 'VIDEO_U', 'VIDEO_U', 'VIDEO'),
-(680, 'VIDEO_D', 'VIDEO_D', 'VIDEO'),
-(681, 'VIDEO_COMMENT_C', 'VIDEO_COMMENT_C', 'VIDEO COMMENT'),
-(682, 'VIDEO_COMMENT_R', 'VIDEO_COMMENT_R', 'VIDEO COMMENT'),
-(683, 'VIDEO_COMMENT_U', 'VIDEO_COMMENT_U', 'VIDEO COMMENT'),
-(684, 'VIDEO_COMMENT_D', 'VIDEO_COMMENT_D', 'VIDEO COMMENT'),
-(685, 'JOB_C', 'JOB_C', 'JOB'),
-(686, 'JOB_R', 'JOB_R', 'JOB'),
-(687, 'JOB_U', 'JOB_U', 'JOB'),
-(688, 'JOB_D', 'JOB_D', 'JOB');
+(4841, 'COURSE_C', 'COURSE_C', 'COURSE'),
+(4842, 'COURSE_R', 'COURSE_R', 'COURSE'),
+(4843, 'COURSE_U', 'COURSE_U', 'COURSE'),
+(4844, 'COURSE_D', 'COURSE_D', 'COURSE'),
+(4845, 'COURSE_TYPE_C', 'COURSE_TYPE_C', 'COURSE TYPE'),
+(4846, 'COURSE_TYPE_R', 'COURSE_TYPE_R', 'COURSE TYPE'),
+(4847, 'COURSE_TYPE_U', 'COURSE_TYPE_U', 'COURSE TYPE'),
+(4848, 'COURSE_TYPE_D', 'COURSE_TYPE_D', 'COURSE TYPE'),
+(4849, 'COURSE_SESSIONAL_TYPE_C', 'COURSE_SESSIONAL_TYPE_C', 'COURSE SESSIONAL TYPE'),
+(4850, 'COURSE_SESSIONAL_TYPE_R', 'COURSE_SESSIONAL_TYPE_R', 'COURSE SESSIONAL TYPE'),
+(4851, 'COURSE_SESSIONAL_TYPE_U', 'COURSE_SESSIONAL_TYPE_U', 'COURSE SESSIONAL TYPE'),
+(4852, 'COURSE_SESSIONAL_TYPE_D', 'COURSE_SESSIONAL_TYPE_D', 'COURSE SESSIONAL TYPE'),
+(4853, 'DISCIPLINE_C', 'DISCIPLINE_C', 'DISCIPLINE'),
+(4854, 'DISCIPLINE_R', 'DISCIPLINE_R', 'DISCIPLINE'),
+(4855, 'DISCIPLINE_U', 'DISCIPLINE_U', 'DISCIPLINE'),
+(4856, 'DISCIPLINE_D', 'DISCIPLINE_D', 'DISCIPLINE'),
+(4857, 'FILE_C', 'FILE_C', 'FILE'),
+(4858, 'FILE_R', 'FILE_R', 'FILE'),
+(4859, 'FILE_U', 'FILE_U', 'FILE'),
+(4860, 'FILE_D', 'FILE_D', 'FILE'),
+(4861, 'PERMISSION_C', 'PERMISSION_C', 'PERMISSION'),
+(4862, 'PERMISSION_R', 'PERMISSION_R', 'PERMISSION'),
+(4863, 'PERMISSION_U', 'PERMISSION_U', 'PERMISSION'),
+(4864, 'PERMISSION_D', 'PERMISSION_D', 'PERMISSION'),
+(4865, 'REGISTRATION_C', 'REGISTRATION_C', 'REGISTRATION'),
+(4866, 'REGISTRATION_R', 'REGISTRATION_R', 'REGISTRATION'),
+(4867, 'REGISTRATION_U', 'REGISTRATION_U', 'REGISTRATION'),
+(4868, 'REGISTRATION_D', 'REGISTRATION_D', 'REGISTRATION'),
+(4869, 'RESULT_C', 'RESULT_C', 'RESULT'),
+(4870, 'RESULT_R', 'RESULT_R', 'RESULT'),
+(4871, 'RESULT_U', 'RESULT_U', 'RESULT'),
+(4872, 'RESULT_D', 'RESULT_D', 'RESULT'),
+(4873, 'ATTENDANCE_C', 'ATTENDANCE_C', 'ATTENDANCE'),
+(4874, 'ATTENDANCE_R', 'ATTENDANCE_R', 'ATTENDANCE'),
+(4875, 'ATTENDANCE_U', 'ATTENDANCE_U', 'ATTENDANCE'),
+(4876, 'ATTENDANCE_D', 'ATTENDANCE_D', 'ATTENDANCE'),
+(4877, 'MARKS_SETUP_C', 'MARKS_SETUP_C', 'MARKS_SETUP'),
+(4878, 'MARKS_SETUP_R', 'MARKS_SETUP_R', 'MARKS_SETUP'),
+(4879, 'MARKS_SETUP_U', 'MARKS_SETUP_U', 'MARKS_SETUP'),
+(4880, 'MARKS_SETUP_D', 'MARKS_SETUP_D', 'MARKS_SETUP'),
+(4881, 'GRADE_SETUP_C', 'GRADE_SETUP_C', 'GRADE_SETUP'),
+(4882, 'GRADE_SETUP_R', 'GRADE_SETUP_R', 'GRADE_SETUP'),
+(4883, 'GRADE_SETUP_U', 'GRADE_SETUP_U', 'GRADE_SETUP'),
+(4884, 'GRADE_SETUP_D', 'GRADE_SETUP_D', 'GRADE_SETUP'),
+(4885, 'ROLE_C', 'ROLE_C', 'ROLE'),
+(4886, 'ROLE_R', 'ROLE_R', 'ROLE'),
+(4887, 'ROLE_U', 'ROLE_U', 'ROLE'),
+(4888, 'ROLE_D', 'ROLE_D', 'ROLE'),
+(4889, 'POSITION_C', 'POSITION_C', 'POSITION'),
+(4890, 'POSITION_R', 'POSITION_R', 'POSITION'),
+(4891, 'POSITION_U', 'POSITION_U', 'POSITION'),
+(4892, 'POSITION_D', 'POSITION_D', 'POSITION'),
+(4893, 'PROJECT_C', 'PROJECT_C', 'PROJECT'),
+(4894, 'PROJECT_R', 'PROJECT_R', 'PROJECT'),
+(4895, 'PROJECT_U', 'PROJECT_U', 'PROJECT'),
+(4896, 'PROJECT_D', 'PROJECT_D', 'PROJECT'),
+(4897, 'QUESTION_C', 'QUESTION_C', 'QUESTION'),
+(4898, 'QUESTION_R', 'QUESTION_R', 'QUESTION'),
+(4899, 'QUESTION_U', 'QUESTION_U', 'QUESTION'),
+(4900, 'QUESTION_D', 'QUESTION_D', 'QUESTION'),
+(4901, 'SCHOOL_C', 'SCHOOL_C', 'SCHOOL'),
+(4902, 'SCHOOL_R', 'SCHOOL_R', 'SCHOOL'),
+(4903, 'SCHOOL_U', 'SCHOOL_U', 'SCHOOL'),
+(4904, 'SCHOOL_D', 'SCHOOL_D', 'SCHOOL'),
+(4905, 'SESSION_C', 'SESSION_C', 'SESSION'),
+(4906, 'SESSION_R', 'SESSION_R', 'SESSION'),
+(4907, 'SESSION_U', 'SESSION_U', 'SESSION'),
+(4908, 'SESSION_D', 'SESSION_D', 'SESSION'),
+(4909, 'SURVEY_C', 'SURVEY_C', 'SURVEY'),
+(4910, 'SURVEY_R', 'SURVEY_R', 'SURVEY'),
+(4911, 'SURVEY_U', 'SURVEY_U', 'SURVEY'),
+(4912, 'SURVEY_D', 'SURVEY_D', 'SURVEY'),
+(4913, 'SURVEY_QUESTION_C', 'SURVEY_QUESTION_C', 'SURVEY QUESTION'),
+(4914, 'SURVEY_QUESTION_R', 'SURVEY_QUESTION_R', 'SURVEY QUESTION'),
+(4915, 'SURVEY_QUESTION_U', 'SURVEY_QUESTION_U', 'SURVEY QUESTION'),
+(4916, 'SURVEY_QUESTION_D', 'SURVEY_QUESTION_D', 'SURVEY QUESTION'),
+(4917, 'SURVEY_QUESTION_TYPE_C', 'SURVEY_QUESTION_TYPE_C', 'SURVEY QUESTION TYPE'),
+(4918, 'SURVEY_QUESTION_TYPE_R', 'SURVEY_QUESTION_TYPE_R', 'SURVEY QUESTION TYPE'),
+(4919, 'SURVEY_QUESTION_TYPE_U', 'SURVEY_QUESTION_TYPE_U', 'SURVEY QUESTION TYPE'),
+(4920, 'SURVEY_QUESTION_TYPE_D', 'SURVEY_QUESTION_TYPE_D', 'SURVEY QUESTION TYPE'),
+(4921, 'SURVEY_QUESTION_FILLUP_C', 'SURVEY_QUESTION_FILLUP_C', 'SURVEY QUESTION FILLUP'),
+(4922, 'SURVEY_QUESTION_FILLUP_R', 'SURVEY_QUESTION_FILLUP_R', 'SURVEY QUESTION FILLUP'),
+(4923, 'SURVEY_QUESTION_FILLUP_U', 'SURVEY_QUESTION_FILLUP_U', 'SURVEY QUESTION FILLUP'),
+(4924, 'SURVEY_QUESTION_FILLUP_D', 'SURVEY_QUESTION_FILLUP_D', 'SURVEY QUESTION FILLUP'),
+(4925, 'TERM_C', 'TERM_C', 'TERM'),
+(4926, 'TERM_R', 'TERM_R', 'TERM'),
+(4927, 'TERM_U', 'TERM_U', 'TERM'),
+(4928, 'TERM_D', 'TERM_D', 'TERM'),
+(4929, 'USER_C', 'USER_C', 'USER'),
+(4930, 'USER_R', 'USER_R', 'USER'),
+(4931, 'USER_U', 'USER_U', 'USER'),
+(4932, 'USER_D', 'USER_D', 'USER'),
+(4933, 'YEAR_C', 'YEAR_C', 'YEAR'),
+(4934, 'YEAR_R', 'YEAR_R', 'YEAR'),
+(4935, 'YEAR_U', 'YEAR_U', 'YEAR'),
+(4936, 'YEAR_D', 'YEAR_D', 'YEAR'),
+(4937, 'VIDEO_C', 'VIDEO_C', 'VIDEO'),
+(4938, 'VIDEO_R', 'VIDEO_R', 'VIDEO'),
+(4939, 'VIDEO_U', 'VIDEO_U', 'VIDEO'),
+(4940, 'VIDEO_D', 'VIDEO_D', 'VIDEO'),
+(4941, 'VIDEO_COMMENT_C', 'VIDEO_COMMENT_C', 'VIDEO COMMENT'),
+(4942, 'VIDEO_COMMENT_R', 'VIDEO_COMMENT_R', 'VIDEO COMMENT'),
+(4943, 'VIDEO_COMMENT_U', 'VIDEO_COMMENT_U', 'VIDEO COMMENT'),
+(4944, 'VIDEO_COMMENT_D', 'VIDEO_COMMENT_D', 'VIDEO COMMENT'),
+(4945, 'JOB_C', 'JOB_C', 'JOB'),
+(4946, 'JOB_R', 'JOB_R', 'JOB'),
+(4947, 'JOB_U', 'JOB_U', 'JOB'),
+(4948, 'JOB_D', 'JOB_D', 'JOB'),
+(4949, 'CLUB_C', 'CLUB_C', 'CLUB'),
+(4950, 'CLUB_R', 'CLUB_R', 'CLUB'),
+(4951, 'CLUB_U', 'CLUB_U', 'CLUB'),
+(4952, 'CLUB_D', 'CLUB_D', 'CLUB'),
+(4953, 'DISCUSSION_C', 'DISCUSSION_C', 'DISCUSSION'),
+(4954, 'DISCUSSION_R', 'DISCUSSION_R', 'DISCUSSION'),
+(4955, 'DISCUSSION_U', 'DISCUSSION_U', 'DISCUSSION'),
+(4956, 'DISCUSSION_D', 'DISCUSSION_D', 'DISCUSSION'),
+(4957, 'DISCUSSION_CAT_C', 'DISCUSSION_CAT_C', 'DISCUSSION CATEGORY'),
+(4958, 'DISCUSSION_CAT_R', 'DISCUSSION_CAT_R', 'DISCUSSION CATEGORY'),
+(4959, 'DISCUSSION_CAT_U', 'DISCUSSION_CAT_U', 'DISCUSSION CATEGORY'),
+(4960, 'DISCUSSION_CAT_D', 'DISCUSSION_CAT_D', 'DISCUSSION CATEGORY'),
+(4961, 'DISCUSSION_COMMENT_C', 'DISCUSSION_COMMENT_C', 'DISCUSSION COMMENT'),
+(4962, 'DISCUSSION_COMMENT_R', 'DISCUSSION_COMMENT_R', 'DISCUSSION COMMENT'),
+(4963, 'DISCUSSION_COMMENT_U', 'DISCUSSION_COMMENT_U', 'DISCUSSION COMMENT'),
+(4964, 'DISCUSSION_COMMENT_D', 'DISCUSSION_COMMENT_D', 'DISCUSSION COMMENT'),
+(4965, 'TASK_C', 'TASK_C', 'TASK'),
+(4966, 'TASK_R', 'TASK_R', 'TASK'),
+(4967, 'TASK_U', 'TASK_U', 'TASK'),
+(4968, 'TASK_D', 'TASK_D', 'TASK'),
+(4969, 'TASK_CATEGORY_C', 'TASK_CATEGORY_C', 'TASK_CATEGORY'),
+(4970, 'TASK_CATEGORY_R', 'TASK_CATEGORY_R', 'TASK_CATEGORY'),
+(4971, 'TASK_CATEGORY_U', 'TASK_CATEGORY_U', 'TASK_CATEGORY'),
+(4972, 'TASK_CATEGORY_D', 'TASK_CATEGORY_D', 'TASK_CATEGORY');
+(3893, 'ASSET_C', 'ASSET_C', 'ASSET'),
+(3894, 'ASSET_R', 'ASSET_R', 'ASSET'),
+(3895, 'ASSET_U', 'ASSET_U', 'ASSET'),
+(3896, 'ASSET_D', 'ASSET_D', 'ASSET'),
+(3897, 'THESIS_C', 'THESIS_C', 'THESIS'),
+(3898, 'THESIS_R', 'THESIS_R', 'THESIS'),
+(3899, 'THESIS_U', 'THESIS_U', 'THESIS'),
+(3900, 'THESIS_D', 'THESIS_D', 'THESIS'),
+(3901, 'EMAIL_C', 'EMAIL_C', 'EMAIL'),
+(3902, 'EMAIL_R', 'EMAIL_R', 'EMAIL'),
+(3903, 'EMAIL_U', 'EMAIL_U', 'EMAIL'),
+(3904, 'EMAIL_D', 'EMAIL_D', 'EMAIL');
 
 -- --------------------------------------------------------
 
@@ -557,9 +713,11 @@ INSERT INTO `ums_permission` (`TableID`, `ID`, `Name`, `Category`) VALUES
 -- Table structure for table `ums_position`
 --
 
-CREATE TABLE `ums_position` (
+DROP TABLE IF EXISTS `ums_position`;
+CREATE TABLE IF NOT EXISTS `ums_position` (
   `ID` varchar(40) NOT NULL,
-  `Name` varchar(50) NOT NULL
+  `Name` varchar(50) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -587,9 +745,11 @@ INSERT INTO `ums_position` (`ID`, `Name`) VALUES
 -- Table structure for table `ums_role`
 --
 
-CREATE TABLE `ums_role` (
+DROP TABLE IF EXISTS `ums_role`;
+CREATE TABLE IF NOT EXISTS `ums_role` (
   `ID` varchar(40) NOT NULL,
-  `Name` varchar(50) NOT NULL
+  `Name` varchar(50) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -610,11 +770,13 @@ INSERT INTO `ums_role` (`ID`, `Name`) VALUES
 -- Table structure for table `ums_role_permission`
 --
 
-CREATE TABLE `ums_role_permission` (
-  `Row` int(11) NOT NULL,
+DROP TABLE IF EXISTS `ums_role_permission`;
+CREATE TABLE IF NOT EXISTS `ums_role_permission` (
+  `Row` int(11) NOT NULL AUTO_INCREMENT,
   `RoleID` varchar(40) NOT NULL,
-  `PermissionID` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `PermissionID` varchar(100) NOT NULL,
+  PRIMARY KEY (`Row`)
+) ENGINE=InnoDB AUTO_INCREMENT=2423 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ums_role_permission`
@@ -657,158 +819,184 @@ INSERT INTO `ums_role_permission` (`Row`, `RoleID`, `PermissionID`) VALUES
 (1486, 'teacher', 'RESULT_D'),
 (1487, 'teacher', 'RESULT_R'),
 (1488, 'teacher', 'RESULT_U'),
-(1739, 'administrator', 'ATTENDANCE_C'),
-(1740, 'administrator', 'ATTENDANCE_R'),
-(1741, 'administrator', 'ATTENDANCE_U'),
-(1742, 'administrator', 'ATTENDANCE_D'),
-(1743, 'administrator', 'CLUB_C'),
-(1744, 'administrator', 'CLUB_R'),
-(1745, 'administrator', 'CLUB_U'),
-(1746, 'administrator', 'CLUB_D'),
-(1747, 'administrator', 'COURSE_C'),
-(1748, 'administrator', 'COURSE_R'),
-(1749, 'administrator', 'COURSE_U'),
-(1750, 'administrator', 'COURSE_D'),
-(1751, 'administrator', 'COURSE_SESSIONAL_TYPE_C'),
-(1752, 'administrator', 'COURSE_SESSIONAL_TYPE_R'),
-(1753, 'administrator', 'COURSE_SESSIONAL_TYPE_U'),
-(1754, 'administrator', 'COURSE_SESSIONAL_TYPE_D'),
-(1755, 'administrator', 'COURSE_TYPE_C'),
-(1756, 'administrator', 'COURSE_TYPE_R'),
-(1757, 'administrator', 'COURSE_TYPE_U'),
-(1758, 'administrator', 'COURSE_TYPE_D'),
-(1759, 'administrator', 'DISCIPLINE_C'),
-(1760, 'administrator', 'DISCIPLINE_R'),
-(1761, 'administrator', 'DISCIPLINE_U'),
-(1762, 'administrator', 'DISCIPLINE_D'),
-(1763, 'administrator', 'DISCUSSION_C'),
-(1764, 'administrator', 'DISCUSSION_R'),
-(1765, 'administrator', 'DISCUSSION_U'),
-(1766, 'administrator', 'DISCUSSION_D'),
-(1767, 'administrator', 'DISCUSSION_CAT_C'),
-(1768, 'administrator', 'DISCUSSION_CAT_R'),
-(1769, 'administrator', 'DISCUSSION_CAT_U'),
-(1770, 'administrator', 'DISCUSSION_CAT_D'),
-(1771, 'administrator', 'DISCUSSION_COMMENT_C'),
-(1772, 'administrator', 'DISCUSSION_COMMENT_R'),
-(1773, 'administrator', 'DISCUSSION_COMMENT_U'),
-(1774, 'administrator', 'DISCUSSION_COMMENT_D'),
-(1775, 'administrator', 'FILE_C'),
-(1776, 'administrator', 'FILE_R'),
-(1777, 'administrator', 'FILE_U'),
-(1778, 'administrator', 'FILE_D'),
-(1779, 'administrator', 'GRADE_SETUP_C'),
-(1780, 'administrator', 'GRADE_SETUP_R'),
-(1781, 'administrator', 'GRADE_SETUP_U'),
-(1782, 'administrator', 'GRADE_SETUP_D'),
-(1783, 'administrator', 'JOB_C'),
-(1784, 'administrator', 'JOB_R'),
-(1785, 'administrator', 'JOB_U'),
-(1786, 'administrator', 'JOB_D'),
-(1787, 'administrator', 'MARKS_SETUP_C'),
-(1788, 'administrator', 'MARKS_SETUP_R'),
-(1789, 'administrator', 'MARKS_SETUP_U'),
-(1790, 'administrator', 'MARKS_SETUP_D'),
-(1791, 'administrator', 'PERMISSION_C'),
-(1792, 'administrator', 'PERMISSION_R'),
-(1793, 'administrator', 'PERMISSION_U'),
-(1794, 'administrator', 'PERMISSION_D'),
-(1795, 'administrator', 'POSITION_C'),
-(1796, 'administrator', 'POSITION_R'),
-(1797, 'administrator', 'POSITION_U'),
-(1798, 'administrator', 'POSITION_D'),
-(1799, 'administrator', 'PROJECT_C'),
-(1800, 'administrator', 'PROJECT_R'),
-(1801, 'administrator', 'PROJECT_U'),
-(1802, 'administrator', 'PROJECT_D'),
-(1803, 'administrator', 'QUESTION_C'),
-(1804, 'administrator', 'QUESTION_R'),
-(1805, 'administrator', 'QUESTION_U'),
-(1806, 'administrator', 'QUESTION_D'),
-(1807, 'administrator', 'REGISTRATION_C'),
-(1808, 'administrator', 'REGISTRATION_R'),
-(1809, 'administrator', 'REGISTRATION_U'),
-(1810, 'administrator', 'REGISTRATION_D'),
-(1811, 'administrator', 'RESULT_C'),
-(1812, 'administrator', 'RESULT_R'),
-(1813, 'administrator', 'RESULT_U'),
-(1814, 'administrator', 'RESULT_D'),
-(1815, 'administrator', 'ROLE_C'),
-(1816, 'administrator', 'ROLE_R'),
-(1817, 'administrator', 'ROLE_U'),
-(1818, 'administrator', 'ROLE_D'),
-(1819, 'administrator', 'SCHOOL_C'),
-(1820, 'administrator', 'SCHOOL_R'),
-(1821, 'administrator', 'SCHOOL_U'),
-(1822, 'administrator', 'SCHOOL_D'),
-(1823, 'administrator', 'SESSION_C'),
-(1824, 'administrator', 'SESSION_R'),
-(1825, 'administrator', 'SESSION_U'),
-(1826, 'administrator', 'SESSION_D'),
-(1827, 'administrator', 'SURVEY_C'),
-(1828, 'administrator', 'SURVEY_R'),
-(1829, 'administrator', 'SURVEY_U'),
-(1830, 'administrator', 'SURVEY_D'),
-(1831, 'administrator', 'SURVEY_QUESTION_C'),
-(1832, 'administrator', 'SURVEY_QUESTION_R'),
-(1833, 'administrator', 'SURVEY_QUESTION_U'),
-(1834, 'administrator', 'SURVEY_QUESTION_D'),
-(1835, 'administrator', 'SURVEY_QUESTION_FILLUP_C'),
-(1836, 'administrator', 'SURVEY_QUESTION_FILLUP_R'),
-(1837, 'administrator', 'SURVEY_QUESTION_FILLUP_U'),
-(1838, 'administrator', 'SURVEY_QUESTION_FILLUP_D'),
-(1839, 'administrator', 'SURVEY_QUESTION_TYPE_C'),
-(1840, 'administrator', 'SURVEY_QUESTION_TYPE_R'),
-(1841, 'administrator', 'SURVEY_QUESTION_TYPE_U'),
-(1842, 'administrator', 'SURVEY_QUESTION_TYPE_D'),
-(1843, 'administrator', 'TERM_C'),
-(1844, 'administrator', 'TERM_R'),
-(1845, 'administrator', 'TERM_U'),
-(1846, 'administrator', 'TERM_D'),
-(1847, 'administrator', 'USER_C'),
-(1848, 'administrator', 'USER_R'),
-(1849, 'administrator', 'USER_U'),
-(1850, 'administrator', 'USER_D'),
-(1851, 'administrator', 'VIDEO_C'),
-(1852, 'administrator', 'VIDEO_R'),
-(1853, 'administrator', 'VIDEO_U'),
-(1854, 'administrator', 'VIDEO_D'),
-(1855, 'administrator', 'VIDEO_COMMENT_C'),
-(1856, 'administrator', 'VIDEO_COMMENT_R'),
-(1857, 'administrator', 'VIDEO_COMMENT_U'),
-(1858, 'administrator', 'VIDEO_COMMENT_D'),
-(1859, 'administrator', 'YEAR_C'),
-(1860, 'administrator', 'YEAR_R'),
-(1861, 'administrator', 'YEAR_U'),
-(1862, 'administrator', 'YEAR_D'),
-(1863, 'student', 'CLUB_C'),
-(1864, 'student', 'CLUB_R'),
-(1865, 'student', 'CLUB_U'),
-(1866, 'student', 'CLUB_D'),
-(1867, 'student', 'DISCUSSION_C'),
-(1868, 'student', 'DISCUSSION_R'),
-(1869, 'student', 'DISCUSSION_U'),
-(1870, 'student', 'DISCUSSION_D'),
-(1871, 'student', 'DISCUSSION_COMMENT_C'),
-(1872, 'student', 'DISCUSSION_COMMENT_R'),
-(1873, 'student', 'DISCUSSION_COMMENT_U'),
-(1874, 'student', 'DISCUSSION_COMMENT_D'),
-(1875, 'student', 'JOB_R'),
-(1876, 'student', 'PROJECT_C'),
-(1877, 'student', 'PROJECT_R'),
-(1878, 'student', 'PROJECT_U'),
-(1879, 'student', 'PROJECT_D'),
-(1880, 'student', 'QUESTION_C'),
-(1881, 'student', 'QUESTION_R'),
-(1882, 'student', 'QUESTION_U'),
-(1883, 'student', 'QUESTION_D'),
-(1884, 'student', 'REGISTRATION_R'),
-(1885, 'student', 'RESULT_R'),
-(1886, 'student', 'USER_R'),
-(1887, 'student', 'VIDEO_C'),
-(1888, 'student', 'VIDEO_R'),
-(1889, 'student', 'VIDEO_U'),
-(1890, 'student', 'VIDEO_D');
+(3630, 'administrator', 'THESIS_C'),
+(3631, 'administrator', 'THESIS_R'),
+(3632, 'administrator', 'THESIS_U'),
+(3633, 'administrator', 'THESIS_D'),
+(3514, 'administrator', 'ASSET_C'),
+(3515, 'administrator', 'ASSET_R'),
+(3516, 'administrator', 'ASSET_U'),
+(3517, 'administrator', 'ASSET_D'),
+(3554, 'administrator', 'EMAIL_C'),
+(3555, 'administrator', 'EMAIL_R'),
+(3556, 'administrator', 'EMAIL_U'),
+(3557, 'administrator', 'EMAIL_D'),
+(2259, 'administrator', 'ATTENDANCE_C'),
+(2260, 'administrator', 'ATTENDANCE_R'),
+(2261, 'administrator', 'ATTENDANCE_U'),
+(2262, 'administrator', 'ATTENDANCE_D'),
+(2263, 'administrator', 'CLUB_C'),
+(2264, 'administrator', 'CLUB_R'),
+(2265, 'administrator', 'CLUB_U'),
+(2266, 'administrator', 'CLUB_D'),
+(2267, 'administrator', 'COURSE_C'),
+(2268, 'administrator', 'COURSE_R'),
+(2269, 'administrator', 'COURSE_U'),
+(2270, 'administrator', 'COURSE_D'),
+(2271, 'administrator', 'COURSE_SESSIONAL_TYPE_C'),
+(2272, 'administrator', 'COURSE_SESSIONAL_TYPE_R'),
+(2273, 'administrator', 'COURSE_SESSIONAL_TYPE_U'),
+(2274, 'administrator', 'COURSE_SESSIONAL_TYPE_D'),
+(2275, 'administrator', 'COURSE_TYPE_C'),
+(2276, 'administrator', 'COURSE_TYPE_R'),
+(2277, 'administrator', 'COURSE_TYPE_U'),
+(2278, 'administrator', 'COURSE_TYPE_D'),
+(2279, 'administrator', 'DISCIPLINE_C'),
+(2280, 'administrator', 'DISCIPLINE_R'),
+(2281, 'administrator', 'DISCIPLINE_U'),
+(2282, 'administrator', 'DISCIPLINE_D'),
+(2283, 'administrator', 'DISCUSSION_C'),
+(2284, 'administrator', 'DISCUSSION_R'),
+(2285, 'administrator', 'DISCUSSION_U'),
+(2286, 'administrator', 'DISCUSSION_D'),
+(2287, 'administrator', 'DISCUSSION_CAT_C'),
+(2288, 'administrator', 'DISCUSSION_CAT_R'),
+(2289, 'administrator', 'DISCUSSION_CAT_U'),
+(2290, 'administrator', 'DISCUSSION_CAT_D'),
+(2291, 'administrator', 'DISCUSSION_COMMENT_C'),
+(2292, 'administrator', 'DISCUSSION_COMMENT_R'),
+(2293, 'administrator', 'DISCUSSION_COMMENT_U'),
+(2294, 'administrator', 'DISCUSSION_COMMENT_D'),
+(2295, 'administrator', 'FILE_C'),
+(2296, 'administrator', 'FILE_R'),
+(2297, 'administrator', 'FILE_U'),
+(2298, 'administrator', 'FILE_D'),
+(2299, 'administrator', 'GRADE_SETUP_C'),
+(2300, 'administrator', 'GRADE_SETUP_R'),
+(2301, 'administrator', 'GRADE_SETUP_U'),
+(2302, 'administrator', 'GRADE_SETUP_D'),
+(2303, 'administrator', 'JOB_C'),
+(2304, 'administrator', 'JOB_R'),
+(2305, 'administrator', 'JOB_U'),
+(2306, 'administrator', 'JOB_D'),
+(2307, 'administrator', 'MARKS_SETUP_C'),
+(2308, 'administrator', 'MARKS_SETUP_R'),
+(2309, 'administrator', 'MARKS_SETUP_U'),
+(2310, 'administrator', 'MARKS_SETUP_D'),
+(2311, 'administrator', 'PERMISSION_C'),
+(2312, 'administrator', 'PERMISSION_R'),
+(2313, 'administrator', 'PERMISSION_U'),
+(2314, 'administrator', 'PERMISSION_D'),
+(2315, 'administrator', 'POSITION_C'),
+(2316, 'administrator', 'POSITION_R'),
+(2317, 'administrator', 'POSITION_U'),
+(2318, 'administrator', 'POSITION_D'),
+(2319, 'administrator', 'PROJECT_C'),
+(2320, 'administrator', 'PROJECT_R'),
+(2321, 'administrator', 'PROJECT_U'),
+(2322, 'administrator', 'PROJECT_D'),
+(2323, 'administrator', 'QUESTION_C'),
+(2324, 'administrator', 'QUESTION_R'),
+(2325, 'administrator', 'QUESTION_U'),
+(2326, 'administrator', 'QUESTION_D'),
+(2327, 'administrator', 'REGISTRATION_C'),
+(2328, 'administrator', 'REGISTRATION_R'),
+(2329, 'administrator', 'REGISTRATION_U'),
+(2330, 'administrator', 'REGISTRATION_D'),
+(2331, 'administrator', 'RESULT_C'),
+(2332, 'administrator', 'RESULT_R'),
+(2333, 'administrator', 'RESULT_U'),
+(2334, 'administrator', 'RESULT_D'),
+(2335, 'administrator', 'ROLE_C'),
+(2336, 'administrator', 'ROLE_R'),
+(2337, 'administrator', 'ROLE_U'),
+(2338, 'administrator', 'ROLE_D'),
+(2339, 'administrator', 'SCHOOL_C'),
+(2340, 'administrator', 'SCHOOL_R'),
+(2341, 'administrator', 'SCHOOL_U'),
+(2342, 'administrator', 'SCHOOL_D'),
+(2343, 'administrator', 'SESSION_C'),
+(2344, 'administrator', 'SESSION_R'),
+(2345, 'administrator', 'SESSION_U'),
+(2346, 'administrator', 'SESSION_D'),
+(2347, 'administrator', 'SURVEY_C'),
+(2348, 'administrator', 'SURVEY_R'),
+(2349, 'administrator', 'SURVEY_U'),
+(2350, 'administrator', 'SURVEY_D'),
+(2351, 'administrator', 'SURVEY_QUESTION_C'),
+(2352, 'administrator', 'SURVEY_QUESTION_R'),
+(2353, 'administrator', 'SURVEY_QUESTION_U'),
+(2354, 'administrator', 'SURVEY_QUESTION_D'),
+(2355, 'administrator', 'SURVEY_QUESTION_FILLUP_C'),
+(2356, 'administrator', 'SURVEY_QUESTION_FILLUP_R'),
+(2357, 'administrator', 'SURVEY_QUESTION_FILLUP_U'),
+(2358, 'administrator', 'SURVEY_QUESTION_FILLUP_D'),
+(2359, 'administrator', 'SURVEY_QUESTION_TYPE_C'),
+(2360, 'administrator', 'SURVEY_QUESTION_TYPE_R'),
+(2361, 'administrator', 'SURVEY_QUESTION_TYPE_U'),
+(2362, 'administrator', 'SURVEY_QUESTION_TYPE_D'),
+(2363, 'administrator', 'TASK_C'),
+(2364, 'administrator', 'TASK_R'),
+(2365, 'administrator', 'TASK_U'),
+(2366, 'administrator', 'TASK_D'),
+(2367, 'administrator', 'TASK_CATEGORY_C'),
+(2368, 'administrator', 'TASK_CATEGORY_R'),
+(2369, 'administrator', 'TASK_CATEGORY_U'),
+(2370, 'administrator', 'TASK_CATEGORY_D'),
+(2371, 'administrator', 'TERM_C'),
+(2372, 'administrator', 'TERM_R'),
+(2373, 'administrator', 'TERM_U'),
+(2374, 'administrator', 'TERM_D'),
+(2375, 'administrator', 'USER_C'),
+(2376, 'administrator', 'USER_R'),
+(2377, 'administrator', 'USER_U'),
+(2378, 'administrator', 'USER_D'),
+(2379, 'administrator', 'VIDEO_C'),
+(2380, 'administrator', 'VIDEO_R'),
+(2381, 'administrator', 'VIDEO_U'),
+(2382, 'administrator', 'VIDEO_D'),
+(2383, 'administrator', 'VIDEO_COMMENT_C'),
+(2384, 'administrator', 'VIDEO_COMMENT_R'),
+(2385, 'administrator', 'VIDEO_COMMENT_U'),
+(2386, 'administrator', 'VIDEO_COMMENT_D'),
+(2387, 'administrator', 'YEAR_C'),
+(2388, 'administrator', 'YEAR_R'),
+(2389, 'administrator', 'YEAR_U'),
+(2390, 'administrator', 'YEAR_D'),
+(3676, 'student', 'ASSET_R'),
+(3696, 'student', 'THESIS_R'),
+(2391, 'student', 'CLUB_C'),
+(2392, 'student', 'CLUB_R'),
+(2393, 'student', 'CLUB_U'),
+(2394, 'student', 'CLUB_D'),
+(2395, 'student', 'DISCUSSION_C'),
+(2396, 'student', 'DISCUSSION_R'),
+(2397, 'student', 'DISCUSSION_U'),
+(2398, 'student', 'DISCUSSION_D'),
+(2399, 'student', 'DISCUSSION_COMMENT_C'),
+(2400, 'student', 'DISCUSSION_COMMENT_R'),
+(2401, 'student', 'DISCUSSION_COMMENT_U'),
+(2402, 'student', 'DISCUSSION_COMMENT_D'),
+(2403, 'student', 'JOB_R'),
+(2404, 'student', 'PROJECT_C'),
+(2405, 'student', 'PROJECT_R'),
+(2406, 'student', 'PROJECT_U'),
+(2407, 'student', 'PROJECT_D'),
+(2408, 'student', 'QUESTION_C'),
+(2409, 'student', 'QUESTION_R'),
+(2410, 'student', 'QUESTION_U'),
+(2411, 'student', 'QUESTION_D'),
+(2412, 'student', 'REGISTRATION_R'),
+(2413, 'student', 'RESULT_R'),
+(2414, 'student', 'TASK_C'),
+(2415, 'student', 'TASK_R'),
+(2416, 'student', 'TASK_U'),
+(2417, 'student', 'TASK_D'),
+(2418, 'student', 'USER_R'),
+(2419, 'student', 'VIDEO_C'),
+(2420, 'student', 'VIDEO_R'),
+(2421, 'student', 'VIDEO_U'),
+(2422, 'student', 'VIDEO_D');
 
 -- --------------------------------------------------------
 
@@ -816,7 +1004,8 @@ INSERT INTO `ums_role_permission` (`Row`, `RoleID`, `PermissionID`) VALUES
 -- Table structure for table `ums_school`
 --
 
-CREATE TABLE `ums_school` (
+DROP TABLE IF EXISTS `ums_school`;
+CREATE TABLE IF NOT EXISTS `ums_school` (
   `ID` varchar(40) NOT NULL,
   `Name` varchar(50) NOT NULL,
   `DeanID` varchar(40) NOT NULL
@@ -839,7 +1028,8 @@ INSERT INTO `ums_school` (`ID`, `Name`, `DeanID`) VALUES
 -- Table structure for table `ums_user`
 --
 
-CREATE TABLE `ums_user` (
+DROP TABLE IF EXISTS `ums_user`;
+CREATE TABLE IF NOT EXISTS `ums_user` (
   `ID` varchar(40) NOT NULL,
   `UniversityID` varchar(20) NOT NULL,
   `Email` varchar(50) NOT NULL,
@@ -851,7 +1041,10 @@ CREATE TABLE `ums_user` (
   `Status` varchar(20) DEFAULT NULL,
   `IsLogged` varchar(10) DEFAULT NULL,
   `IsArchived` varchar(10) DEFAULT NULL,
-  `IsDeleted` varchar(10) DEFAULT NULL
+  `IsDeleted` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `Email` (`Email`),
+  UNIQUE KEY `UniversityID` (`UniversityID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -859,10 +1052,12 @@ CREATE TABLE `ums_user` (
 --
 
 INSERT INTO `ums_user` (`ID`, `UniversityID`, `Email`, `Password`, `FirstName`, `MiddleName`, `LastName`, `DisciplineID`, `Status`, `IsLogged`, `IsArchived`, `IsDeleted`) VALUES
-('aysha@gmail.com', '020208', 'aysha@gmail.com', '$2y$10$pJX46d.T.jkANrRShAm0qOMYkYJ/YbNfu09BFmcmMiYGKfuuEcWgO', 'Aysha', 'mrs', 'Akther', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL),
-('kashif@gmail.com', '020202', 'kashif@gmail.com', '$2y$10$pM7S85LE300vkDhYnFIz0.WKfpSPJLMNzTS4y1wLCH0TeR0qno27q', 'Kashif', 'Nizam', 'Khan', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL),
+('avi@gmail.com', '160211', 'avi@gmail.com', '$2y$10$7KR9kj/ePlAQjVPTdSIvCOxnqSTaWDxJAcNEHQDbzuF1Pxv.wDD/G', 'avi', 'dev', 'raha', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL),
+('lotif@gmail.com', '160212', 'lotif@gmail.com', '$2y$10$MBB/ST/yOmtXog3FSEzneevL07erAGyxWK/pX/KT7QVSysSVqRaHq', 'Abdul', 'Lotif', 'Limon', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL),
 ('mkazi078@uottawa.ca', '020229', 'mkazi078@uottawa.ca', '$2y$10$l0gFzILMq03DcwcBGxIdgunnOd9G5kF8J8ucZZvCKkt8mNGlI74/W', 'Kazi', 'Masudul', 'Alam', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL),
-('zahid@gmail.com', '020203', 'zahid@gmail.com', '$2y$10$nLZhZRneURR.v2AFqWw9KOe6/J60pCV/ioBnJnruw5H/Xf3x0lFy6', 'Zahidul', '', 'Islam', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL);
+('rokeya@gmail.com', '160210', 'rokeya@gmail.com', '$2y$10$yHHxXaXZX1Qm34Lz.r/BG..NB3Ctw7lkdf/g9geg0I0RzUnJsFDrm', 'Rokeya', '', 'sadaf', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL),
+('ryhan1630@cseku.ac.bd', '160230', 'ryhan1630@cseku.ac.bd', '$2y$10$4VNGxyf8mttFjuy2E07VkuZ3E4N4m09xugiq1hofd2vVty0ZXE9L.', 'Ryhan', 'Ahmed', 'Tamim', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL),
+('saimumislam96@gmail.com', '160227', 'saimumislam96@gmail.com', '$2y$10$BjexPvEbArRS7lcxvjHQ0.xegDY83Twv6REeuZ2B11IQ6Xr5qaV5G', 'saimum', '', 'islam', '{FFDB1CB8-AF34-4381-8971-9784DCB516C5}', 'approved', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -870,14 +1065,16 @@ INSERT INTO `ums_user` (`ID`, `UniversityID`, `Email`, `Password`, `FirstName`, 
 -- Table structure for table `ums_user_details`
 --
 
-CREATE TABLE `ums_user_details` (
+DROP TABLE IF EXISTS `ums_user_details`;
+CREATE TABLE IF NOT EXISTS `ums_user_details` (
   `ID` varchar(40) NOT NULL,
   `FatherName` varchar(100) DEFAULT NULL,
   `MotherName` varchar(100) DEFAULT NULL,
   `PermanentAddress` varchar(200) DEFAULT NULL,
   `HomePhone` varchar(20) DEFAULT NULL,
   `CurrentAddress` varchar(200) DEFAULT NULL,
-  `MobilePhone` varchar(20) DEFAULT NULL
+  `MobilePhone` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -885,10 +1082,12 @@ CREATE TABLE `ums_user_details` (
 --
 
 INSERT INTO `ums_user_details` (`ID`, `FatherName`, `MotherName`, `PermanentAddress`, `HomePhone`, `CurrentAddress`, `MobilePhone`) VALUES
-('aysha@gmail.com', 'f', 'm', 'Dr. Kazi Masudul Alam', '12313123123', 'Computer Science and Engineering Discipline, Khulna University', '45 '),
-('kashif@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL),
+('avi@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL),
+('lotif@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL),
 ('mkazi078@uottawa.ca', 'Kazi Shahidul Alam', 'Hosneara Jahan', '49/2, Rokon Uddin Sarak, East Baniakhamar, Khulna', '0417223344', 'Same', '01711149360 '),
-('zahid@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL);
+('rokeya@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL),
+('ryhan1630@cseku.ac.bd', NULL, NULL, NULL, NULL, NULL, NULL),
+('saimumislam96@gmail.com', 'Rafiqul Islam', 'Shahida khatun', 'khulna', '01763706245', 'ku', '01763706245 ');
 
 -- --------------------------------------------------------
 
@@ -896,7 +1095,8 @@ INSERT INTO `ums_user_details` (`ID`, `FatherName`, `MotherName`, `PermanentAddr
 -- Table structure for table `ums_user_discipline`
 --
 
-CREATE TABLE `ums_user_discipline` (
+DROP TABLE IF EXISTS `ums_user_discipline`;
+CREATE TABLE IF NOT EXISTS `ums_user_discipline` (
   `UserID` varchar(40) NOT NULL,
   `DisciplineID` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -907,11 +1107,13 @@ CREATE TABLE `ums_user_discipline` (
 -- Table structure for table `ums_user_position`
 --
 
-CREATE TABLE `ums_user_position` (
-  `ID` int(11) NOT NULL,
+DROP TABLE IF EXISTS `ums_user_position`;
+CREATE TABLE IF NOT EXISTS `ums_user_position` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `UserID` varchar(40) NOT NULL,
-  `PositionID` varchar(40) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `PositionID` varchar(40) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ums_user_position`
@@ -919,7 +1121,7 @@ CREATE TABLE `ums_user_position` (
 
 INSERT INTO `ums_user_position` (`ID`, `UserID`, `PositionID`) VALUES
 (50, 'aysha@gmail.com', '{7CDA1F32-A2F8-4469-B5A8-C2038FCE1F9A}'),
-(51, 'mkazi078@uottawa.ca', '{C27B6BCF-FB83-4F3D-85CA-B7870D8B12D0}');
+(52, 'mkazi078@uottawa.ca', '{C27B6BCF-FB83-4F3D-85CA-B7870D8B12D0}');
 
 -- --------------------------------------------------------
 
@@ -927,11 +1129,13 @@ INSERT INTO `ums_user_position` (`ID`, `UserID`, `PositionID`) VALUES
 -- Table structure for table `ums_user_role`
 --
 
-CREATE TABLE `ums_user_role` (
-  `ID` int(11) NOT NULL,
+DROP TABLE IF EXISTS `ums_user_role`;
+CREATE TABLE IF NOT EXISTS `ums_user_role` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `UserID` varchar(40) NOT NULL,
-  `RoleID` varchar(40) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `RoleID` varchar(40) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ums_user_role`
@@ -955,186 +1159,239 @@ INSERT INTO `ums_user_role` (`ID`, `UserID`, `RoleID`) VALUES
 (136, 'middle@test.com', 'student'),
 (137, 'middle@test.com', 'student'),
 (138, 'middle@test.com', 'student'),
-(142, 'zahid@gmail.com', 'student'),
 (144, 'middle1@test.com', 'student'),
-(145, 'kashif@gmail.com', 'student'),
-(164, 'aysha@gmail.com', 'administrator'),
-(165, 'mkazi078@uottawa.ca', 'administrator');
+(168, 'saimumislam96@gmail.com', 'administrator'),
+(170, 'mkazi078@uottawa.ca', 'administrator'),
+(171, 'mkazi078@uottawa.ca', 'teacher'),
+(172, 'avi@gmail.com', 'teacher'),
+(173, 'lotif@gmail.com', 'student'),
+(174, 'rokeya@gmail.com', 'student'),
+(175, 'ryhan1630@cseku.ac.bd', 'administrator');
 
---
--- Indexes for dumped tables
---
 
---
--- Indexes for table `jms_job`
---
-ALTER TABLE `jms_job`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_course`
---
-ALTER TABLE `reg_course`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_course_sessional_type`
---
-ALTER TABLE `reg_course_sessional_type`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_course_student_registration`
---
-ALTER TABLE `reg_course_student_registration`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_course_teacher`
---
-ALTER TABLE `reg_course_teacher`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_course_teacher_registration`
---
-ALTER TABLE `reg_course_teacher_registration`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_course_type`
---
-ALTER TABLE `reg_course_type`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_registration_session`
---
-ALTER TABLE `reg_registration_session`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_term`
---
-ALTER TABLE `reg_term`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `reg_year`
---
-ALTER TABLE `reg_year`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `rms_course_marks_result`
---
-ALTER TABLE `rms_course_marks_result`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `rms_course_marks_result_publish`
---
-ALTER TABLE `rms_course_marks_result_publish`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `rms_course_marks_tests`
---
-ALTER TABLE `rms_course_marks_tests`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `rms_grade_setup`
---
-ALTER TABLE `rms_grade_setup`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `rms_marks_setup`
---
-ALTER TABLE `rms_marks_setup`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `ums_discipline`
---
-ALTER TABLE `ums_discipline`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `ums_permission`
---
-ALTER TABLE `ums_permission`
-  ADD PRIMARY KEY (`TableID`);
-
---
--- Indexes for table `ums_position`
---
-ALTER TABLE `ums_position`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `ums_role`
---
-ALTER TABLE `ums_role`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `ums_role_permission`
---
-ALTER TABLE `ums_role_permission`
-  ADD PRIMARY KEY (`Row`);
-
---
--- Indexes for table `ums_user`
---
-ALTER TABLE `ums_user`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `Email` (`Email`),
-  ADD UNIQUE KEY `UniversityID` (`UniversityID`);
-
---
--- Indexes for table `ums_user_details`
---
-ALTER TABLE `ums_user_details`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `ums_user_position`
---
-ALTER TABLE `ums_user_position`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `ums_user_role`
---
-ALTER TABLE `ums_user_role`
-  ADD PRIMARY KEY (`ID`);
-
---
--- AUTO_INCREMENT for dumped tables
+-- Table structure for table `ams_asset`
 --
 
+DROP TABLE IF EXISTS `ams_asset`;
+CREATE TABLE IF NOT EXISTS `ams_asset` (
+  `id` varchar(40) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `serialNo` varchar(256) NOT NULL,
+  `modelNo` varchar(256) NOT NULL,
+  `brand` varchar(256) NOT NULL,
+  `purchaseDate` date NOT NULL,
+  `status` varchar(256) NOT NULL,
+  `configuration` text NOT NULL,
+  `stuff_id` varchar(40) NOT NULL,
+  `purchasedFrom` varchar(256) NOT NULL,
+  `cost` double NOT NULL,
+  `warrantyLimit` date NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `serialNo` (`serialNo`),
+  KEY `type_id` (`type_id`),
+  KEY `user_id` (`stuff_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
 --
--- AUTO_INCREMENT for table `ums_permission`
+-- Table structure for table `ams_asset_type`
 --
-ALTER TABLE `ums_permission`
-  MODIFY `TableID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=689;
+
+DROP TABLE IF EXISTS `ams_asset_type`;
+CREATE TABLE IF NOT EXISTS `ams_asset_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
 --
--- AUTO_INCREMENT for table `ums_role_permission`
+-- Table structure for table `ams_repair`
 --
-ALTER TABLE `ums_role_permission`
-  MODIFY `Row` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1891;
+
+DROP TABLE IF EXISTS `ams_repair`;
+CREATE TABLE IF NOT EXISTS `ams_repair` (
+  `id` varchar(40) NOT NULL,
+  `asset_id` varchar(40) NOT NULL,
+  `problem` text NOT NULL,
+  `sendingDate` date NOT NULL,
+  `receivingDate` date DEFAULT NULL,
+  `status` varchar(256) DEFAULT NULL,
+  `sent_by` varchar(40) NOT NULL,
+  `received_by` varchar(40) DEFAULT NULL,
+  `repaired_from` varchar(256) NOT NULL,
+  `cost` double DEFAULT NULL,
+  `onWarranty` tinyint(1) NOT NULL,
+  `isReceived` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `sent_by` (`sent_by`),
+  KEY `received_by` (`received_by`),
+  KEY `asset_id` (`asset_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 --
--- AUTO_INCREMENT for table `ums_user_position`
+-- Table structure for table `ams_user_asset`
 --
-ALTER TABLE `ums_user_position`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+
+DROP TABLE IF EXISTS `ams_user_asset`;
+CREATE TABLE IF NOT EXISTS `ams_user_asset` (
+  `id` varchar(40) NOT NULL,
+  `user_id` varchar(40) NOT NULL,
+  `asset_id` varchar(40) NOT NULL,
+  `lendingDate` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `asset_id` (`asset_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 --
--- AUTO_INCREMENT for table `ums_user_role`
+-- Table structure for table `ems_email`
 --
-ALTER TABLE `ums_user_role`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166;
+
+DROP TABLE IF EXISTS `ems_email`;
+CREATE TABLE IF NOT EXISTS `ems_email` (
+  `id` varchar(40) NOT NULL,
+  `firstName` varchar(256) NOT NULL,
+  `lastName` varchar(256) NOT NULL,
+  `email` varchar(256) NOT NULL,
+  `contact` varchar(256) NOT NULL,
+  `contactEmail` varchar(256) NOT NULL,
+  `address` text NOT NULL,
+  `created_at` date NOT NULL,
+  `expire_at` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+--
+-- Table structure for table `pms_link_project`
+--
+
+DROP TABLE IF EXISTS `pms_link_project`;
+CREATE TABLE IF NOT EXISTS `pms_link_project` (
+  `id` varchar(40) NOT NULL,
+  `link` text NOT NULL,
+  `project_id` varchar(40) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `project_id` (`project_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pms_project`
+--
+
+DROP TABLE IF EXISTS `pms_project`;
+CREATE TABLE IF NOT EXISTS `pms_project` (
+  `id` varchar(40) NOT NULL,
+  `thumbnail` text NOT NULL,
+  `title` varchar(256) NOT NULL,
+  `description` text NOT NULL,
+  `language` varchar(256) NOT NULL,
+  `year_id` varchar(40) NOT NULL,
+  `term_id` varchar(40) NOT NULL,
+  `course_id` varchar(40) NOT NULL,
+  `discipline_id` varchar(40) NOT NULL,
+  `teacher_id` varchar(40) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `year_id` (`year_id`),
+  KEY `term_id` (`term_id`),
+  KEY `course_id` (`course_id`),
+  KEY `discipline_id` (`discipline_id`),
+  KEY `teacher_id` (`teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pms_student_project`
+--
+
+DROP TABLE IF EXISTS `pms_student_project`;
+CREATE TABLE IF NOT EXISTS `pms_student_project` (
+  `id` varchar(40) NOT NULL,
+  `student_id` varchar(40) NOT NULL,
+  `project_id` varchar(40) NOT NULL,
+  `contribution` int(3) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student_id` (`student_id`),
+  KEY `project_id` (`project_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tms_link_thesis`
+--
+
+DROP TABLE IF EXISTS `tms_link_thesis`;
+CREATE TABLE IF NOT EXISTS `tms_link_thesis` (
+  `id` varchar(40) NOT NULL,
+  `link` text NOT NULL,
+  `thesis_id` varchar(40) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `thesis_id` (`thesis_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tms_student_thesis`
+--
+
+DROP TABLE IF EXISTS `tms_student_thesis`;
+CREATE TABLE IF NOT EXISTS `tms_student_thesis` (
+  `id` varchar(40) NOT NULL,
+  `student_id` varchar(40) NOT NULL,
+  `thesis_id` varchar(40) NOT NULL,
+  `contribution` int(3) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student_id` (`student_id`),
+  KEY `thesis_id` (`thesis_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tms_supervisor_thesis`
+--
+
+DROP TABLE IF EXISTS `tms_supervisor_thesis`;
+CREATE TABLE IF NOT EXISTS `tms_supervisor_thesis` (
+  `id` varchar(40) NOT NULL,
+  `supervisor_id` varchar(40) NOT NULL,
+  `thesis_id` varchar(40) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `supervisor_id` (`supervisor_id`),
+  KEY `thesis_id` (`thesis_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tms_thesis`
+--
+
+DROP TABLE IF EXISTS `tms_thesis`;
+CREATE TABLE IF NOT EXISTS `tms_thesis` (
+  `id` varchar(40) NOT NULL,
+  `thumbnail` text NOT NULL,
+  `title` varchar(256) NOT NULL,
+  `pdf_link` text,
+  `description` text NOT NULL,
+  `year_id` varchar(40) NOT NULL,
+  `term_id` varchar(40) NOT NULL,
+  `course_id` varchar(40) NOT NULL,
+  `discipline_id` varchar(40) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `year_id` (`year_id`),
+  KEY `term_id` (`term_id`),
+  KEY `course_id` (`course_id`),
+  KEY `discipline_id` (`discipline_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `tms_link_thesis`
+  ADD CONSTRAINT `tms_link_thesis_ibfk_1` FOREIGN KEY (`thesis_id`) REFERENCES `tms_thesis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -76,6 +76,25 @@ Class CourseDAO{
 		    
 			}
 			$this->_Course->setDisciplineID($value);
+
+
+			$prequisiteid = $row['PrequisiteID'];
+		    $this->_DB->doQuery("SELECT * FROM reg_course WHERE ID='".$prequisiteid."'");
+
+			$newrows = $this->_DB->getAllRows();
+
+			for($j = 0; $j < sizeof($newrows); $j++) {
+				$newrow = $newrows[$j];
+			
+		    	$value = $newrow['Title'] ;
+		    
+			}
+			if(sizeof($newrows)!=0)
+			   $this->_Course->setPrequisite($value);
+			else
+			   $this->_Course->setPrequisite("No Priquisite");
+
+
 			
 		    $CourseList[]=$this->_Course;
 
@@ -83,7 +102,6 @@ Class CourseDAO{
 		}
 
 		//todo: LOG util with level of log
-
 
 		$Result = new Result();
 		$Result->setIsSuccess(1);
@@ -93,11 +111,12 @@ Class CourseDAO{
 	}
 
 	// get all the Courses from the database based on the search query
-	public function searchAllCourses($CourseNo){
+	public function searchAllCourses($CourseNo,$userDiscipline){
 
 		$CourseList = array();
 
-		$this->_DB->doQuery("SELECT * FROM reg_course where CourseNo LIKE '$CourseNo'");
+		$SQL="SELECT * FROM reg_course where CourseNo LIKE '$CourseNo' and DisciplineID='$userDiscipline'";
+		$this->_DB->doQuery($SQL);
 
 		if($this->_DB->getNumRows()>=1)
 		{
@@ -110,7 +129,7 @@ Class CourseDAO{
 			$this->_Course->setID($row['ID']);
 		    $this->_Course->setCourseNo($row['CourseNo']);
 		    $this->_Course->setTitle($row['Title']);
-		    $this->_Course->setCredit($row['Credit']);		    
+		    $this->_Course->setCredit($row['Credit']);
 			$this->_Course->setISdeleted($row['IsDeleted']);
 			//echo '<br> DAO = '.$this->_Course->getISdeleted()." -> ". $row['IsDeleted'];
 		    $coursetypeid = $row['CourseTypeID'];
@@ -138,6 +157,22 @@ Class CourseDAO{
 		    
 			}
 			$this->_Course->setDisciplineID($value);
+
+			$prequisiteid = $row['PrequisiteID'];
+		    $this->_DB->doQuery("SELECT * FROM reg_course WHERE ID='".$prequisiteid."'");
+
+			$newrows = $this->_DB->getAllRows();
+
+			for($j = 0; $j < sizeof($newrows); $j++) {
+				$newrow = $newrows[$j];
+			
+		    	$value = $newrow['Title'] ;
+		    
+			}
+			if(sizeof($newrows)!=0)
+			   $this->_Course->setPrequisite($value);
+			else
+			   $this->_Course->setPrequisite("No Priquisite");
 			
 		    $CourseList[]=$this->_Course;
 
@@ -173,7 +208,7 @@ Class CourseDAO{
 		$StudentID=$Student['ID']; //retrieving student id
 
 
-		$SQL = 	"SELECT * FROM reg_course_student_registration where StudentID='$StudentID' AND SessionID='$SessionID' AND YearID='$YearID' AND TermID='$TermID'";
+		$SQL = 	"SELECT * FROM reg_course_student_registration where StudentID='$StudentID' AND SessionID='$SessionID' AND YearID='$YearID' AND TermID='$TermID'" ;
 
 		$this->_DB->doQuery($SQL);
 
@@ -213,7 +248,8 @@ Class CourseDAO{
 			$User->setID($StudentID);
 			$this->_CourseStudentRegistration->setStudent($User);
 
-			$this->_CourseStudentRegistration->setStatus($row['Status']);			
+			$this->_CourseStudentRegistration->setStatus($row['Status']);
+			$this->_CourseStudentRegistration->setPreRetake($row['PreRetake']);		
 		    
 		    $CourseStudentRegistrationList[]= $this->_CourseStudentRegistration;
   
@@ -294,7 +330,10 @@ Class CourseDAO{
 			$User->setID($StudentID);
 			$this->_CourseStudentRegistration->setStudent($User);
 
-			$this->_CourseStudentRegistration->setStatus($row['Status']);			
+			$this->_CourseStudentRegistration->setIsRetake($row['IsRetake']);			
+			$this->_CourseStudentRegistration->setPreRetake($row['PreRetake']);
+			$this->_CourseStudentRegistration->setStatus($row['Status']);		
+			
 		    
 		    $CourseStudentRegistrationList[]= $this->_CourseStudentRegistration;
   
@@ -316,70 +355,58 @@ Class CourseDAO{
 
 
 	// get all the students that have registered to a certain course based on session, year, term
-	public function searchAllStudents($CourseNo,$SessionID,$YearID,$TermID){
+	public function searchAllStudents($CourseID,$SessionID,$YearID,$TermID){
 
 		$CourseStudentRegistrationList = array();
 
-		$this->_DB->doQuery("SELECT * FROM reg_course where CourseNo='$CourseNo' LIMIT 1");
-
-
-		if($this->_DB->getNumRows()>=1) // a course is found that match with the give courseno
-		{
-
-			$Course = $this->_DB->getTopRow(); //getting the course details
-			
-			$CourseID=$Course['ID']; //retrieving course id
-
-			$SQL = "SELECT r.StudentID FROM reg_course_student_registration r, ums_user u where 
+		$SQL = "SELECT r.StudentID FROM reg_course_student_registration r, ums_user u where 
 			r.StudentID=u.ID AND
 			r.CourseID='$CourseID' AND r.SessionID='$SessionID' AND 
-			r.YearID='$YearID' AND r.TermID='$TermID' AND 
-			r.Status='registered' order by (u.UniversityID * 1) ASC";
+			r.YearID='$YearID' AND r.TermID='$TermID' order by (u.UniversityID * 1) ASC";
 
-			$this->_DB->doQuery($SQL);
+		$this->_DB->doQuery($SQL);
 
-			$rows = $this->_DB->getAllRows();
-
-			for($i = 0; $i < sizeof($rows); $i++) {
-				$row = $rows[$i];
-				
-				$this->_CourseStudentRegistration = new CourseStudentRegistration();
-				
-			    
-				$User = new User();
-				$User->setID($row['StudentID']);
-				$Result_Student = $this->_UserDAO->readUser($User)->getResultObject();
-				$this->_CourseStudentRegistration->setStudent($Result_Student);
+		$rows = $this->_DB->getAllRows();
 
 
-				/*$Session = new RegistrationSession();
-				$Session->setID($row['SessionID']);
-				$Result_Session = $this->_RegistrationSessionDAO->
+		if(sizeof($rows)>0)
+		{
+		for($i = 0; $i < sizeof($rows); $i++) {
+		$row = $rows[$i];
+
+		$this->_CourseStudentRegistration = new CourseStudentRegistration();
+
+		$User = new User();
+		$User->setID($row['StudentID']);
+		$Result_Student = $this->_UserDAO->readUser($User)->getResultObject();
+		$this->_CourseStudentRegistration->setStudent($Result_Student);
+
+
+		/*$Session = new RegistrationSession();
+		$Session->setID($row['SessionID']);
+		$Result_Session = $this->_RegistrationSessionDAO->
 									readRegistrationSession($Session)->getResultObject();
-			    $this->_CourseStudentRegistration->setSessionID($Result_Session->getName());
+		$this->_CourseStudentRegistration->setSessionID($Result_Session->getName());
 
-			    $Year = new Year();
-			    $Year->setID($row['YearID']);
-				$Result_year = $this->_YearDAO->readYear($Year)->getResultObject();
-			    $this->_CourseStudentRegistration->setYearID($Result_year->getName());
+	    $Year = new Year();
+		$Year->setID($row['YearID']);
+		$Result_year = $this->_YearDAO->readYear($Year)->getResultObject();
+		$this->_CourseStudentRegistration->setYearID($Result_year->getName());
 
 			    
-			    $Term = new Term();
-			    $Term->setID($row['TermID']);
-				$Result_term = $this->_TermDAO->readTerm($Term)->getResultObject();
-			    $this->_CourseStudentRegistration->setTermID($Result_term->getName());
-			    */
-			    
-			    $CourseStudentRegistrationList[]=$this->_CourseStudentRegistration;
-	  
-			}
-
+		$Term = new Term();
+		$Term->setID($row['TermID']);
+		$Result_term = $this->_TermDAO->readTerm($Term)->getResultObject();
+		$this->_CourseStudentRegistration->setTermID($Result_term->getName());
+		*/
+		$CourseStudentRegistrationList[]=$this->_CourseStudentRegistration;
+		}
 		$Result = new Result();
 		$Result->setIsSuccess(1);
 		$Result->setResultObject($CourseStudentRegistrationList);
-
-		}else{
-
+	}
+		else
+		{
 		$Result = new Result();
 		$Result->setIsSuccess(0);
 		$Result->setResultObject("No Students Registered!");
@@ -399,6 +426,7 @@ Class CourseDAO{
 		$Credit=$Course->getCredit();
 		$CourseTypeID=$Course->getCourseTypeID();
 		$DisciplineID = $Course->getDisciplineID();
+		$PrequisiteID = $Course->getPrequisite();
 		$isdlted = $Course->getISdeleted();
 		$isdeletednmbr;
 		if($isdlted == "Delete")
@@ -407,7 +435,7 @@ Class CourseDAO{
 			$isdeletednmbr=0;
 
 
-		$SQL = "INSERT INTO reg_course(ID, CourseNo, Title, Credit, CourseTypeID, DisciplineID, IsDeleted) VALUES ('$ID','$CourseNo','$Title','$Credit','$CourseTypeID','$DisciplineID','$isdeletednmbr')";
+		$SQL = "INSERT INTO reg_course(ID, CourseNo, Title, Credit, CourseTypeID, DisciplineID,PrequisiteID,PrequisiteID,IsDeleted) VALUES ('$ID','$CourseNo','$Title','$Credit','$CourseTypeID','$DisciplineID','$PrequisiteID','$isdeletednmbr')";
 		
 
 
@@ -440,6 +468,7 @@ Class CourseDAO{
 		    $this->_Course->setCredit($row['Credit']);
 		    $this->_Course->setCourseTypeID($row['CourseTypeID']);
 		    $this->_Course->setDisciplineID($row['DisciplineID']);
+		    $this->_Course->setPrequisite($row['PrequisiteID']);
 		    $this->_Course->setISdeleted($row['IsDeleted']);
 			
 
@@ -471,6 +500,7 @@ Class CourseDAO{
 		    $this->_Course->setCredit($row['Credit']);
 		    $this->_Course->setCourseTypeID($row['CourseTypeID']);
 		    $this->_Course->setDisciplineID($row['DisciplineID']);
+		    $this->_Course->setPrequisite($row['PrequisiteID']);
 		    $this->_Course->setISdeleted($row['IsDeleted']);
 			
 
@@ -491,6 +521,7 @@ Class CourseDAO{
 		Credit='".$Course->getCredit()."',
 		CourseTypeID='".$Course->getCourseTypeID()."',
 		DisciplineID='".$Course->getDisciplineID()." ',
+		PrequisiteID='".$Course->getPrequisite()." ',
 		IsDeleted='".$Course->getISdeleted()." '
 		WHERE ID='".$Course->getID()."'";
 

@@ -149,7 +149,7 @@ class User{
     }
 
     public function getPriority () {
-        return $this->_Priority;
+       return $this->_Priority;
     }
 
 }

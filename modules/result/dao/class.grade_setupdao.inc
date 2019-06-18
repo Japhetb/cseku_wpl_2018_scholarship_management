@@ -35,6 +35,10 @@ Class GradeSetupDAO{
 
 		    $this->_GradeSetup->setRanges( $row['Ranges'] );
 
+		    $this->_GradeSetup->setCgpa( $row['Cgpa'] );
+
+		    $this->_GradeSetup->setIsRetake( $row['IsRetake'] );
+
 		    $this->_GradeSetup->setIsDefault( $row['IsDefault'] );
 
 		    $GradeSetupList[]=$this->_GradeSetup; 
@@ -58,10 +62,12 @@ Class GradeSetupDAO{
 		$ID=$GradeSetup->getID();
 		$Grades=$GradeSetup->getGrades();
 		$Ranges=$GradeSetup->getRanges();
+		$Cgpa=$GradeSetup->getCgpa();
+		$IsRetake=$GradeSetup->getIsRetake();
 		$IsDefault=$GradeSetup->getIsDefault();
 
-		$SQL = "INSERT INTO rms_grade_setup(ID,Grades,Ranges,IsDefault) 
-							VALUES('$ID','$Grades','$Ranges','$IsDefault')";
+		$SQL = "INSERT INTO rms_grade_setup(ID,Grades,Ranges,Cgpa,IsRetake,IsDefault) 
+							VALUES('$ID','$Grades','$Ranges','$Cgpa','$IsRetake','$IsDefault')";
 
 		$SQL = $this->_DB->doQuery($SQL);		
 		
@@ -91,6 +97,10 @@ Class GradeSetupDAO{
 	    $this->_GradeSetup->setGrades( $row['Grades'] );
 
 	    $this->_GradeSetup->setRanges( $row['Ranges'] );
+
+	    $this->_GradeSetup->setCgpa( $row['Cgpa'] );
+
+		$this->_GradeSetup->setIsRetake( $row['IsRetake'] );
 
 	    $this->_GradeSetup->setIsDefault( $row['IsDefault'] );
 
@@ -122,6 +132,43 @@ Class GradeSetupDAO{
 
 	    $this->_GradeSetup->setRanges( $row['Ranges'] );
 
+	    $this->_GradeSetup->setCgpa( $row['Cgpa'] );
+
+		$this->_GradeSetup->setIsRetake( $row['IsRetake'] );
+
+	    $this->_GradeSetup->setIsDefault( $row['IsDefault'] );
+
+
+
+	 	$Result = new Result();
+		$Result->setIsSuccess(1);
+		$Result->setResultObject($this->_GradeSetup);
+
+		return $Result;
+	}
+
+	public function readRetakeGradeSetup(){
+		
+		
+		$SQL = "SELECT * FROM rms_grade_setup WHERE IsRetake='1' LIMIT 1";
+		
+		$this->_DB->doQuery($SQL);
+
+		//reading the top row for this GradeSetup from the database
+		$row = $this->_DB->getTopRow();
+
+		$this->_GradeSetup = new GradeSetup();
+    
+    	$this->_GradeSetup->setID ( $row['ID']);
+
+	    $this->_GradeSetup->setGrades( $row['Grades'] );
+
+	    $this->_GradeSetup->setRanges( $row['Ranges'] );
+
+	    $this->_GradeSetup->setCgpa( $row['Cgpa'] );
+
+		$this->_GradeSetup->setIsRetake( $row['IsRetake'] );
+
 	    $this->_GradeSetup->setIsDefault( $row['IsDefault'] );
 
 
@@ -140,11 +187,12 @@ Class GradeSetupDAO{
 		$ID=$GradeSetup->getID();
 		$Grades=$GradeSetup->getGrades();
 		$Ranges=$GradeSetup->getRanges();
+		$Cgpa=$GradeSetup->getCgpa();
+		$IsRetake=$GradeSetup->getIsRetake();
 		$IsDefault=$GradeSetup->getIsDefault();
 
-		$SQL = "UPDATE rms_grade_setup SET Grades='$Grades', Ranges='$Ranges', 
-		  IsDefault='$IsDefault' WHERE 
-		  ID='$ID'"; 
+		$SQL = "UPDATE rms_grade_setup SET Grades='$Grades', Ranges='$Ranges',Cgpa='$Cgpa',
+		IsRetake='$IsRetake',IsDefault='$IsDefault' WHERE ID='$ID'"; 
 
 
 		$SQL = $this->_DB->doQuery($SQL);

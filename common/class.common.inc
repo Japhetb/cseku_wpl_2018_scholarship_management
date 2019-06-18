@@ -7,7 +7,7 @@ class PermissionXML{
     var $id;  // id of permission
     var $name;    // name of permission
     var $category;  // category of permission
-    
+
     //map the tag, value pair with the members serially
     //used in xml to permission mapping
     public function __construct($row) {
@@ -43,7 +43,7 @@ class MenuXML{
     }
 
     public function setParentTitle($ParentTitle){
-        $this->_ParentTitle = $ParentTitle; 
+        $this->_ParentTitle = $ParentTitle;
     }
 
     public function getPermissions(){
@@ -159,7 +159,7 @@ class PermissionUtil{
     public static $POSITION_U='POSITION_U';
     public static $POSITION_D='POSITION_D';
 
-  
+
     public static $PROJECT_C='PROJECT_C';
     public static $PROJECT_R='PROJECT_R';
     public static $PROJECT_U='PROJECT_U';
@@ -208,7 +208,7 @@ class PermissionUtil{
     public static $SESSION_C='SESSION_C';
     public static $SESSION_R='SESSION_R';
     public static $SESSION_U='SESSION_U';
-    public static $SESSION_D='SESSION_D'; 
+    public static $SESSION_D='SESSION_D';
 
     public static $SURVEY_C='SURVEY_C';
     public static $SURVEY_R='SURVEY_R';
@@ -256,6 +256,21 @@ class PermissionUtil{
     public static $VIDEO_COMMENT_U='VIDEO_COMMENT_U';
     public static $VIDEO_COMMENT_D='VIDEO_COMMENT_D';
 
+    public static $THESIS_C='THESIS_C';
+    public static $THESIS_R='THESIS_R';
+    public static $THESIS_U='THESIS_U';
+    public static $THESIS_D='THESIS_D';
+
+    public static $EMAIL_C='EMAIL_C';
+    public static $EMAIL_R='EMAIL_R';
+    public static $EMAIL_U='EMAIL_U';
+    public static $EMAIL_D='EMAIL_D';
+
+    public static $ASSET_C='ASSET_C';
+    public static $ASSET_R='ASSET_R';
+    public static $ASSET_U='ASSET_U';
+    public static $ASSET_D='ASSET_D';
+
     public static $SCHOLARSHIP_C='SCHOLARSHIP_C';
     public static $SCHOLARSHIP_R='SCHOLARSHIP_R';
     public static $SCHOLARSHIP_U='SCHOLARSHIP_U';
@@ -271,11 +286,6 @@ class PermissionUtil{
 
 class PageUtil{
 
-    public static $CLUB='club.php';
-    public static $CLUB_PAGE='clubpage.php';
-    public static $CLUB_MEMBER='club_member.php';
-    public static $CLUB_MODULE='club_module.php';
-
     public static $COURSE='course.php';
     public static $COURSE_TYPE='course_type.php';
     public static $COURSE_SESSIONAL_TYPE='course_sessional_type.php';
@@ -289,62 +299,39 @@ class PageUtil{
     public static $MY_REGISTRATION='my_registration.php';
     public static $PRINT_REGISTRATION='print_registration.php';
 
-    public static $MARKS_SETUP='marks_setup.php';    
-    public static $GRADE_SETUP='grade_setup.php';    
+    public static $MARKS_SETUP='marks_setup.php';
+    public static $GRADE_SETUP='grade_setup.php';
     public static $MARKS_ENTRY='marks_entry.php';
     public static $TESTS_ENTRY='tests_entry.php';
+    public static $PRINT_GRADE='print_grade.php';
+    public static $GRADE_SHIT ='marks_shit.php';
+    public static $STUDENT_RESULT ='students_result.php';
+    public static $STUDENT_RESULT_SHEET ='students_result_sheet.php';
+
+
+
 
 
 
     public static $DISCIPLINE='discipline.php';
 
 
-    public static $DISCUSSION_CAT='discussion_category.php';
-    public static $DISCUSSION='discussion.php';
-    public static $DISCUSSION_COMMENT='discussion_comment.php';
-    public static $DISCUSSION_SEARCH='discussion_search.php';
-    public static $DISCUSSION_ANSWERED='discussion_answered.php';
-    public static $DISCUSSION_UNANSWERED='discussion_unanswered.php';
-    public static $DISCUSSION_LIST='discussion_list.php';
-    public static $DISCUSSION_RECENT='discussion_recent.php';
-
-
     public static $ERROR='error.php';
 
-    public static $FILE='file.php';
-    public static $FILE_LOG='file_log.php';
-    public static $FILE_NOTIFY='file_notify.php';
-    public static $FILE_SHARE='file_share.php';
-    public static $FILE_STATUS='file_status.php';
-   
-
-    public static $FEEDBACK='feedback.php';
-
     public static $HOME='home.php';
-
-    public static $QUESTION='question.php';
-    public static $QUESTION_SEARCH='question_search.php';
-
-
     public static $LOGIN='login.php';
     public static $LOGOUT='logout.php';
 
-    public static $PROJECT='project.php';
     public static $POSITION='position.php';
     public static $PERMISSION='permission.php';
 
     public static $ROLE='role.php';
     public static $RESOURCE='resource.php';
-    public static $REGISTRATION_SESSION='registration_session.php';   
+    public static $REGISTRATION_SESSION='registration_session.php';
 
 
     public static $SCHOOL='school.php';
- 
-    public static $SURVEY_LIST='survey_list.php';
-    public static $SURVEY='survey.php';
-    public static $SURVEY_QUES_CREATE='survey_ques_create.php';
-    public static $SURVEY_QUES_TYPE='survey_ques_type.php';
-    public static $SURVEY_QUES_FILLUP='survey_ques_fillup.php';
+
 
 
     public static $TERM='term.php';
@@ -357,16 +344,43 @@ class PageUtil{
 
 
     public static $YEAR='year.php';
-    
-    public static $VIDEO='video.php';
-    public static $VIDEO_COMMENT='video_comment.php';
-    public static $VIDEO_SEARCH='video_search.php';
+    //task
+    public static $Task='my_cal.php';
+    public static $Assign_My_Task = 'assign_my_task.php';
+    public static $MANAGE_CATEGORY = 'manage_category.php';
+    public static $MY_TASK = 'my_task.php';
+    public static $CREAT_TASK = 'create_task.php';
+    public static $ASSIGN_TASK_AJAX = 'assign_task_ajax.php';
+    public static $TASK_DETAILS = 'task_details.php';
 
-    //job
-    public static $JOB='search_job.php';  
-    public static $JOB_LIST='see_all_jobs.php';
+    //Project Archive
+    public static $PROJECT='project.php';
+    public static $PROJECT_MEMBER='project_member.php';
+    public static $PROJECT_HOME='project_home.php';
+    public static $PROJECT_SEARCH='search_project.php';
 
-    //Scholarship
+    //Thesis Archive
+    public static $THESIS='thesis.php';
+    public static $THESIS_MEMBER='thesis_member.php';
+    public static $THESIS_HOME='thesis_home.php';
+    public static $THESIS_SEARCH='search_thesis.php';
+
+    //Email Archive
+    public static $EMAIL='email.php';
+    public static $EMAIL_RENEW="email_renew.php";
+    public static $EMAIL_EXPIRED="email_expired.php";
+    public static $EMAIL_RELICENSE="email_relicense.php";
+
+    //Asset Archive
+    public static $ASSET='asset.php';
+    public static $ASSET_REPAIR_SEND='asset_repair_send.php';
+    public static $ASSET_REPAIR_RECEIVE='asset_repair_receive.php';
+    public static $ASSET_DETAILS='asset_details.php';
+    public static $ASSET_LEND='asset_lend.php';
+    public static $ASSET_RETURN='asset_return.php'; 
+    public static $ASSET_SEARCH = 'asset_search.php';
+
+    //Scholarship Archive
     public static $SCHOLARSHIP_POST='post_scholarship.php';
     public static $SCHOLARSHIP_TYPE='modify_catagory.php';
     public static $SCHOLARSHIP_QUOTA='modify_quota.php';
@@ -375,10 +389,6 @@ class PageUtil{
     public static $SCHOLARSHIP_CV = 'create_cv.php';
     public static $SCHOLARSHIP_APPLY = 'applied_scholarship.php';
     public static $SCHOLARSHIP_ACHIEVED = 'achieved_scholarship.php';
-
-
-
-   
 }
 
 class RouteUtil{
@@ -388,74 +398,32 @@ class RouteUtil{
 
 
     private function __construct(){
-        
+
          self::$s_Routes = array();
 
         //add new page and routing address here always
-
-         self::$s_Routes[PageUtil::$CLUB]       =   "modules/club/ui/view.club.inc";
-         self::$s_Routes[PageUtil::$CLUB_PAGE]       =   "modules/club/ui/view.clubpage.inc";
-         self::$s_Routes[PageUtil::$CLUB_MEMBER]       =   "modules/club/ui/view.member.inc";
-         self::$s_Routes[PageUtil::$CLUB_MODULE]       =   "modules/club/ui/view.module.inc";
-
-
- 
-
-         self::$s_Routes[PageUtil::$DISCUSSION_CAT]       =   
-         "modules/forum/ui/view.discussionCategory.inc";
-         self::$s_Routes[PageUtil::$DISCUSSION]       =   
-         "modules/forum/ui/view.discussion.inc";
-         self::$s_Routes[PageUtil::$DISCUSSION_COMMENT]       =   
-         "modules/forum/ui/view.comment.inc";
-         self::$s_Routes[PageUtil::$DISCUSSION_LIST]       =   
-         "modules/forum/ui/view.discussionList.inc";
-         self::$s_Routes[PageUtil::$DISCUSSION_SEARCH]       =   
-         "modules/forum/ui/view.searchDiscussion.inc";
-         self::$s_Routes[PageUtil::$DISCUSSION_RECENT]       =   
-         "modules/forum/ui/view.mostRecent.inc";
-         self::$s_Routes[PageUtil::$DISCUSSION_ANSWERED]       =   
-         "modules/forum/ui/view.answered.inc";
-         self::$s_Routes[PageUtil::$DISCUSSION_UNANSWERED]       =   
-         "modules/forum/ui/view.unanswered.inc";
-
-
 
          self::$s_Routes[PageUtil::$HOME]             =   "modules/dashboard/ui/view.home.inc";
          self::$s_Routes[PageUtil::$LOGIN]            =   "modules/dashboard/ui/view.login.inc";
          self::$s_Routes[PageUtil::$LOGOUT]            =   "modules/dashboard/ui/view.logout.inc";
 
          self::$s_Routes[PageUtil::$ROLE]   =   "modules/user/ui/view.role.inc";
-         self::$s_Routes[PageUtil::$DISCIPLINE]       =   "modules/user/ui/view.discipline.inc";  
+         self::$s_Routes[PageUtil::$DISCIPLINE]       =   "modules/user/ui/view.discipline.inc";
          self::$s_Routes[PageUtil::$PERMISSION]       =   "modules/user/ui/view.permission.inc";
          self::$s_Routes[PageUtil::$POSITION]         =   "modules/user/ui/view.position.inc";
          self::$s_Routes[PageUtil::$SCHOOL]           =   "modules/user/ui/view.school.inc";
 
 
-         self::$s_Routes[PageUtil::$QUESTION]         =   "modules/question/ui/view.question.inc";
-         self::$s_Routes[PageUtil::$QUESTION_SEARCH]  =   
-         "modules/question/ui/view.search.question.inc";
-
-         self::$s_Routes[PageUtil::$REGISTRATION_SESSION] =   
+         self::$s_Routes[PageUtil::$REGISTRATION_SESSION] =
          "modules/registration/ui/view.registration_session.inc";
-
-
-         
-         self::$s_Routes[PageUtil::$SURVEY_LIST]  = "modules/survey/ui/view.survey_list.inc";
-         self::$s_Routes[PageUtil::$SURVEY]           =   "modules/survey/ui/view.survey.inc";
-         self::$s_Routes[PageUtil::$SURVEY_QUES_CREATE]           =   
-         "modules/survey/ui/view.survey_ques_create.inc";
-         self::$s_Routes[PageUtil::$SURVEY_QUES_TYPE]           =   
-         "modules/survey/ui/view.survey_ques_type.inc";
-         self::$s_Routes[PageUtil::$SURVEY_QUES_FILLUP]           =   
-         "modules/survey/ui/view.survey_ques_fillup.inc";
 
 
 
          self::$s_Routes[PageUtil::$TERM]  =   "modules/registration/ui/view.term.inc";
-         
-         self::$s_Routes[PageUtil::$COURSE] =   
+
+         self::$s_Routes[PageUtil::$COURSE] =
          "modules/registration/ui/view.course.inc";
-         self::$s_Routes[PageUtil::$COURSE_TYPE]      =   
+         self::$s_Routes[PageUtil::$COURSE_TYPE]      =
          "modules/registration/ui/view.course_type.inc";
          self::$s_Routes[PageUtil::$COURSE_SESSIONAL_TYPE] =
          "modules/registration/ui/view.course_sessional_type.inc";
@@ -469,9 +437,9 @@ class RouteUtil{
          self::$s_Routes[PageUtil::$COURSE_STUDENT_REGISTRATION] =
          "modules/registration/ui/view.course_student_registration.inc";
          self::$s_Routes[PageUtil::$COURSEWISE_REGISTRATION] =
-         "modules/registration/ui/view.coursewise_registration.inc";         
+         "modules/registration/ui/view.coursewise_registration.inc";
          self::$s_Routes[PageUtil::$STUDENTWISE_REGISTRATION] =
-         "modules/registration/ui/view.studentwise_registration.inc";         
+         "modules/registration/ui/view.studentwise_registration.inc";
          self::$s_Routes[PageUtil::$MANAGE_REGISTRATION_REQUEST] =
          "modules/registration/ui/view.manage_registration_request.inc";
          self::$s_Routes[PageUtil::$MY_REGISTRATION] =
@@ -489,6 +457,15 @@ class RouteUtil{
 
          self::$s_Routes[PageUtil::$TESTS_ENTRY] =
          "modules/result/ui/view.tests_entry.inc";
+         self::$s_Routes[PageUtil::$PRINT_GRADE] =
+         "modules/result/ui/view.print_grade.inc";
+         self::$s_Routes[PageUtil::$GRADE_SHIT] =
+         "modules/result/ui/view.marks_shit.inc";
+         self::$s_Routes[PageUtil::$STUDENT_RESULT_SHEET] =
+         "modules/result/ui/view.students_result_sheet.inc";
+         self::$s_Routes[PageUtil::$STUDENT_RESULT] =
+         "modules/result/ui/view.students_result.inc";
+
 
 
          self::$s_Routes[PageUtil::$USER] =   "modules/user/ui/view.user.inc";
@@ -497,39 +474,63 @@ class RouteUtil{
          self::$s_Routes[PageUtil::$USER_SEARCH] =   "modules/user/ui/view.user_search.inc";
          self::$s_Routes[PageUtil::$USER_FORGOT_PASSWORD] =   "modules/user/ui/view.forgot_password.inc";
 
- 
-         self::$s_Routes[PageUtil::$VIDEO] =  "modules/video/ui/view.video.inc";
-         self::$s_Routes[PageUtil::$VIDEO_COMMENT]="modules/video/ui/view.videoComment.inc";
-         self::$s_Routes[PageUtil::$VIDEO_SEARCH]= "modules/video/ui/view.videosearch.inc";
-  
 
         //the page not found will redirect to error page
          self::$s_Routes[PageUtil::$ERROR] = "modules/dashboard/ui/view.error.inc";
 
-         self::$s_Routes[PageUtil::$FEEDBACK] = "modules/survey/view.feedback.inc";
-
-         self::$s_Routes[PageUtil::$FILE] = "modules/file/ui/view.file.inc";
-         self::$s_Routes[PageUtil::$FILE_LOG] = "modules/file/ui/view.file_log.inc";
-         self::$s_Routes[PageUtil::$FILE_NOTIFY] = "modules/file/ui/view.file_notify.inc";
-         self::$s_Routes[PageUtil::$FILE_STATUS] = "modules/file/ui/view.file_status.inc";
-         self::$s_Routes[PageUtil::$FILE_SHARE] = "modules/file/ui/view.file_share.inc";
-
-
          self::$s_Routes[PageUtil::$YEAR]  =   "modules/registration/ui/view.year.inc";
 
-         //JOB
-         self::$s_Routes[PageUtil::$JOB]  =   "modules/job/ui/view.job.inc";
-         self::$s_Routes[PageUtil::$JOB_LIST]  =   "modules/job/ui/view.job_search.inc";
+         //Task
+         self::$s_Routes[PageUtil::$Task]  =   "modules/task/ui/view.my_cal.inc";
+         //view.assign_my_task.inc
+         self::$s_Routes[PageUtil::$Assign_My_Task]  =   "modules/task/ui/view.assign_my_task.inc";
+         //MANAGE_CATEGORY
+         self::$s_Routes[PageUtil::$MANAGE_CATEGORY]  =   "modules/task/ui/view.manage_category.inc";
+         self::$s_Routes[PageUtil::$MY_TASK] = "modules/task/ui/view.my_task.inc";
+         //ASSIGN_TASK
+         self::$s_Routes[PageUtil::$CREAT_TASK] = "modules/task/ui/view.assign_task.inc";
+         //ASSIGN_TASK_AJAX
+         self::$s_Routes[PageUtil::$ASSIGN_TASK_AJAX] = "modules/task/ui/ajax/view.assign_task.ajax.inc";
+         self::$s_Routes[PageUtil::$TASK_DETAILS] = "modules/task/ui/view.task_details.inc";
 
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_POST]  =   
-         "modules/scholarship/ui/view.post_scholarship.inc";
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_TYPE] = "modules/scholarship/ui/view.catagory.inc";
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_VIEW] = "modules/scholarship/ui/view.display_scholarship.inc";
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_QUOTA] = "modules/scholarship/ui/view.quota.inc";
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_COCURRICULAR] = "modules/scholarship/ui/view.cocurricular.inc";
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_CV] = "modules/scholarship/ui/view.upload_cv.inc";
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_APPLY] = "modules/scholarship/ui/view.applied_scholarship.inc";
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_ACHIEVED] = "modules/scholarship/ui/view.achieved_scholarship.inc";
+         //Project Archive Routes
+       self::$s_Routes[PageUtil::$PROJECT]="/modules/projectArchive/ui/view.project.inc";
+       self::$s_Routes[PageUtil::$PROJECT_MEMBER]="/modules/projectArchive/ui/view.projectMember.inc";
+       self::$s_Routes[PageUtil::$PROJECT_HOME]="/modules/projectArchive/ui/view.projectHome.inc";
+       self::$s_Routes[PageUtil::$PROJECT_SEARCH]="/modules/projectArchive/ui/view.searchProject.inc";
+
+       //Thesis Archive Routes
+       self::$s_Routes[PageUtil::$THESIS]="modules/thesisArchive/ui/view.thesis.inc";
+       self::$s_Routes[PageUtil::$THESIS_MEMBER]="modules/thesisArchive/ui/view.thesisMember.inc";
+       self::$s_Routes[PageUtil::$THESIS_HOME]="modules/thesisArchive/ui/view.thesisHome.inc";
+       self::$s_Routes[PageUtil::$THESIS_SEARCH]="modules/thesisArchive/ui/view.searchThesis.inc";
+
+       //Email Archive Routes
+       self::$s_Routes[PageUtil::$EMAIL]="modules/emailArchive/ui/view.email.inc";
+       self::$s_Routes[PageUtil::$EMAIL_RENEW]="modules/emailArchive/ui/view.emailRenew.inc";
+       self::$s_Routes[PageUtil::$EMAIL_EXPIRED]="modules/emailArchive/ui/view.emailExpired.inc";
+       self::$s_Routes[PageUtil::$EMAIL_RELICENSE]="modules/emailArchive/ui/renew.inc";
+
+
+       //Asset Archive Routes
+       self::$s_Routes[PageUtil::$ASSET]="modules/assetArchive/ui/view.asset.inc";
+       self::$s_Routes[PageUtil::$ASSET_REPAIR_SEND]="modules/assetArchive/ui/view.sendRepair.inc";
+       self::$s_Routes[PageUtil::$ASSET_REPAIR_RECEIVE]="modules/assetArchive/ui/view.receiveRepair.inc";
+       self::$s_Routes[PageUtil::$ASSET_DETAILS]="modules/assetArchive/ui/view.assetDetails.inc";
+       self::$s_Routes[PageUtil::$ASSET_LEND]="modules/assetArchive/ui/view.assetLend.inc";
+       self::$s_Routes[PageUtil::$ASSET_RETURN]="modules/assetArchive/ui/view.assetReturn.inc";
+       self::$s_Routes[PageUtil::$ASSET_SEARCH]="modules/assetArchive/ui/view.assetSearch.inc";
+
+       //Scholarship Archive Routes
+       self::$s_Routes[PageUtil::$SCHOLARSHIP_POST]  = "modules/scholarship/ui/view.post_scholarship.inc";
+       self::$s_Routes[PageUtil::$SCHOLARSHIP_TYPE] = "modules/scholarship/ui/view.catagory.inc";
+       self::$s_Routes[PageUtil::$SCHOLARSHIP_VIEW] = "modules/scholarship/ui/view.display_scholarship.inc";
+       self::$s_Routes[PageUtil::$SCHOLARSHIP_QUOTA] = "modules/scholarship/ui/view.quota.inc";
+       self::$s_Routes[PageUtil::$SCHOLARSHIP_COCURRICULAR] = "modules/scholarship/ui/view.cocurricular.inc";
+       self::$s_Routes[PageUtil::$SCHOLARSHIP_CV] = "modules/scholarship/ui/view.upload_cv.inc";
+       self::$s_Routes[PageUtil::$SCHOLARSHIP_APPLY] = "modules/scholarship/ui/view.applied_scholarship.inc";
+       self::$s_Routes[PageUtil::$SCHOLARSHIP_ACHIEVED] = "modules/scholarship/ui/view.achieved_scholarship.inc";
+
     }
 
     public static function getInstance() {
@@ -541,15 +542,15 @@ class RouteUtil{
 
     public static function get($Page){
 
-        $Page = strtolower(trim($Page)); 
+        $Page = strtolower(trim($Page));
 
         if(array_key_exists($Page, self::$s_Routes)){
-        
+
             return self::$s_Routes[$Page];
         }
         else{
-        
-            return self::$s_Routes[PageUtil::$ERROR]; 
+
+            return self::$s_Routes[PageUtil::$ERROR];
         }
     }
 
@@ -562,70 +563,17 @@ class MiddlewareUtil{
 
 
     private function __construct(){
-        
+
          self::$s_Routes = array();
 
         //add which page should be successfully logged before getting to this page
         //example: login.php should be successfully logged in to get to home.php
 
-         self::$s_Routes[PageUtil::$CLUB]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$CLUB_PAGE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$CLUB_MEMBER]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$CLUB_MODULE]   =  PageUtil::$LOGIN ;
+
+         
 
 
-         self::$s_Routes[PageUtil::$COURSE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$COURSE_TYPE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$COURSE_SESSIONAL_TYPE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$COURSE_TEACHER]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$MY_COURSES]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$COURSE_TEACHER_REGISTRATION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$COURSE_STUDENT_REGISTRATION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$COURSEWISE_REGISTRATION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$STUDENTWISE_REGISTRATION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$MANAGE_REGISTRATION_REQUEST]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$REGISTRATION_SESSION]   =  PageUtil::$LOGIN ;         
-         self::$s_Routes[PageUtil::$TERM]   =  PageUtil::$LOGIN ;         
-         self::$s_Routes[PageUtil::$YEAR]   =  PageUtil::$LOGIN ;         
-         self::$s_Routes[PageUtil::$MY_REGISTRATION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$PRINT_REGISTRATION]   =  PageUtil::$LOGIN ;
-
-         self::$s_Routes[PageUtil::$MARKS_SETUP]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$GRADE_SETUP]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$MARKS_ENTRY]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$TESTS_ENTRY]   =  PageUtil::$LOGIN ;
-
- 
- 
-
-         self::$s_Routes[PageUtil::$DISCUSSION_CAT]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$DISCUSSION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$DISCUSSION_COMMENT]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$DISCUSSION_SEARCH]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$DISCUSSION_ANSWERED]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$DISCUSSION_UNANSWERED]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$DISCUSSION_LIST]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$DISCUSSION_RECENT]   =  PageUtil::$LOGIN ;
-
-
-         self::$s_Routes[PageUtil::$FILE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$FILE_LOG]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$FILE_NOTIFY]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$FILE_SHARE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$FILE_STATUS]   =  PageUtil::$LOGIN ;
-
-
-         self::$s_Routes[PageUtil::$FEEDBACK]   =  PageUtil::$LOGIN ;
-                                    
          self::$s_Routes[PageUtil::$HOME]   =  PageUtil::$LOGIN ;
-
-         self::$s_Routes[PageUtil::$QUESTION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$QUESTION_SEARCH]   =  PageUtil::$LOGIN ;
-
-
-         self::$s_Routes[PageUtil::$COURSE_STUDENT_REGISTRATION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$MANAGE_REGISTRATION_REQUEST]   =  PageUtil::$LOGIN ;
-
 
          self::$s_Routes[PageUtil::$USER]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$USER_DETAILS]   =  PageUtil::$LOGIN ;
@@ -636,34 +584,42 @@ class MiddlewareUtil{
          self::$s_Routes[PageUtil::$ROLE]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$PERMISSION]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$POSITION]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$DISCIPLINE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$SCHOOL]   =  PageUtil::$LOGIN ;
-       
+          //task
+         self::$s_Routes[PageUtil::$Task]  =   PageUtil::$LOGIN ;
+         self::$s_Routes[PageUtil::$Assign_My_Task]  =   PageUtil::$LOGIN ;
+         self::$s_Routes[PageUtil::$MANAGE_CATEGORY]  =   PageUtil::$LOGIN ;
+         self::$s_Routes[PageUtil::$MY_TASK]  =   PageUtil::$LOGIN ;
+         self::$s_Routes[PageUtil::$TASK_DETAILS]  =   PageUtil::$LOGIN ;
 
-         self::$s_Routes[PageUtil::$PROJECT]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$RESOURCE]   =  PageUtil::$LOGIN ;
- 
+               //Project Archive Middleware
+        self::$s_Routes[PageUtil::$PROJECT] = PageUtil::$LOGIN;
 
-         self::$s_Routes[PageUtil::$SURVEY_LIST]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$SURVEY]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$SURVEY_QUES_CREATE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$SURVEY_QUES_TYPE]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$SURVEY_QUES_FILLUP]   =  PageUtil::$LOGIN ;
+        //Thesis Archive Middleware
+        self::$s_Routes[PageUtil::$THESIS]=PageUtil::$LOGIN;
 
-         self::$s_Routes[PageUtil::$VIDEO]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$VIDEO_COMMENT]   =  PageUtil::$LOGIN ;
-         self::$s_Routes[PageUtil::$VIDEO_SEARCH]   =  PageUtil::$LOGIN ;
+        //Email Archive Middleware
+        self::$s_Routes[PageUtil::$EMAIL]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$EMAIL_RENEW]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$EMAIL_EXPIRED]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$EMAIL_RELICENSE]=PageUtil::$LOGIN;
 
-         self::$s_Routes[PageUtil::$SCHOLARSHIP_POST]   =  PageUtil::$LOGIN ;
+        //Asset Archive Middleware
+        self::$s_Routes[PageUtil::$ASSET]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$ASSET_REPAIR_SEND]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$ASSET_REPAIR_RECEIVE]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$ASSET_DETAILS]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$ASSET_LEND]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$ASSET_RETURN]=PageUtil::$LOGIN;
+        self::$s_Routes[PageUtil::$ASSET_SEARCH]=PageUtil::$LOGIN;
+
+        //Scholarship Archive
+        self::$s_Routes[PageUtil::$SCHOLARSHIP_POST]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$SCHOLARSHIP_TYPE]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$SCHOLARSHIP_VIEW]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$SCHOLARSHIP_QUOTA]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$SCHOLARSHIP_COCURRICULAR]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$SCHOLARSHIP_APPLY]   =  PageUtil::$LOGIN ;
          self::$s_Routes[PageUtil::$SCHOLARSHIP_ACHIEVED]   =  PageUtil::$LOGIN ;
-
-         
-   
     }
 
     public static function getInstance() {
@@ -675,16 +631,16 @@ class MiddlewareUtil{
 
     private static function isAvailable($Page){
 
-        $Page = strtolower(trim($Page)); 
+        $Page = strtolower(trim($Page));
 
         //if the page is refereneced in the middleware
         if(array_key_exists($Page, self::$s_Routes)){
-            
+
             return true;
         }
         else{
-        
-            return false; 
+
+            return false;
         }
     }
 
@@ -700,7 +656,7 @@ class MiddlewareUtil{
             }
 
             // other send initial page: example if logged out then go to login.php page
-            return isset($_SESSION[self::$s_Routes[$Page]])? $Page: header("Location:".self::$s_Routes[$Page]);// self::$s_Routes[$Page]; 
+            return isset($_SESSION[self::$s_Routes[$Page]])? $Page: header("Location:".self::$s_Routes[$Page]);// self::$s_Routes[$Page];
 
         }else{
             // if no middleware then just go on with the current request
@@ -711,38 +667,38 @@ class MiddlewareUtil{
 }
 
 //finding different partse of an url
-function unparse_url($parsed_url) { 
-        $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : ''; 
-        $host     = isset($parsed_url['host']) ? $parsed_url['host'] : ''; 
-        $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : ''; 
-        $user     = isset($parsed_url['user']) ? $parsed_url['user'] : ''; 
-        $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : ''; 
-        $pass     = ($user || $pass) ? "$pass@" : ''; 
-        $path     = isset($parsed_url['path']) ? $parsed_url['path'] : ''; 
-        $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : ''; 
-        $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : ''; 
+function unparse_url($parsed_url) {
+        $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+        $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+        $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+        $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+        $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+        $pass     = ($user || $pass) ? "$pass@" : '';
+        $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+        $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+        $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
 
         //extracting the page name such as user.php from the url
         $page = substr($path, strrpos($path,'/')+1,strrpos($path,'.php')-strrpos($path,'/')+strlen('.php'));
 
         return $page;
-        //return "$scheme$user$pass$host$port$path$query$fragment"; 
-} 
+        //return "$scheme$user$pass$host$port$path$query$fragment";
+}
 
 
 //applying middleware such as login.php comes before home.php
-function apply_middleware($page) { 
- 
-    // checking whtether there is any middleware     
-    $page=MiddlewareUtil::get($page);   
+function apply_middleware($page) {
+
+    // checking whtether there is any middleware
+    $page=MiddlewareUtil::get($page);
 
     return $page;
-     
+
 }
 
 //finding different partse of an url
-function apply_routing($page) { 
- 
+function apply_routing($page) {
+
     //looking for the extracted page in the route list
 
     return RouteUtil::get($page);;
@@ -755,15 +711,15 @@ function userHasAccessToLink($Link){
     $unorganizedMenu = $_SESSION["unorganizedMenu"];
 
     $LinkPermissions = menu_link_permissions($unorganizedMenu,$Link);
-    
+
     foreach ($LinkPermissions as $permission) { // any global permission of the logged in user
         if(in_array($permission, $globalPermission)){ //if matches with any permission of a given link
 
            return true;
         }
 
-    }   
-    
+    }
+
     return false;
 }
 
@@ -772,21 +728,21 @@ function menu_link_permissions($Menus,$Link){
 
     //taking each menu from the menu xml file
     for ($i=0; $i<sizeof($Menus); $i++) {
-        
+
         //matching with the given link
         if (strcasecmp($Menus[$i]->getLink(), $Link)==0) {
-               
+
             $LinkPermissions = $Menus[$i]->getPermissions();
 
             $LinkPermissionList = array();
 
             foreach ($LinkPermissions as $LinkPermission) {
-                
+
                 $LinkPermissionList[] = $LinkPermission->getID();
             }
 
             return $LinkPermissionList;
-         }  
+         }
 
     }
 
@@ -803,7 +759,13 @@ function every_one_has_access($page){
     $All_Access_Pages[PageUtil::$LOGOUT]= PageUtil::$LOGOUT;
     $All_Access_Pages[PageUtil::$HOME]= PageUtil::$HOME;
     $All_Access_Pages[PageUtil::$PRINT_REGISTRATION]= PageUtil::$PRINT_REGISTRATION;
-    $All_Access_Pages[PageUtil::$USER_NEW]= PageUtil::$USER_NEW;
+    $All_Access_Pages[PageUtil::$PRINT_GRADE]= PageUtil::$PRINT_GRADE;
+    $All_Access_Pages[PageUtil::$TESTS_ENTRY]= PageUtil::$TESTS_ENTRY;
+    $All_Access_Pages[PageUtil::$GRADE_SHIT]= PageUtil::$GRADE_SHIT;
+    $All_Access_Pages[PageUtil::$STUDENT_RESULT_SHEET]= PageUtil::$STUDENT_RESULT_SHEET;
+
+    
+    
 
 
     if (array_key_exists($page, $All_Access_Pages))
@@ -820,8 +782,12 @@ function no_layout_page($page){
     $All_Access_Pages[PageUtil::$LOGIN]= PageUtil::$LOGIN;
     $All_Access_Pages[PageUtil::$LOGOUT]= PageUtil::$LOGOUT;
     $All_Access_Pages[PageUtil::$PRINT_REGISTRATION]= PageUtil::$PRINT_REGISTRATION;
+    $All_Access_Pages[PageUtil::$PRINT_GRADE]= PageUtil::$PRINT_GRADE;
     $All_Access_Pages[PageUtil::$USER_NEW]= PageUtil::$USER_NEW;
     $All_Access_Pages[PageUtil::$USER_FORGOT_PASSWORD]=PageUtil::$USER_FORGOT_PASSWORD;
+    $All_Access_Pages[PageUtil::$GRADE_SHIT]= PageUtil::$GRADE_SHIT;
+    $All_Access_Pages[PageUtil::$STUDENT_RESULT_SHEET]= PageUtil::$STUDENT_RESULT_SHEET;
+
 
 
 

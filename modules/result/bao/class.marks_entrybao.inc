@@ -70,10 +70,10 @@ Class MarksEntryBAO{
 	}
 
 	//get default marks setup of a course
-	public function getCourseMarksSetup($CourseNo){
+	public function getCourseMarksSetup($CourseID){
 
 		$Result = new Result();	
-		$Result = $this->_MarksEntryDAO->getCourseMarksSetup($CourseNo);
+		$Result = $this->_MarksEntryDAO->getCourseMarksSetup($CourseID);
 		
 		if(!$Result->getIsSuccess())
 			$Result->setResultObject("Database failure in MarksEntryDAO.getCourseMarksSetup()");		
@@ -105,7 +105,19 @@ Class MarksEntryBAO{
 
 		return $Result;
 
-	}	
+	}
+	public function getAStudentCourseMarks($CourseID,$Session,$Year,$Term,$Student){
+
+		$Result = new Result();	
+		$Result = $this->_MarksEntryDAO->getAStudentCourseMarks($CourseID,$Session,$Year,$Term,$Student);
+		
+		if(!$Result->getIsSuccess())
+			$Result->setResultObject("Database failure in MarksEntryDAO.getAStudentCourseMarks()");		
+
+		return $Result;
+
+	}
+		
 
 	//get course marks for the students
 	public function getCourseStudentMarks($CourseNo,$Session,$Year,$Term,$StudentList){
@@ -122,10 +134,10 @@ Class MarksEntryBAO{
 
 
 	//get course class tests for the students
-	public function getCourseStudentTests($CourseNo,$Session,$Year,$Term,$StudentList){
+	public function getCourseStudentTests($CourseID,$Session,$Year,$Term,$StudentList){
 
 		$Result = new Result();	
-		$Result = $this->_MarksEntryDAO->getCourseStudentTests($CourseNo,$Session,$Year,$Term,$StudentList);
+		$Result = $this->_MarksEntryDAO->getCourseStudentTests($CourseID,$Session,$Year,$Term,$StudentList);
 		
 		if(!$Result->getIsSuccess())
 			$Result->setResultObject("Database failure in MarksEntryDAO.getCourseStudentTests()");		
@@ -136,10 +148,10 @@ Class MarksEntryBAO{
 
 
 	//read course teacher row from the table based on the given criteria
-	public function readCourseTeacher($CourseNo,$TeacherID,$SessionID,$YearID,$TermID){
+	public function readCourseTeacher($CourseID,$TeacherID,$SessionID,$YearID,$TermID){
 
 		$Result = new Result();	
-		$Result = $this->_MarksEntryDAO->readCourseTeacher($CourseNo,$TeacherID,$SessionID,$YearID,$TermID);
+		$Result = $this->_MarksEntryDAO->readCourseTeacher($CourseID,$TeacherID,$SessionID,$YearID,$TermID);
 		
 		if(!$Result->getIsSuccess())
 			$Result->setResultObject("Database failure in CourseTeacherDAO.readCourseTeacher()");		
@@ -189,6 +201,12 @@ Class MarksEntryBAO{
 		if(!$Result->getIsSuccess())
 			$Result->setResultObject("Database failure in MarksEntryDAO.updateMarksEntry()");		
 
+		return $Result;
+	}
+
+	public function checkPreRetake($StudentID,$CourseID){
+
+		$Result = $this->_MarksEntryDAO->checkPreRetake($StudentID,$CourseID);
 		return $Result;
 	}
 

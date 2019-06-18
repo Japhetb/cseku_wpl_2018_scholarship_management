@@ -30,7 +30,7 @@ Class UserDAO{
 
 		$UserList = array();
 
-		$this->_DB->doQuery("SELECT * FROM ums_user where IsDeleted is null 
+		$this->_DB->doQuery("SELECT * FROM ums_user where IsDeleted is null
 			order by (UniversityID * 1) ASC");
 
 		$rows = $this->_DB->getAllRows();
@@ -40,7 +40,7 @@ Class UserDAO{
 			$this->_User = new User();
 
 		    $this->_User->setID ( $row['ID']);
-		    $this->_User->setUniversityID ( $row['UniversityID'] );   
+		    $this->_User->setUniversityID ( $row['UniversityID'] );
 		    $this->_User->setEmail ( $row['Email'] );
 		    $this->_User->setPassword ( $row['Password'] );
 		    $this->_User->setFirstName( $row['FirstName'] );
@@ -57,7 +57,7 @@ Class UserDAO{
 		    $this->_User->setIsDeleted( $row['IsDeleted'] );
 
 		    $UserList[]=$this->_User;
-   
+
 		}
 
 
@@ -73,7 +73,7 @@ Class UserDAO{
 
 		$UserList = array();
 
-		$SQL = "SELECT u.* FROM ums_user u, ums_user_role ur where u.IsDeleted is null AND 
+		$SQL = "SELECT u.* FROM ums_user u, ums_user_role ur where u.IsDeleted is null AND
 				u.ID=ur.UserID AND ur.RoleID='$Role'";
 
 		$this->_DB->doQuery($SQL);
@@ -85,7 +85,7 @@ Class UserDAO{
 			$this->_User = new User();
 
 		    $this->_User->setID ( $row['ID']);
-		    $this->_User->setUniversityID ( $row['UniversityID'] );   
+		    $this->_User->setUniversityID ( $row['UniversityID'] );
 		    $this->_User->setEmail ( $row['Email'] );
 		    $this->_User->setPassword ( $row['Password'] );
 		    $this->_User->setFirstName( $row['FirstName'] );
@@ -102,12 +102,66 @@ Class UserDAO{
 		    $this->_User->setIsDeleted( $row['IsDeleted'] );
 
 		    $UserList[]=$this->_User;
-   
+
 		}
 
 		$Result = new Result();
 		$Result->setIsSuccess(1);
 		$Result->setResultObject($UserList);
+
+		return $Result;
+	}
+
+
+	public function findUserByEmail($email){
+	
+		$Result = new Result();
+
+		//$Email = $User->getEmail();
+		//$Password = $User->getPassword();
+		
+		//start::user reading information
+		$SQL = "SELECT * FROM ums_user WHERE IsDeleted is NULL and Email='$email'";
+	
+		$this->_DB->doQuery($SQL);
+		//reading the top row for this user from the database
+		$row = $this->_DB->getTopRow();
+
+		if(isset($row)){
+
+			$this->_User = new User();
+
+			//preparing the user object
+		    $this->_User->setID ( $row['ID']);
+		    $this->_User->setUniversityID ( $row['UniversityID'] );   
+		    $this->_User->setEmail ( $row['Email'] );
+		    $this->_User->setPassword ( $row['Password'] );
+
+		    $this->_User->setFirstName( $row['FirstName'] );
+		    $this->_User->setMiddleName( $row['MiddleName'] );
+		    $this->_User->setLastName( $row['LastName'] );
+
+		    $Discipline = new Discipline();
+		    $Discipline->setID($row['DisciplineID']);
+		    $Discipline = $this->_DisciplineDAO->readDiscipline($Discipline)->getResultObject();
+		    $this->_User->setDiscipline( $Discipline );
+
+		    $this->_User->setStatus( $row['Status'] );
+		    $this->_User->setIsLogged( $row['IsLogged'] );	
+		    $this->_User->setIsArchived( $row['IsArchived'] );
+		    $this->_User->setIsDeleted( $row['IsDeleted'] );
+
+
+		    //$Result = new Result();
+
+			$Result->setIsSuccess(1);
+			$Result->setResultObject($this->_User);
+
+		}
+			//end::user reading information
+
+		
+			
 
 		return $Result;
 	}
@@ -128,14 +182,14 @@ Class UserDAO{
 		$Status=$User->getStatus();
 		$IsArchived=$User->getIsArchived();
 		$IsDeleted=$User->getIsDeleted();
-		$Roles = $User->getRoles();	
+		$Roles = $User->getRoles();
 		$Positions=$User->getPositions();
 
-		$SQL = "INSERT INTO ums_user(ID,UniversityID,Email,Password,FirstName,MiddleName,LastName,DisciplineID,Status) 
+		$SQL = "INSERT INTO ums_user(ID,UniversityID,Email,Password,FirstName,MiddleName,LastName,DisciplineID,Status)
 		 	VALUES('$ID','$UniversityID','$Email','$Password','$FirstName','$MiddleName','$LastName',
 		 	'$DisciplineID','$Status')";
 
-		//beginning a transaction 	
+		//beginning a transaction
 		$this->_DB->getConnection()->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		//creating the user
 		$SQL = $this->_DB->doQuery($SQL);
@@ -143,28 +197,28 @@ Class UserDAO{
 		$SQL = "INSERT INTO ums_user_details(ID) VALUES('$ID')";
 		//creating user details
 		$SQL = $this->_DB->doQuery($SQL);
-		
+
 		//assigning list of roles
-		for ($i=0; $i < sizeof($Roles); $i++) { 
+		for ($i=0; $i < sizeof($Roles); $i++) {
 				$Role = $Roles[$i];
 
-			
-			$SQL_Role = "INSERT INTO ums_user_role(UserID,RoleID) 
-										VALUES('".$User->getID()."','".$Role->getID()."')";	
-		
+
+			$SQL_Role = "INSERT INTO ums_user_role(UserID,RoleID)
+										VALUES('".$User->getID()."','".$Role->getID()."')";
+
 			$SQL_Role = $this->_DB->doQuery($SQL_Role);
-		}	
+		}
 
 		//assigning list of positions
-		for ($i=0; $i < sizeof($Positions); $i++) { 
+		for ($i=0; $i < sizeof($Positions); $i++) {
 				$Position = $Positions[$i];
-		
-			$SQL_Position = "INSERT INTO ums_user_position(UserID,PositionID) 
-										VALUES('".$User->getID()."','".$Position->getID()."')";	
-			
+
+			$SQL_Position = "INSERT INTO ums_user_position(UserID,PositionID)
+										VALUES('".$User->getID()."','".$Position->getID()."')";
+
 			$SQL_Position = $this->_DB->doQuery($SQL_Position);
-		}	
-				
+		}
+
 		//closing the transaction
 		$this->_DB->getConnection()->commit();
 
@@ -190,16 +244,16 @@ Class UserDAO{
 		$LastName=$User->getLastName();
 		$DisciplineID=$User->getDiscipline()->getID();
 		$Status=$User->getStatus();
-		$Roles = $User->getRoles();	
+		$Roles = $User->getRoles();
 
 
-		$SQL = "INSERT INTO ums_user(ID,UniversityID,Email,Password,FirstName,MiddleName,LastName,DisciplineID,Status) 
+		$SQL = "INSERT INTO ums_user(ID,UniversityID,Email,Password,FirstName,MiddleName,LastName,DisciplineID,Status)
 		 	VALUES('$ID','$UniversityID','$Email','$Password','$FirstName','$MiddleName','$LastName',
 		 			'$DisciplineID','$Status')";
 
-		//echo $SQL; 	
+		//echo $SQL;
 
-		//beginning a transaction 	
+		//beginning a transaction
 		$this->_DB->getConnection()->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		//creating the user
 		$SQL = $this->_DB->doQuery($SQL);
@@ -207,19 +261,19 @@ Class UserDAO{
 		$SQL = "INSERT INTO ums_user_details(ID) VALUES('$ID')";
 		//creating user details
 		$SQL = $this->_DB->doQuery($SQL);
-		
+
 		//assigning list of roles
-		for ($i=0; $i < sizeof($Roles); $i++) { 
+		for ($i=0; $i < sizeof($Roles); $i++) {
 				$Role = $Roles[$i];
 
-			
-			$SQL_Role = "INSERT INTO ums_user_role(UserID,RoleID) 
-										VALUES('".$User->getID()."','".$Role->getID()."')";	
-		
-			$SQL_Role = $this->_DB->doQuery($SQL_Role);
-		}	
 
-	
+			$SQL_Role = "INSERT INTO ums_user_role(UserID,RoleID)
+										VALUES('".$User->getID()."','".$Role->getID()."')";
+
+			$SQL_Role = $this->_DB->doQuery($SQL_Role);
+		}
+
+
 		//closing the transaction
 		$this->_DB->getConnection()->commit();
 
@@ -241,9 +295,9 @@ Class UserDAO{
 		$msg = $User->getFullName(). ' Your request is pending for approval. You will be notified in your email: '.$User->getEmail().' about it';
 		$headers = 'From: kucse@dgted.com';
 
-		mail($User->getEmail(),$subject,$msg,$headers);
+		//mail($User->getEmail(),$subject,$msg,$headers);
 
-	}	
+	}
 
 	private function send_User_Request_Admin_Email($User){
 
@@ -251,17 +305,17 @@ Class UserDAO{
 		$msg = $User->getFullName(). ' user request is pending for approval.';
 		$headers = 'From: kucse@dgted.com';
 
-		mail('mkazi078@uottawa.ca',$subject,$msg,$headers);
+		//mail('mkazi078@uottawa.ca',$subject,$msg,$headers);
 
 	}
 
 	//user requesting password
 	public function requestPassword($User){
-		
+
 
 		$SQL = "SELECT * FROM ums_user WHERE ID like '".$User->getID()."' LIMIT 1";
 
-	
+
 		$this->_DB->doQuery($SQL);
 
 		if($this->_DB->getNumRows()>=1)
@@ -269,9 +323,9 @@ Class UserDAO{
 		 	$row = $this->_DB->getTopRow();
 
 		    $this->_User->setID ( $row['ID']);
-		    $this->_User->setUniversityID ( $row['UniversityID'] );   
+		    $this->_User->setUniversityID ( $row['UniversityID'] );
 		    $this->_User->setEmail ( $row['Email'] );
-		    
+
 		    $this->_User->setFirstName( $row['FirstName'] );
 		    $this->_User->setMiddleName( $row['MiddleName'] );
 		    $this->_User->setLastName( $row['LastName'] );
@@ -314,7 +368,7 @@ Class UserDAO{
 
 	//read an user object based on its id from user object
 	public function readUser($User){
-		
+
 
 		$SQL = "SELECT * FROM ums_user WHERE ID='".$User->getID()."'";
 		$this->_DB->doQuery($SQL);
@@ -326,7 +380,7 @@ Class UserDAO{
 
 		//preparing the user object
 	    $this->_User->setID ( $row['ID']);
-	    $this->_User->setUniversityID ( $row['UniversityID'] );   
+	    $this->_User->setUniversityID ( $row['UniversityID'] );
 	    $this->_User->setEmail ( $row['Email'] );
 	    $this->_User->setPassword ( $row['Password'] );
 	    $this->_User->setFirstName( $row['FirstName'] );
@@ -351,7 +405,7 @@ Class UserDAO{
 
 	//read an user object based on its id from user object
 	public function readUser_By_UniversityID($User){
-		
+
 
 		$SQL = "SELECT * FROM ums_user WHERE UniversityID='".$User->getUniversityID()."'";
 		$this->_DB->doQuery($SQL);
@@ -363,7 +417,7 @@ Class UserDAO{
 
 		//preparing the user object
 	    $this->_User->setID ( $row['ID']);
-	    $this->_User->setUniversityID ( $row['UniversityID'] );   
+	    $this->_User->setUniversityID ( $row['UniversityID'] );
 	    $this->_User->setEmail ( $row['Email'] );
 	    $this->_User->setPassword ( $row['Password'] );
 	    $this->_User->setFirstName( $row['FirstName'] );
@@ -377,85 +431,6 @@ Class UserDAO{
 
 	    $this->_User->setIsArchived( $row['IsArchived'] );
 	    $this->_User->setIsDeleted( $row['IsDeleted'] );
-
-
-	 	$Result = new Result();
-		$Result->setIsSuccess(1);
-		$Result->setResultObject($this->_User);
-
-		return $Result;
-	}
-
-
-	//search an user object based on some criteria
-	public function searchUser($Role,$SearchField,$SearchText){
-		
-
-		$SQL = "SELECT u.* FROM ums_user u, ums_user_role ur WHERE u.ID=ur.UserID AND 
-				ur.RoleID='$Role' AND u.".$SearchField." Like '$SearchText'";
-
-
-		$this->_DB->doQuery($SQL);
-		
-		$rows = $this->_DB->getAllRows();
-
-		for($i = 0; $i < sizeof($rows); $i++) {
-			$row = $rows[$i];
-			$this->_User = new User();
-
-		    $this->_User->setID ( $row['ID']);
-		    $this->_User->setUniversityID ( $row['UniversityID'] );   
-		    $this->_User->setEmail ( $row['Email'] );
-		    $this->_User->setPassword ( $row['Password'] );
-		    $this->_User->setFirstName( $row['FirstName'] );
-		    $this->_User->setMiddleName( $row['MiddleName'] );
-		    $this->_User->setLastName( $row['LastName'] );
-
-
-		    $Discipline = new Discipline();
-		    $Discipline->setID($row['DisciplineID']);
-		    $Discipline = $this->_DisciplineDAO->readDiscipline($Discipline)->getResultObject();
-		    $this->_User->setDiscipline( $Discipline );
-
-
-		    $this->_User->setStatus( $row['Status'] );
-		    $this->_User->setIsArchived( $row['IsArchived'] );
-		    $this->_User->setIsDeleted( $row['IsDeleted'] );
-
-		    $UserList[]=$this->_User;
-   
-		}
-
-		$Result = new Result();
-		$Result->setIsSuccess(1);
-		$Result->setResultObject($UserList);
-
-		return $Result;
-	}
-
-
-
-	//read an user object based on its id from user object
-	public function readUserDetails($UserDetails){
-		
-
-		$SQL = "SELECT * FROM ums_user_details WHERE ID='".$UserDetails->getID()."'";
-
-		$this->_DB->doQuery($SQL);
-
-		//reading the top row for this user from the database
-		$row = $this->_DB->getTopRow();
-
-		$this->_User = new UserDetails();
-
-		//preparing the user object
-	    $this->_User->setID ( $row['ID']);
-	    $this->_User->setFatherName ( $row['FatherName'] );   
-	    $this->_User->setMotherName ( $row['MotherName'] );
-	    $this->_User->setPermanentAddress ( $row['PermanentAddress'] );
-	    $this->_User->setHomePhone ( $row['HomePhone'] ); 
-	    $this->_User->setCurrentAddress ( $row['CurrentAddress'] );
-	    $this->_User->setMobilePhone ( $row['MobilePhone'] );   
 
 
 	 	$Result = new Result();
@@ -495,11 +470,89 @@ Class UserDAO{
 		return $Result;
 	}
 
+	//search an user object based on some criteria
+	public function searchUser($Role,$SearchField,$SearchText){
+
+
+		$SQL = "SELECT u.* FROM ums_user u, ums_user_role ur WHERE u.ID=ur.UserID AND
+				ur.RoleID='$Role' AND u.".$SearchField." Like '$SearchText'";
+
+
+		$this->_DB->doQuery($SQL);
+
+		$rows = $this->_DB->getAllRows();
+
+		for($i = 0; $i < sizeof($rows); $i++) {
+			$row = $rows[$i];
+			$this->_User = new User();
+
+		    $this->_User->setID ( $row['ID']);
+		    $this->_User->setUniversityID ( $row['UniversityID'] );
+		    $this->_User->setEmail ( $row['Email'] );
+		    $this->_User->setPassword ( $row['Password'] );
+		    $this->_User->setFirstName( $row['FirstName'] );
+		    $this->_User->setMiddleName( $row['MiddleName'] );
+		    $this->_User->setLastName( $row['LastName'] );
+
+
+		    $Discipline = new Discipline();
+		    $Discipline->setID($row['DisciplineID']);
+		    $Discipline = $this->_DisciplineDAO->readDiscipline($Discipline)->getResultObject();
+		    $this->_User->setDiscipline( $Discipline );
+
+
+		    $this->_User->setStatus( $row['Status'] );
+		    $this->_User->setIsArchived( $row['IsArchived'] );
+		    $this->_User->setIsDeleted( $row['IsDeleted'] );
+
+		    $UserList[]=$this->_User;
+
+		}
+
+		$Result = new Result();
+		$Result->setIsSuccess(1);
+		$Result->setResultObject($UserList);
+
+		return $Result;
+	}
+
+
+
+	//read an user object based on its id from user object
+	public function readUserDetails($UserDetails){
+
+
+		$SQL = "SELECT * FROM ums_user_details WHERE ID='".$UserDetails->getID()."'";
+
+		$this->_DB->doQuery($SQL);
+
+		//reading the top row for this user from the database
+		$row = $this->_DB->getTopRow();
+
+		$this->_User = new UserDetails();
+
+		//preparing the user object
+	    $this->_User->setID ( $row['ID']);
+	    $this->_User->setFatherName ( $row['FatherName'] );
+	    $this->_User->setMotherName ( $row['MotherName'] );
+	    $this->_User->setPermanentAddress ( $row['PermanentAddress'] );
+	    $this->_User->setHomePhone ( $row['HomePhone'] );
+	    $this->_User->setCurrentAddress ( $row['CurrentAddress'] );
+	    $this->_User->setMobilePhone ( $row['MobilePhone'] );
+
+
+	 	$Result = new Result();
+		$Result->setIsSuccess(1);
+		$Result->setResultObject($this->_User);
+
+		return $Result;
+	}
+
 
 	//read an user object based on its id form user object along with the roles
 	//todo: add permissions to the roles
 	public function readUserRoles($User){
-		
+
 		//getting the user information
 		$Result = $this->readUser($User);
 
@@ -508,13 +561,13 @@ Class UserDAO{
 
 			$this->_User = $Result->getResultObject();
 
-					
-			$SQL = "SELECT r.ID, r.Name  FROM ums_user u,ums_user_role ur, ums_role r  
+
+			$SQL = "SELECT r.ID, r.Name  FROM ums_user u,ums_user_role ur, ums_role r
 					WHERE u.ID=ur.UserID and ur.RoleID=r.ID and  u.IsDeleted is null and u.ID='".$this->_User->getID()."'";
-			
+
 			$this->_DB->doQuery($SQL);
 
-			//reading all the rows 
+			//reading all the rows
 			$rows = $this->_DB->getAllRows();
 
 			//setting roles list object
@@ -523,18 +576,18 @@ Class UserDAO{
 			for($i = 0; $i < sizeof($rows); $i++) {
 
 				$row = $rows[$i];
-		
+
 				$Role = new Role();
 
 			    //filling up role information
 			    $Role->setID ( $row['ID']);
 			    $Role->setName ( $row['Name']);
 
-			    //adding new roles with every iteration belong to this user	
+			    //adding new roles with every iteration belong to this user
 			    $Roles[]=$Role;
-	   
+
 			}
-	
+
 			//assigning role list to the user object
 			$this->_User->setRoles($Roles);
 
@@ -552,7 +605,7 @@ Class UserDAO{
 
 	//read an user object based on its id form user object along with the Positions
 	public function readUserRolesPositions($User){
-		
+
 		//getting the user information
 		$Result = $this->readUserRoles($User);
 
@@ -561,13 +614,13 @@ Class UserDAO{
 
 			$this->_User = $Result->getResultObject();
 
-					
-			$SQL = "SELECT p.ID, p.Name  FROM ums_user u,ums_user_position up, ums_position p 
+
+			$SQL = "SELECT p.ID, p.Name  FROM ums_user u,ums_user_position up, ums_position p
 					WHERE u.ID=up.UserID and up.PositionID=p.ID and  u.IsDeleted is null and  u.ID='".$this->_User->getID()."'";
-			
+
 			$this->_DB->doQuery($SQL);
 
-			//reading all the rows 
+			//reading all the rows
 			$rows = $this->_DB->getAllRows();
 
 			//setting Positions list object
@@ -576,18 +629,18 @@ Class UserDAO{
 			for($i = 0; $i < sizeof($rows); $i++) {
 
 				$row = $rows[$i];
-		
+
 				$Position = new Position();
 
 			    //filling up Position information
 			    $Position->setID ( $row['ID']);
 			    $Position->setName ( $row['Name']);
 
-			    //adding new Positions with every iteration belong to this user	
+			    //adding new Positions with every iteration belong to this user
 			    $Positions[]=$Position;
-	   
+
 			}
-	
+
 			//assigning Position list to the user object
 			$this->_User->setPositions($Positions);
 
@@ -612,7 +665,7 @@ Class UserDAO{
 
 		//start::user reading information
 		$SQL = "SELECT * FROM ums_user WHERE IsDeleted is NULL and Email='$Email'";
-	
+
 		$this->_DB->doQuery($SQL);
 		//reading the top row for this user from the database
 		$row = $this->_DB->getTopRow();
@@ -638,15 +691,15 @@ Class UserDAO{
 
 	//read an user object based on its email form user object with all the roles and related permissions
 	public function readUserRolesPermissions($User){
-	
+
 		$Result = new Result();
 
 		$Email = $User->getEmail();
 		$Password = $User->getPassword();
-		
+
 		//start::user reading information
 		$SQL = "SELECT * FROM ums_user WHERE IsDeleted is NULL and Email='$Email'";
-	
+
 		$this->_DB->doQuery($SQL);
 		//reading the top row for this user from the database
 		$row = $this->_DB->getTopRow();
@@ -657,7 +710,7 @@ Class UserDAO{
 
 			//preparing the user object
 		    $this->_User->setID ( $row['ID']);
-		    $this->_User->setUniversityID ( $row['UniversityID'] );   
+		    $this->_User->setUniversityID ( $row['UniversityID'] );
 		    $this->_User->setEmail ( $row['Email'] );
 		    $this->_User->setPassword ( $row['Password'] );
 
@@ -671,22 +724,22 @@ Class UserDAO{
 		    $this->_User->setDiscipline( $Discipline );
 
 		    $this->_User->setStatus( $row['Status'] );
-		    $this->_User->setIsLogged( $row['IsLogged'] );	
+		    $this->_User->setIsLogged( $row['IsLogged'] );
 		    $this->_User->setIsArchived( $row['IsArchived'] );
 		    $this->_User->setIsDeleted( $row['IsDeleted'] );
 			//end::user reading information
 
-		
+
 			if(strcasecmp( $row['Status'], 'approved')==0 )
 			{
 
 			//start::getting all the roles of the user
-			$SQL = "SELECT r.ID, r.Name  FROM ums_user u,ums_user_role ur, ums_role r  
+			$SQL = "SELECT r.ID, r.Name  FROM ums_user u,ums_user_role ur, ums_role r
 						WHERE u.ID=ur.UserID and ur.RoleID=r.ID and u.ID='".$this->_User->getID()."'";
-				
+
 			$this->_DB->doQuery($SQL);
 
-			//reading all the rows 
+			//reading all the rows
 			$rows = $this->_DB->getAllRows();
 
 			//setting roles list object
@@ -695,7 +748,7 @@ Class UserDAO{
 			for($i = 0; $i < sizeof($rows); $i++) {
 
 				$row = $rows[$i];
-		
+
 				$Role = new Role();
 
 			    //filling up role information
@@ -709,20 +762,20 @@ Class UserDAO{
 			   	//if role permission reading is succesful
 			   	if($ResultRole->getIsSuccess()){
 			   		//assigning the role information to current role object
-			   		$Role = $ResultRole->getResultObject();	
+			   		$Role = $ResultRole->getResultObject();
 
 			   	}
 
-			    //adding new roles with every iteration belong to this user	
+			    //adding new roles with every iteration belong to this user
 			    $Roles[]=$Role;
-	   
+
 			}
 
 				//assigning role list to the user object
 			$this->_User->setRoles($Roles);
 
 			//end::getting all the roles of the user
-		
+
 
 			$Result->setIsSuccess(1);
 			$Result->setResultObject($this->_User);
@@ -758,25 +811,25 @@ Class UserDAO{
 
 		if(strcasecmp($Password, "*__KEEP__*")==0){ //if you are keeping your old password
 
-		$SQL = "UPDATE ums_user SET UniversityID='$UniversityID', 
+		$SQL = "UPDATE ums_user SET UniversityID='$UniversityID',
 			Email='$Email',FirstName='$FirstName',MiddleName='$MiddleName',LastName='$LastName',
 			DisciplineID='$DisciplineID' WHERE ID='$ID'";
 
 		}else{ //otherwise you have entered a new password
 
-		$SQL = "UPDATE ums_user SET UniversityID='$UniversityID',Password='$Password', 
+		$SQL = "UPDATE ums_user SET UniversityID='$UniversityID',Password='$Password',
 		Email='$Email',FirstName='$FirstName',MiddleName='$MiddleName',LastName='$LastName',
 		DisciplineID='$DisciplineID' WHERE ID='$ID'";
-	
-			
+
+
 		}
 
-		//beginning a transaction 	
+		//beginning a transaction
 		$this->_DB->getConnection()->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		//updating the user
 		$SQL = $this->_DB->doQuery($SQL);
 
-		//removing previous roles 
+		//removing previous roles
 
 		$SQL_delete = "DELETE from ums_user_role where UserID ='".$User->getID()."'";
 		$SQL_delete = $this->_DB->doQuery($SQL_delete);
@@ -785,16 +838,16 @@ Class UserDAO{
 		$Roles = $User->getRoles();
 
 		//assigning new roles to the user
-		for ($i=0; $i < sizeof($Roles); $i++) { 
+		for ($i=0; $i < sizeof($Roles); $i++) {
 			$Role = $Roles[$i];
-			
-			$SQL_Role = "INSERT INTO ums_user_role(UserID,RoleID) 
+
+			$SQL_Role = "INSERT INTO ums_user_role(UserID,RoleID)
 										VALUES('".$User->getID()."','".$Role->getID()."')";
 			$SQL_Role = $this->_DB->doQuery($SQL_Role);
-		}	
+		}
 
 
-		//removing previous Positions 
+		//removing previous Positions
 
 		$SQL_delete = "DELETE from ums_user_position where UserID ='".$User->getID()."'";
 		$SQL_delete = $this->_DB->doQuery($SQL_delete);
@@ -803,17 +856,17 @@ Class UserDAO{
 		$Positions = $User->getPositions();
 
 		//assigning new Positions to the user
-		for ($i=0; $i < sizeof($Positions); $i++) { 
+		for ($i=0; $i < sizeof($Positions); $i++) {
 			$Position = $Positions[$i];
-			
-			$SQL_Position = "INSERT INTO ums_user_position(UserID,PositionID) 
+
+			$SQL_Position = "INSERT INTO ums_user_position(UserID,PositionID)
 										VALUES('".$User->getID()."','".$Position->getID()."')";
 
 			$SQL_Position = $this->_DB->doQuery($SQL_Position);
-		}	
+		}
 
 
-				
+
 		//closing the transaction
 		$this->_DB->getConnection()->commit();
 
@@ -829,7 +882,7 @@ Class UserDAO{
 	//update an user details object based on its id information
 	public function updateUserDetails($UserDetails){
 
-		$SQL = "UPDATE ums_user_details SET FatherName='".$UserDetails->getFatherName()."', 
+		$SQL = "UPDATE ums_user_details SET FatherName='".$UserDetails->getFatherName()."',
 			MotherName='".$UserDetails->getMotherName()."',
 			PermanentAddress='".$UserDetails->getPermanentAddress()."',
 			HomePhone='".$UserDetails->getHomePhone()."',
@@ -837,11 +890,11 @@ Class UserDAO{
 			MobilePhone='".$UserDetails->getMobilePhone()." '
 			WHERE ID='".$UserDetails->getID()."'";
 
-		//beginning a transaction 	
+		//beginning a transaction
 		$this->_DB->getConnection()->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		//updating the user
 		$SQL = $this->_DB->doQuery($SQL);
-				
+
 		//closing the transaction
 		$this->_DB->getConnection()->commit();
 
@@ -855,15 +908,15 @@ Class UserDAO{
 	//delete an user based on its id of the database
 	public function deleteUser($User){
 
-		//beginning a transaction 	
+		//beginning a transaction
 		$this->_DB->getConnection()->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
-	
-		//removing previous Positions 
+
+		//removing previous Positions
 
 		$SQL_delete = "DELETE from ums_user_position where UserID ='".$User->getID()."'";
 		$SQL_delete = $this->_DB->doQuery($SQL_delete);
 
-		//removing previous roles 
+		//removing previous roles
 
 		$SQL_delete = "DELETE from ums_user_role where UserID ='".$User->getID()."'";
 		$SQL_delete = $this->_DB->doQuery($SQL_delete);
@@ -890,10 +943,10 @@ Class UserDAO{
 	//approve or reject an user
 	public function approve_Reject_User($User,$Status){
 
-		//beginning a transaction 	
+		//beginning a transaction
 		$this->_DB->getConnection()->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
-	
-	
+
+
 		// check the deleted row to true in the user now
 		$SQL = "UPDATE ums_user SET Status='$Status' where ID ='".$User->getID()."'";
 
@@ -922,7 +975,7 @@ Class UserDAO{
 
 		mail($User->getEmail(),$subject,$msg,$headers);
 
-	}	
+	}
 
 
 }

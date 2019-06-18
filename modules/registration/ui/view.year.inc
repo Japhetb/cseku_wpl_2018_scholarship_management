@@ -19,7 +19,7 @@ include_once COMMON.'class.common.course.inc';
               	<label class="control-label col-sm-2" for="txtName">Year Name:</label>
               	<div class="col-sm-10">       
 				<input type="text" name="txtName" class="form-control"  placeholder="Year Name" value="<?php 
-					if(isset($_GET['edit'])) echo $getROW->getName();  ?>" />
+					if(isset($_GET['edit'])) echo $getROW->getName();  ?>"required />
 				</div>
 				</div>
 		        <div class="form-group">        

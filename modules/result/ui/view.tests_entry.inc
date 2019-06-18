@@ -17,9 +17,9 @@ include_once 'blade/view.tests_entry.blade.inc';
           	<label class="control-label col-sm-4" for="txtCourseNo">Course No:</label>
           		<div class="col-sm-6">       
 				<input type="text" name="txtCourseNo" class="form-control" 
-				value="<?php if(isset($_GET['update'])&&isset($Course)) echo $Course->getCourseNo(); ?>" readonly/>
-				<input type="hidden" name="hiddenCourseNo" class="form-control" 
-				value="<?php if(isset($_GET['update'])&&isset($Course)) echo $Course->getCourseNo(); ?>" readonly/>				
+				value="<?php if(isset($Course)) echo $Course->getCourseNo(); ?>" readonly/>
+				<input type="hidden" name="hiddenCourseID" class="form-control" 
+				value="<?php if(isset($_GET['update'])&&isset($Course)) echo $Course->getID(); ?>" readonly/>				
 			 	</div>
 			</div>
 
@@ -35,7 +35,7 @@ include_once 'blade/view.tests_entry.blade.inc';
           	<label class="control-label col-sm-4" for="txtSession">Session:</label>
           		<div class="col-sm-6">       
 				<input type="text" name="txtSession" class="form-control" 
-				value="<?php if(isset($_GET['update'])&&isset($Session)) echo $Session->getName(); ?>" readonly/>
+				value="<?php if(isset($Session)) echo $Session->getName(); ?>" readonly/>
 				<input type="hidden" name="hiddenSession" class="form-control" 
 				value="<?php if(isset($_GET['update'])&&isset($Session)) echo $Session->getID(); ?>" readonly/>				
 			 	</div>
@@ -121,19 +121,25 @@ include_once 'blade/view.tests_entry.blade.inc';
 		$NoOfTests = $Result_Course_Teacher->getNoOfTests();
 
 		?>
-				
-		<input type="hidden" name="hidden_all_students" value="<?php echo implode(",", $StudentIDList); ?>" />
+		<?php
+		if ($StudentIDList!=null) {
+			?>
+			<input type="hidden" name="hidden_all_students" value="<?php echo implode(",", $StudentIDList); ?>" />
 		<input type="hidden" name="hidden_no_of_tests" value="<?php echo $NoOfTests; ?>" />
+			<?php
+		}
+		else
+		{
+			echo "No strudents to show";
+		}
+		?>
 		<tr>
-
 			<th>University ID</th>
 			<th>Name</th>
-		
 		<?php	for ($i=1; $i <= $NoOfTests ; $i++) { 
 				echo '<th>Test ('.$i.')</th>';
 			}
 		?>	
-
 		</tr>
 		<?php 
 		for($i = 0; $i < sizeof($CourseStudentRegistrations); $i++) {

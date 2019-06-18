@@ -110,6 +110,16 @@ Class CourseTeacherBAO{
 		return $Result;
 
 	}
+	public function getAllOfMyCourses($CourseTeaher){
+
+		$Result = new Result();	
+		$Result = $this->_CourseTeacherDAO->getAllOfMyCourses($CourseTeaher);
+		
+		if(!$Result->getIsSuccess())
+			$Result->setResultObject("Database failure in CourseTeacherDAO.getAllOfMyCourses($CourseTeaher)");		
+
+		return $Result;
+	}
 
 }
 

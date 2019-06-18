@@ -140,6 +140,16 @@ Class CourseStudentRegistrationBAO{
 		return $Result;
 
 	}
+	public function setRetakeStatus($StudentID,$IsRetake,$CourseNo,$Status)
+	{
+		$Result = new Result();	
+		$Result = $this->_CourseStudentRegistrationDAO->setRetakeStatus($StudentID,$IsRetake,$CourseNo,$Status);
+		
+		if(!$Result->getIsSuccess())
+			$Result->setResultObject("Database failure in CourseStudentRegistrationDAO.setRetakeStatus()");		
+		return $Result;
+
+	}
 	
 }
 

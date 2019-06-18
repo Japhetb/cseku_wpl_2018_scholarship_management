@@ -14,11 +14,13 @@ if(isset($_POST['save']))
 	 $GradeSetup = new GradeSetup();
 
 	 $GradeSetup->setID(Util::getGUID());
-
 	 
      $GradeSetup->setGrades($_DB->secureInput($_POST['txtGrades']));
      
      $GradeSetup->setRanges($_DB->secureInput($_POST['txtRanges']));
+
+      $GradeSetup->setCgpa($_DB->secureInput($_POST['txtCgpa']));
+
 
   
      if(!isset($_POST['IsDefault'])||$_POST['IsDefault'] == "")
@@ -28,6 +30,15 @@ if(isset($_POST['save']))
      else 
      {
      	$GradeSetup->setIsDefault(1);
+     }
+
+     if(!isset($_POST['IsRetake'])||$_POST['IsRetake'] == "")
+     {
+          $GradeSetup->setIsRetake(0);
+     }
+     else 
+     {
+          $GradeSetup->setIsRetake(1);
      }
 
      $_GradeSetupBAO->createGradeSetup($GradeSetup);	 
@@ -64,6 +75,8 @@ if(isset($_POST['update']))
       $GradeSetup->setGrades($_DB->secureInput($_POST['txtGrades']));
      
      $GradeSetup->setRanges($_DB->secureInput($_POST['txtRanges']));
+
+     $GradeSetup->setCgpa($_DB->secureInput($_POST['txtCgpa']));
 	 
   
      if(!isset($_POST['IsDefault'])||$_POST['IsDefault'] == "")
@@ -73,6 +86,15 @@ if(isset($_POST['update']))
      else 
      {
      	$GradeSetup->setIsDefault(1);
+     }
+
+     if(!isset($_POST['IsRetake'])||$_POST['IsRetake'] == "")
+     {
+          $GradeSetup->setIsRetake(0);
+     }
+     else 
+     {
+          $GradeSetup->setIsRetake(1);
      }
 
      $_GradeSetupBAO->updateGradeSetup($GradeSetup);	 

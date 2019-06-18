@@ -5,7 +5,6 @@ include_once COMMON.'class.common.inc';
 include_once 'blade/view.marks_entry.blade.inc';
 
 //course status evolve: pending, submitted, approved/rejected, registered, passed/failed
-
 ?>
 
 <div class="panel  panel-default">
@@ -15,17 +14,52 @@ include_once 'blade/view.marks_entry.blade.inc';
 		<form method="post" name="form1" class="form-horizontal">
 
 			<div class="form-group">
-          	<label class="control-label col-sm-4" for="txtCourseNo">Course No:</label>
-          		<div class="col-sm-6">       
-				<input type="text" name="txtCourseNo" class="form-control"  placeholder="cse-3310"
-				value="<?php if(isset($_POST['txtCourseNo'])) echo $_POST['txtCourseNo']; ?>"/>
-			 	</div>
+          	<label class="control-label col-sm-4" for="CourseID">Course Name:</label>
+			 	<div class="col-sm-6">	
+							<?php
+                                $Result = $_CourseTeacherBAO->getAllOfMyCourses($CourseTeacher);
+							if ($Result->getIsSuccess())
+							{
+								$CourseTeachers = $Result->getResultObject();							}
+							?>
+							<select name="CourseID" class="form-control" style="width:170px">
+								<?php
+								for ($i = 0; $i<sizeof($CourseTeachers); $i++){
+									$CourseTeacher = $CourseTeachers[$i];
+
+									if (isset($_POST['CourseID'])){
+
+										if ($_POST['CourseID'] == $CourseTeacher->getCourse()->getCourseNo()){
+											?>
+											<option selected value = "<?php echo $CourseTeacher->getCourse()->getID();?>" > <?php echo $CourseTeacher->getCourse()->getTitle();?> 
+											</option>
+											<?php
+										}
+										else {
+
+											?>
+											<option value="<?php echo $CourseTeacher->getCourse()->getID();?>" > <?php echo $CourseTeacher->getCourse()->getTitle(); ?> 
+											</option>
+											<?php
+										}
+									}	
+									else {
+
+											?>
+											<option value="<?php echo $CourseTeacher->getCourse()->getID();?>" > <?php echo $CourseTeacher->getCourse()->getTitle();?> 
+											</option>
+											<?php
+									}	
+								
+								}
+								?>	
+							</select>
+				</div>
 			</div>
 
 			<div class="form-group">
               	<label class="control-label col-sm-4" for="session">Session:</label>
               	<div class="col-sm-6">	
-
 							<?php
 							$Result = $_RegistrationSessionBAO->getAllRegistrationSessions();
 							if ($Result->getIsSuccess())
@@ -168,7 +202,14 @@ include_once 'blade/view.marks_entry.blade.inc';
 			<div class="form-group">
               	<div class=" col-sm-6">	
 
-						<button type="submit" name="notify_marks">Notify Marks</button>
+						<button type="submit" class="btn btn-info" onclick="window.open('marks_shit.php?print=true&&session=<?php
+							if(isset($Print_Session)) echo $Print_Session->getID();?>&&CourseID=<?php
+							if(isset($Course)) echo $Course->getID();?>&&year=<?php 
+							if(isset($Print_Year))echo $Print_Year->getID();?>&&term=<?php 
+							if(isset($Print_Term))echo $Print_Term->getID();?>')" 
+			>
+			Print Marks
+			</button> 
 	
 				</div>
               	<div class=" col-sm-6">	
@@ -198,76 +239,6 @@ include_once 'blade/view.marks_entry.blade.inc';
 		<!--form method="post" name="form2" class="form-horizontal"-->
 <?php
 	//searching the marks entry in the result list that match student id
-	function findMarksEntry($MarksEntryList,$StudentID){
-
-		for ($i=0; $i < sizeof($MarksEntryList) ; $i++) { 
-			
-			$MarksEntry = $MarksEntryList[$i];
-			if($MarksEntry->getStudent()==$StudentID)
-				return $MarksEntry;
-		}
-
-		return null;
-	}
-
-	//returning the marks value from the marks entry
-	function findMarks($MarksEntry, $FindHeaderID){
-
-		if(isset($MarksEntry)){
-			$MarksValueList = explode(",",$MarksEntry->getMarksValue());
-			$HeaderIDList = explode(",",$MarksEntry->getHeaderID());
-
-			for ($i=0; $i < sizeof($HeaderIDList) ; $i++) { 
-				
-				$HeaderID = $HeaderIDList[$i];
-				$MarksValue = $MarksValueList[$i];
-
-				if($HeaderID==$FindHeaderID){
-					return $MarksValue;
-				}
-			}
-		}
-		else
-			return "X";	
-	}
-
-	function findGrade($TotalMarks, $GradeRangesList, $GradeList){
-				
-	$GradePos = searchGrade($GradeRangesList,$TotalMarks );
-		
-			if($GradePos>=0)
-				return $GradeList[$GradePos]; //grade position
-	
-		return "X";
-	}
-
-	function searchGrade($GradeRangesList,$TotalMarks ){
-		$j=0;
-		foreach ($GradeRangesList as $Range) { //extracting the list
-			if(strpos($Range, '-')!==false){ //if - is present
-				$X = explode("-", $Range);	
-				if(count($X)===2){//both from and to are found
-					if($TotalMarks>=$X[0] && $TotalMarks<= $X[1]) //searching the grade position
-						return $j;
-				}
-			}
-			$j++;
-		}
-
-		return -1;			
-	}
-
-	function sumMarks($MarksEntry){
-		if(isset($MarksEntry)){
-			
-			$MarksValueList = explode(",",$MarksEntry->getMarksValue());
-			$MarksValueList = array_map('intval',$MarksValueList); //converting string arrya to num array
-			$TotalMarks=array_sum($MarksValueList); //adding all the numbers
-
-			return $TotalMarks;
-		}	
-
-	}
 
 	if(isset($Result_Course_Students) && isset($Result_Marks_Setup)&&isset($Result_Grade_Setup))
 	{
@@ -277,27 +248,42 @@ include_once 'blade/view.marks_entry.blade.inc';
 		for($i = 0; $i < sizeof($CourseStudentRegistrations); $i++) {
 			$CourseStudentRegistration = $CourseStudentRegistrations[$i];
 			$StudentIDList[] = $CourseStudentRegistration->getStudent()->getUniversityID();
-		}	
+		}
 
 		$MarksSetup = $Result_Marks_Setup->getResultObject(); //marks setup
 		$MarksEntryList= $Result_Course_Student_Marks->getResultObject(); //all student registered
 		$GradeSetup = $Result_Grade_Setup->getResultObject(); //grade distribution setup
+		$RetakeGradeSetup = $Retake_Grade_Setup->getResultObject(); //retake grade distribution setup
+
 
 		$MarksHeaderID= $MarksSetup->getHeaderID(); //getting header id
 		$MarksHeaderName= $MarksSetup->getHeaderName(); //header name
 		$MarksHeaderMax= $MarksSetup->getHeaderMax(); //maximum heade value
 
-		$Grades = $GradeSetup->getGrades();
-		$GradeRanges= $GradeSetup->getRanges();
 
 		
 		$HeaderIDList = explode(",",$MarksHeaderID); //getting header ids
 		$HeaderList = explode(",",$MarksHeaderName); //getting header names
 		$HeaderMaxList = explode(",",$MarksHeaderMax); //getting header maxs
 
+
+//normal grade
+		$Grades = $GradeSetup->getGrades();
+		$GradeRanges= $GradeSetup->getRanges();
+		$CgpaRanges=$GradeSetup->getCgpa();
+
 		$GradeList = explode(",",$Grades); //getting grades
 		$GradeRangesList=explode(",",$GradeRanges); //getting grade ranges
+		$CgpaRangesList=explode(",", $CgpaRanges);
 
+		//retake
+		$RetakeGrades = $RetakeGradeSetup->getGrades();
+		$RetakeGradeRanges= $RetakeGradeSetup->getRanges();
+		$RetakeCgpaRanges=$RetakeGradeSetup->getCgpa();
+
+		$RetakeGradeList = explode(",",$RetakeGrades); //getting grades
+		$RetakeGradeRangesList=explode(",",$RetakeGradeRanges); //getting grade ranges
+		$RetakeCgpaRangesList=explode(",", $RetakeCgpaRanges);
 
 		?>
 		
@@ -309,14 +295,18 @@ include_once 'blade/view.marks_entry.blade.inc';
 		
 
 		<input type="hidden" name="marks_id" value="<?php echo $MarksSetup->getID(); ?>" />
-
-		<input type="hidden" name="all_students" value="<?php echo implode(",", $StudentIDList); ?>" />
+		<?php
+		if(sizeof($StudentIDList)>0)
+		{?>
+		<input type="hidden" name="all_students" value="<?php echo implode(",",$StudentIDList ); ?>"/>
+	    <?php }?>
 		<tr>
 
 			<th>University ID</th>
 			<th>Name</th>
 		
-		<?php	for ($i=0; $i < sizeof($HeaderList) ; $i++) { 
+		<?php
+		for ($i=0; $i < sizeof($HeaderList) ; $i++) { 
 				$Header = $HeaderList[$i];
 				$HeaderMax = $HeaderMaxList[$i];
 				echo '<th>'.$Header.' ('.$HeaderMax.')</th>';
@@ -324,6 +314,8 @@ include_once 'blade/view.marks_entry.blade.inc';
 		?>	
 			<th>Total</th>
 			<th>Grade</th>
+			<th>Grade Point</th>
+			<th>Is Retake</th>
 		</tr>
 		<?php 
 		for($i = 0; $i < sizeof($CourseStudentRegistrations); $i++) {
@@ -332,6 +324,8 @@ include_once 'blade/view.marks_entry.blade.inc';
 			$StudentEmail = $CourseStudentRegistration->getStudent()->getID();
 			$MarksEntry = findMarksEntry($MarksEntryList,$StudentID);//marks entry, marks value
 			$TotalMarks = sumMarks($MarksEntry); // sum of all the marks
+			$IsRetake=$_MarksEntryBAO->checkPreRetake($StudentID,$CourseID);
+;
 
 			?>
 			<tr>
@@ -355,11 +349,36 @@ include_once 'blade/view.marks_entry.blade.inc';
 						value="<?php echo $TotalMarks; ?>" size="3" readonly/>
 				</td>
 				<td><input type="text" name="<?php echo $StudentID.'[\''.(sizeof($HeaderList)+2).'\']'; ?>" 
-						value="<?php echo findGrade($TotalMarks, $GradeRangesList, $GradeList); ?>" 
+						value="<?php
+						if($IsRetake)
+						 echo findGrade($TotalMarks, $RetakeGradeRangesList, $RetakeGradeList);
+						else
+						 echo findGrade($TotalMarks, $GradeRangesList, $GradeList); 
+						 ?>" 
 						size="3"
 						readonly/>
-				</td>		
-
+				</td>
+				<td><input type="text" name="<?php echo $StudentID.'[\''.(sizeof($HeaderList)+3).'\']'; ?>" 
+						value="<?php
+						if($IsRetake)
+						echo findGradePoint($TotalMarks, $RetakeGradeRangesList, $RetakeCgpaRangesList);
+						else
+						 echo findGradePoint($TotalMarks, $GradeRangesList, $CgpaRangesList); ?>" 
+						size="3"
+						readonly/>
+				</td>
+				<td>
+					<?php
+					if($IsRetake)
+					{
+						echo "Retake";
+					}
+					else
+					{
+						echo "";
+					}
+					?>
+				</td>	
 			</tr>
 			<?php
 

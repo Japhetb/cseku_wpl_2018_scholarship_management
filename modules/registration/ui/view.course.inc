@@ -6,44 +6,44 @@ include_once COMMON.'class.common.course.inc';
 
 ?>
 <div class="panel panel-default">
-    
+
     <div class="panel-heading">Course Information</div>
-    
+
     <div class="panel-body">
 
 	<div id="form">
 		<form method="post" class="form-horizontal">
 			<div class="form-group">
           	<label class="control-label col-sm-4" for="txtName">Course No:</label>
-          	<div class="col-sm-6">       
-			<input type="text" name="txtName" class="form-control"  placeholder="Course No" value="<?php 
-				if(isset($_GET['edit'])) echo $getROW->getCourseNo();  ?>" />
+          	<div class="col-sm-6">
+			<input type="text" name="txtName" class="form-control"  placeholder="Course No" value="<?php
+				if(isset($_GET['edit'])) echo $getROW->getCourseNo();  ?>" required/>
 			</div>
 			</div>
 
 			<div class="form-group">
           	<label class="control-label col-sm-4" for="txtName">Course Title:</label>
-          	<div class="col-sm-6">       
-			<input type="text" name="txttitle" class="form-control"  placeholder="Course Title" value="<?php 
-				if(isset($_GET['edit'])) echo $getROW->getTitle();  ?>" />
+          	<div class="col-sm-6">
+			<input type="text" name="txttitle" class="form-control"  placeholder="Course Title" value="<?php
+				if(isset($_GET['edit'])) echo $getROW->getTitle();  ?>" required/>
 			</div>
 			</div>
 
 			<div class="form-group">
-          	<label class="control-label col-sm-4" for="txtName">Course Title:</label>
-          	<div class="col-sm-6">       
-			<input type="text" name="txtcrdit" class="form-control"  placeholder="Course Credit" value="<?php 
-				if(isset($_GET['edit'])) echo $getROW->getCredit();  ?>" />
+          	<label class="control-label col-sm-4" for="txtName">Course Credit:</label>
+          	<div class="col-sm-6">
+			<input type="text" name="txtcrdit" class="form-control"  placeholder="Course Credit" value="<?php
+				if(isset($_GET['edit'])) echo $getROW->getCredit();  ?>" required/>
 			</div>
 			</div>
 			<div class="form-group">
               	<label class="control-label col-sm-4" for="coursetype">Course Type:</label>
-              	<div class="col-sm-6">	
+              	<div class="col-sm-6">
 
 							<?php
 							$Result = $_CourseTypeBAO->getAllCourseTypes();
 							if ($Result->getIsSuccess())
-								$CourseTypeList = $Result->getResultObject();					
+								$CourseTypeList = $Result->getResultObject();
 							?>
 							<select name="coursetype" class="form-control" style="width:170px">
 								<?php
@@ -54,7 +54,7 @@ include_once COMMON.'class.common.course.inc';
 									if (!isset($_GET['edit'])){
 
 										?>
-										<option value="<?php echo $CourseType->getID();?>" > <?php echo $CourseType->getName(); ?> 
+										<option value="<?php echo $CourseType->getID();?>" > <?php echo $CourseType->getName(); ?>
 										</option>
 										<?php
 									}
@@ -62,31 +62,31 @@ include_once COMMON.'class.common.course.inc';
 
 										if ($getROW->getCourseTypeID() == $CourseType->getID() ){
 											?>
-											<option selected value = "<?php echo $CourseType->getID();?>" > <?php echo $CourseType->getName();?> 
+											<option selected value = "<?php echo $CourseType->getID();?>" > <?php echo $CourseType->getName();?>
 											</option>
 											<?php
 										}
 										else {
 
 											?>
-											<option value="<?php echo $CourseType->getID();?>" > <?php echo $CourseType->getName(); ?> 
+											<option value="<?php echo $CourseType->getID();?>" > <?php echo $CourseType->getName(); ?>
 											</option>
 											<?php
-										}	
+										}
 									}
 								}
-								?>	
+								?>
 							</select>
-					</div>		
-			</div>	
+					</div>
+			</div>
 			<div class="form-group">
               	<label class="control-label col-sm-4" for="discipline">Discipline:</label>
-              	<div class="col-sm-6">	
+              	<div class="col-sm-6">
 
 							<?php
 							$Result = $_DisciplineBAO->getAllDisciplines();
 							if ($Result->getIsSuccess())
-								$DisciplineList = $Result->getResultObject();					
+								$DisciplineList = $Result->getResultObject();
 							?>
 							<select name="discipline" class="form-control" style="width:170px">
 								<?php
@@ -97,7 +97,7 @@ include_once COMMON.'class.common.course.inc';
 									if (!isset($_GET['edit'])){
 
 										?>
-										<option value="<?php echo $Discipline->getID();?>" > <?php echo $Discipline->getName(); ?> 
+										<option value="<?php echo $Discipline->getID();?>" > <?php echo $Discipline->getName(); ?>
 										</option>
 										<?php
 									}
@@ -105,27 +105,69 @@ include_once COMMON.'class.common.course.inc';
 
 										if ($getROW->getDisciplineID() == $Discipline->getID() ){
 											?>
-											<option selected value = "<?php echo $Discipline->getID();?>" > <?php echo $Discipline->getName();?> 
+											<option selected value = "<?php echo $Discipline->getID();?>" > <?php echo $Discipline->getName();?>
 											</option>
 											<?php
 										}
 										else {
 
 											?>
-											<option value="<?php echo $Discipline->getID();?>" > <?php echo $Discipline->getName(); ?> 
+											<option value="<?php echo $Discipline->getID();?>" > <?php echo $Discipline->getName(); ?>
 											</option>
 											<?php
-										}	
+										}
 									}
 								}
-								?>	
+								?>
 							</select>
 				</div>
-			</div>	
+			</div>
+			<div class="form-group">
+              	<label class="control-label col-sm-4" for="prequsite">Prequisite Course:</label>
+              	<div class="col-sm-6">
+
+							<?php
+				                    $Result = $_CourseBAO->getAllCourses();
+							        if ($Result->getIsSuccess())
+								        $CourseList = $Result->getResultObject();
+							    ?>
+							<select name="prequsite" class="form-control" style="width:170px">
+								<?php
+								for ($i = 0; $i<sizeof($CourseList); $i++){
+									$Course = $CourseList[$i];
+									?>
+									<?php
+									if (!isset($_GET['edit'])){
+										?>
+										<option value="<?php echo $Course->getID();?>" > <?php echo $Course->getTitle(); ?>
+										</option>
+										<?php
+									}
+									if (isset($_GET['edit'])){
+										if ($getROW->getPrequisite() == $Course->getID() ){
+											?>
+											<option selected value = "<?php echo $Course->getID();?>" > <?php echo $Course->getTitle();?>
+											</option>
+											<?php
+										}
+										else {
+
+											?>
+											<option value="<?php echo $Course->getID();?>" > <?php echo $Course->getTitle(); ?>
+											</option>
+											<?php
+										}
+									}
+								}
+								?>
+								<option>NO Prequisite</option>
+							</select>
+				</div>
+			</div>
 			<div class="form-group">
               	<label class="control-label col-sm-4" for="ISdeleted">Deleted ?</label>
-              	<div class="col-sm-2">	
-  
+              	<div class="col-sm-2">
+
 							<input type="checkbox" name="ISdeleted"
 							<?php
 							if (isset($_GET['edit'])){
@@ -139,11 +181,11 @@ include_once COMMON.'class.common.course.inc';
 							?>
 							/>
 
-				</div>			
-			</div>	
-		
-	        <div class="form-group">        
-              	<div class="col-sm-offset-2 col-sm-10">	
+				</div>
+			</div>
+
+	        <div class="form-group">
+              	<div class="col-sm-offset-2 col-sm-10">
 
 							<?php
 							if(isset($_GET['edit']))
@@ -160,7 +202,7 @@ include_once COMMON.'class.common.course.inc';
 							}
 							?>
 				</div>
-			</div>				
+			</div>
 
 			</form>
 </div>
@@ -183,10 +225,11 @@ include_once COMMON.'class.common.course.inc';
 						<th>Title</th>
 						<th>Credit</th>
 						<th>Course Type</th>
+						<th>Prequsite</th>
 						<th>Discipline</th>
 						<th>Is Deleted?</th>
 					</tr>
-					<?php 
+					<?php
 					for($i = 0; $i < sizeof($Courses); $i++) {
 						$Course = $Courses[$i];
 		//echo '<br>'. $Course->getCourseNo().$Course->getISdeleted();
@@ -196,16 +239,17 @@ include_once COMMON.'class.common.course.inc';
 							<td><?php echo $Course->getTitle(); ?></td>
 							<td><?php echo $Course->getCredit(); ?></td>
 							<td><?php echo $Course->getCourseTypeID(); ?></td>
+							<td><?php echo $Course->getPrequisite(); ?></td>
 							<td><?php echo $Course->getDisciplineID(); ?></td>
 							<?php
 
 							if($Course->getISdeleted() == 1)
 								$deletertik = "checked";
-							else 
+							else
 								$deletertik = "";
 							?>
-							<td><input type="checkbox" name="name1" onclick="return false;" 
-								<?php 
+							<td><input type="checkbox" name="name1" onclick="return false;"
+								<?php
 								if($Course->getISdeleted() == 1)
 								{
 									?>
@@ -232,4 +276,3 @@ include_once COMMON.'class.common.course.inc';
 
 </div>
 </div>
-

@@ -78,6 +78,19 @@ Class GradeSetupBAO{
 
 	}
 
+	public function readRetakeGradeSetup(){
+
+
+		$Result = new Result();	
+		$Result = $this->_GradeSetupDAO->readRetakeGradeSetup();
+		
+		if(!$Result->getIsSuccess())
+			$Result->setResultObject("Database failure in GradeSetupDAO.readRetakeGradeSetup()");		
+		return $Result;
+
+
+	}
+
 
 	//update an GradeSetup object based on its current information
 	public function updateGradeSetup($GradeSetup){

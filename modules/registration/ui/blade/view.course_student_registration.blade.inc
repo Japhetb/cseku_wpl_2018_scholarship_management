@@ -33,13 +33,11 @@ if(isset($_POST['search']))
     
     $CourseNo = $_DB->secureInput($_POST['txtCourseNo']);
   
-    $Result_Search_Course = $_CourseBAO->searchAllCourses($CourseNo);
-
+    $userDiscipline=$globalUser->getDiscipline()->getID();
+    $Result_Search_Course = $_CourseBAO->searchAllCourses($CourseNo,$userDiscipline);
  
     if($Result_Search_Course->getIsSuccess())
-        $_SESSION['Result_Search_Course']=$Result_Search_Course;
-    else
-        $_SESSION['Result_Search_Course']=null;
+        $_SESSION['Result_Search_Courses']=$Result_Search_Course;
  }
 
 if(isset($_GET['add'])) //adding to the cart

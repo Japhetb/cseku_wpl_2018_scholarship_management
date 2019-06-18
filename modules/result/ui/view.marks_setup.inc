@@ -54,7 +54,7 @@ include_once COMMON.'class.common.course.inc';
               	<label class="control-label col-sm-2" for="txtHeaderID">Header ID:</label>
               	<div class="col-sm-10">
 					<input type="text" name="txtHeaderID" placeholder="e.g. att,assess" value="<?php 
-					if(isset($_GET['edit'])) echo $getROW->getHeaderID();  ?>" />
+					if(isset($_GET['edit'])) echo $getROW->getHeaderID();  ?>" required/>
 				</div>				
 			</div>
 
@@ -62,7 +62,7 @@ include_once COMMON.'class.common.course.inc';
               	<label class="control-label col-sm-2" for="txtHeaderName">Header Name:</label>
               	<div class="col-sm-10">
 					<input type="text" name="txtHeaderName" placeholder="e.g. Attendance,Assessment" value="<?php 
-					if(isset($_GET['edit'])) echo $getROW->getHeaderName();  ?>" />
+					if(isset($_GET['edit'])) echo $getROW->getHeaderName();  ?>" required/>
 				</div>				
 			</div>
 
@@ -70,7 +70,7 @@ include_once COMMON.'class.common.course.inc';
               	<label class="control-label col-sm-2" for="txtHeaderMax">Header Max:</label>
               	<div class="col-sm-10">
 					<input type="text" name="txtHeaderMax" placeholder="e.g. 10,30" value="<?php 
-					if(isset($_GET['edit'])) echo $getROW->getHeaderMax();  ?>" />
+					if(isset($_GET['edit'])) echo $getROW->getHeaderMax();  ?>"required />
 				</div>				
 			</div>
 

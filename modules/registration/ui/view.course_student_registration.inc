@@ -37,9 +37,9 @@ include_once 'blade/view.course_student_registration.blade.inc';
 		<?php
 
 	//courses available according to the selection
-		if(isset($_SESSION['Result_Search_Course']))
+		if(isset($_SESSION['Result_Search_Courses']))
 		{
-			$Result_Search_Course = $_SESSION['Result_Search_Course'];
+			$Result_Search_Course = $_SESSION['Result_Search_Courses'];
 
 					$Courses = $Result_Search_Course->getResultObject();
 					?>
@@ -74,7 +74,7 @@ include_once 'blade/view.course_student_registration.blade.inc';
 								if($Course->getISdeleted() == 1)
 								{
 									?>
-									checked = "checked"
+									checked = "checked";
 									<?php
 								}
 								?>/></td>
@@ -147,6 +147,7 @@ include_once 'blade/view.course_student_registration.blade.inc';
 						<th>Session</th>
 						<th>Year</th>
 						<th>Term</th>
+						<th>Is Retake</th>
 						<th>Status</th>
 					</tr>
 					<?php 
@@ -161,7 +162,18 @@ include_once 'blade/view.course_student_registration.blade.inc';
 							<td><?php echo $CourseStudentRegistration->getSession()->getName(); ?></td>
 							<td><?php echo $CourseStudentRegistration->getYear()->getName(); ?></td>
 							<td><?php echo $CourseStudentRegistration->getTerm()->getName(); ?></td>
+							<td><input type="checkbox" name="name1" onclick="return false;" 
+								<?php 
+								if( $CourseStudentRegistration->getPreRetake() == "1")
+								{
+									?>
+									checked = "checked";
+									<?php
+								}
+								?>/></td>
+					
 							<td><?php echo $CourseStudentRegistration->getStatus(); ?></td>
+
 
 							<td>
 							<a href="?add=<?php echo $CourseStudentRegistration->getCourse()->getID(); ?>" onclick="return confirm('sure to add to the cart !'); " >Add to Cart
@@ -375,7 +387,6 @@ include_once 'blade/view.course_student_registration.blade.inc';
               	<div class="col-sm-6">	
 
 						<button type="submit" name="approval_request">Get Approved!</button>
-
 				</div>
 
 	          	<div class="col-sm-6">	
@@ -438,6 +449,7 @@ include_once 'blade/view.course_student_registration.blade.inc';
 				<th>Session</th>
 				<th>Year</th>
 				<th>Term</th>
+				<th>Is Retake?</th>
 				<th>Status</th>
 			</tr>
 			<?php 
@@ -452,6 +464,15 @@ include_once 'blade/view.course_student_registration.blade.inc';
 					<td><?php echo $CourseStudentRegistration->getSession()->getName(); ?></td>
 					<td><?php echo $CourseStudentRegistration->getYear()->getName(); ?></td>
 					<td><?php echo $CourseStudentRegistration->getTerm()->getName(); ?></td>
+					<td><input type="checkbox" name="name1" onclick="return false;" 
+								<?php 
+								if($CourseStudentRegistration->getPreRetake() == 1)
+								{
+									?>
+									checked = "checked";
+									<?php
+								}
+								?>/></td>
 					<td><?php echo $CourseStudentRegistration->getStatus(); ?></td>
 
 					<td>
@@ -511,6 +532,7 @@ include_once 'blade/view.course_student_registration.blade.inc';
 				<th>Session</th>
 				<th>Year</th>
 				<th>Term</th>
+				<th>Is Retake</th>
 				<th>Status</th>
 			</tr>
 			<?php 
@@ -525,6 +547,15 @@ include_once 'blade/view.course_student_registration.blade.inc';
 					<td><?php echo $CourseStudentRegistration->getSession()->getName(); ?></td>
 					<td><?php echo $CourseStudentRegistration->getYear()->getName(); ?></td>
 					<td><?php echo $CourseStudentRegistration->getTerm()->getName(); ?></td>
+					<td><input type="checkbox" name="name1" onclick="return false;" 
+								<?php 
+								if($CourseStudentRegistration->getPreRetake() == 1)
+								{
+									?>
+									checked = "checked";
+									<?php
+								}
+								?>/></td>
 					<td><?php echo $CourseStudentRegistration->getStatus(); ?></td>
 
 					<td>
@@ -609,11 +640,13 @@ include_once 'blade/view.course_student_registration.blade.inc';
 				<th>Session</th>
 				<th>Year</th>
 				<th>Term</th>
+				<th>Is Retake</th>
 				<th>Status</th>
 			</tr>
 			<?php 
 			for($i = 0; $i < sizeof($CourseStudentRegistrations); $i++) {
 				$CourseStudentRegistration = $CourseStudentRegistrations[$i];
+				//echo $CourseStudentRegistration->getPreRetake();
 				?>
 				<tr>
 					<td><?php echo $CourseStudentRegistration->getCourse()->getCourseNo(); ?></td>
@@ -623,6 +656,15 @@ include_once 'blade/view.course_student_registration.blade.inc';
 					<td><?php echo $CourseStudentRegistration->getSession()->getName(); ?></td>
 					<td><?php echo $CourseStudentRegistration->getYear()->getName(); ?></td>
 					<td><?php echo $CourseStudentRegistration->getTerm()->getName(); ?></td>
+					<td><input type="checkbox" name="name1" onclick="return false;" 
+								<?php 
+								if($CourseStudentRegistration->getPreRetake() == 1)
+								{
+									?>
+									checked = "checked";
+									<?php
+								}
+								?>/></td>
 					<td><?php echo $CourseStudentRegistration->getStatus(); ?></td>
 
 					<td>

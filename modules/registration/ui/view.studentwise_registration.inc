@@ -15,7 +15,7 @@ include_once 'blade/view.studentwise_registration.blade.inc';
 			<div class="form-group">
           	<label class="control-label col-sm-4" for="txtStudentID">Student ID:</label>
           		<div class="col-sm-6">       
-				<input type="text" name="txtStudentID" class="form-control"  placeholder="Example: 140201"/>
+				<input type="text" name="txtStudentID" class="form-control"  placeholder="Example: 140201"/required>
 			 	</div>
 			</div>
 

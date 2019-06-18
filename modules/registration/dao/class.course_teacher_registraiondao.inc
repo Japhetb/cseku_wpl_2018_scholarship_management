@@ -94,7 +94,7 @@ Class CourseTeacherRegistrationDAO{
 		$YearID=$CourseTeacherRegistration->getYearID();
 		$TermID=$CourseTeacherRegistration->getTermID();
 		
-		echo '<br>'.$ID.$TeacherID.$SessionID.$TermID;
+		//echo '<br>'.$ID.$TeacherID.$SessionID.$TermID;
 
 		$SQL = "INSERT INTO reg_course_teacher_registration(ID, TeacherID, SessionID, YearID, TermID) VALUES ('$ID','$TeacherID','$SessionID','$YearID','$TermID')";
 		

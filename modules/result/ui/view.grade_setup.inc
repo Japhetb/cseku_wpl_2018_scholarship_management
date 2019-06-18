@@ -20,15 +20,23 @@ include_once COMMON.'class.common.result.inc';
               	<label class="control-label col-sm-2" for="txtGrades">Grades List:</label>
               	<div class="col-sm-10">
 					<input type="text" name="txtGrades" placeholder="e.g. F,E,D,C" value="<?php 
-					if(isset($_GET['edit'])) echo $getROW->getGrades();  ?>" />
+					if(isset($_GET['edit'])) echo $getROW->getGrades();  ?>" required/>
 				</div>				
 			</div>
 
 			<div class="form-group">
-              	<label class="control-label col-sm-2" for="txtRanges">Ranges:</label>
+              	<label class="control-label col-sm-2" for="txtRanges">Marks Ranges:</label>
               	<div class="col-sm-10">
 					<input type="text" name="txtRanges" placeholder="e.g. 0-39,40-44,45-49" value="<?php 
-					if(isset($_GET['edit'])) echo $getROW->getRanges();  ?>" />
+					if(isset($_GET['edit'])) echo $getROW->getRanges();  ?>" required/>
+				</div>				
+			</div>
+
+			<div class="form-group">
+              	<label class="control-label col-sm-2" for="txtCgpa">CGPA Ranges:</label>
+              	<div class="col-sm-10">
+					<input type="text" name="txtCgpa" placeholder="e.g. 3.00,3.75,4.00" value="<?php 
+					if(isset($_GET['edit'])) echo $getROW->getCgpa();?>" required/>
 				</div>				
 			</div>
 
@@ -50,7 +58,28 @@ include_once COMMON.'class.common.result.inc';
 							/>
 
 				</div>			
-			</div>	
+			</div>
+
+			<div class="form-group">
+              	<label class="control-label col-sm-4" for="IsRetake">ReTake ?</label>
+              	<div class="col-sm-2">	
+  
+							<input type="checkbox" name="IsRetake"
+							<?php
+							if (isset($_GET['edit'])){
+								if($getROW->getIsRetake() == 1)
+								{
+									?>
+									checked = "checked"
+									<?php
+								}
+							}
+							?>
+							/>
+
+				</div>			
+			</div>
+
 
 		    <div class="form-group">        
 	              <div class="col-sm-offset-2 col-sm-10">
@@ -91,7 +120,9 @@ include_once COMMON.'class.common.result.inc';
 	?>
 		<tr>
 			<th>Grades</th>
-			<th>Ranges</th>
+			<th>Marks Ranges</th>
+			<th>Cgpa Ranges</th>
+			<th>For Retake</th>
 			<th>Is Default?</th>
 		</tr>
 		<?php
@@ -101,6 +132,18 @@ include_once COMMON.'class.common.result.inc';
 		    <tr>
 			    <td><?php echo $GradeSetup->getGrades(); ?></td>
 			    <td><?php echo $GradeSetup->getRanges(); ?></td>
+			    <td><?php echo $GradeSetup->getCgpa(); ?></td>
+			    <td>
+					<input type="checkbox" name="name2" onclick="return false;" 
+					<?php 
+					if($GradeSetup->getIsRetake() == 1)
+					{
+						?>
+						checked = "checked"
+						<?php
+					}
+					?>/>
+				</td>
 				<td>
 					<input type="checkbox" name="name1" onclick="return false;" 
 					<?php 

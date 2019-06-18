@@ -5,7 +5,6 @@ include_once UTILITY.'class.util.inc';
 include_once MODULES_USER.'bao/class.userbao.inc';
 
 
-
 $_UserBAO = new UserBAO();
 $_DB = DBUtil::getInstance();
 $_Log= LogUtil::getInstance();

@@ -45,12 +45,12 @@ Class CourseTeacherDAO{
 			//echo '<br>'.$row['ID']." ".$row['CourseID'];
 			$this->_CourseTeacher = new CourseTeacher();
 			$this->_CourseTeacher->setID($row['ID']);
-			
+
 			$Course = new Course();
 	 		$Course->setID($row['CourseID']);
 			$Result_course = $this->_CourseDAO->readCourse($Course)->getResultObject();
 			$this->_CourseTeacher->setCourse($Result_course);
-		    
+
 			$User = new User();
 			$User->setID($row['TeacherID']);
 
@@ -63,26 +63,26 @@ Class CourseTeacherDAO{
 			$Result_Session = $this->_RegistrationSessionDAO->
 										readRegistrationSession($Session)->getResultObject();
 		    $this->_CourseTeacher->setSession($Result_Session);
-		    
+
 		    $Year = new Year();
 		    $Year->setID($row['YearID']);
-	
+
 			$Result_year = $this->_YearDAO->readYear($Year)->getResultObject();
 		    $this->_CourseTeacher->setYear($Result_year);
-	
+
 
 		    $Term = new Term();
 		    $Term->setID($row['TermID']);
-	
+
 			$Result_term = $this->_TermDAO->readTerm($Term)->getResultObject();
 		    $this->_CourseTeacher->setTerm($Result_term);
-		    
-		    
+
+
 		    $CourseTeacherList[]=$this->_CourseTeacher;
 
-		    
 
-   
+
+
 		}
 
 		$Result = new Result();
@@ -103,10 +103,10 @@ Class CourseTeacherDAO{
 
 		$CourseTeacherList = array();
 
-		$SQL = "SELECT * FROM reg_course_teacher where TeacherID='$TeacherID' AND 
+		$SQL = "SELECT * FROM reg_course_teacher where TeacherID='$TeacherID' AND
 				SessionID='$SessionID'";
-				// AND 
-				//YearID='$YearID' AND 
+				// AND
+				//YearID='$YearID' AND
 				//TermID='$TermID'";
 
 		$SQL = $this->_DB->doQuery($SQL);
@@ -118,12 +118,12 @@ Class CourseTeacherDAO{
 			//echo '<br>'.$row['ID']." ".$row['CourseID'];
 			$this->_CourseTeacher = new CourseTeacher();
 			$this->_CourseTeacher->setID($row['ID']);
-			
+
 			$Course = new Course();
 	 		$Course->setID($row['CourseID']);
 			$Result_course = $this->_CourseDAO->readCourse($Course)->getResultObject();
 			$this->_CourseTeacher->setCourse($Result_course);
-		    
+
 			$User = new User();
 			$User->setID($row['TeacherID']);
 
@@ -136,26 +136,26 @@ Class CourseTeacherDAO{
 			$Result_Session = $this->_RegistrationSessionDAO->
 										readRegistrationSession($Session)->getResultObject();
 		    $this->_CourseTeacher->setSession($Result_Session);
-		    
+
 		    $Year = new Year();
 		    $Year->setID($row['YearID']);
-	
+
 			$Result_year = $this->_YearDAO->readYear($Year)->getResultObject();
 		    $this->_CourseTeacher->setYear($Result_year);
-	
+
 
 		    $Term = new Term();
 		    $Term->setID($row['TermID']);
-	
+
 			$Result_term = $this->_TermDAO->readTerm($Term)->getResultObject();
 		    $this->_CourseTeacher->setTerm($Result_term);
 
 
-			$this->_CourseTeacher->setNoOfTests($row['NoOfTests']);		    
-		    
+			$this->_CourseTeacher->setNoOfTests($row['NoOfTests']);
+
 		    $CourseTeacherList[]=$this->_CourseTeacher;
 
-		   
+
 		}
 
 
@@ -165,9 +165,6 @@ Class CourseTeacherDAO{
 
 		return $Result;
 	}
-
-
-
 	//update course test number
 	public function updateCourseNoOfTests($ID, $NoOfTests){
 
@@ -193,14 +190,15 @@ Class CourseTeacherDAO{
 		$SessionID=$CourseTeacher->getSession();
 		$YearID=$CourseTeacher->getYear();
 		$TermID=$CourseTeacher->getTerm();
-		
-		
+		$NoOfTests=3;
 
-		$SQL = "INSERT INTO reg_course_teacher(ID, CourseID, TeacherID, SessionID, YearID, TermID) VALUES ('$ID','$CourseNo','$TeacherID','$SessionID','$YearID','$TermID')";
-		
 
-		$SQL = $this->_DB->doQuery($SQL);		
-		
+
+		$SQL = "INSERT INTO reg_course_teacher(ID, CourseID, TeacherID, SessionID, YearID, TermID,NoOfTests) VALUES ('$ID','$CourseNo','$TeacherID','$SessionID','$YearID','$TermID','$NoOfTests')";
+
+
+		$SQL = $this->_DB->doQuery($SQL);
+
 	 	$Result = new Result();
 		$Result->setIsSuccess(1);
 		$Result->setResultObject($SQL);
@@ -210,8 +208,8 @@ Class CourseTeacherDAO{
 
 	//read an Course object based on its id form Course object
 	public function readCourseTeacher($CourseTeacher){
-		
-		
+
+
 		$SQL = "SELECT * FROM reg_course_teacher WHERE ID='".$CourseTeacher->getID()."'";
 		$this->_DB->doQuery($SQL);
 
@@ -222,12 +220,12 @@ Class CourseTeacherDAO{
 
 		//preparing the Course object
 		$this->_CourseTeacher->setID($row['ID']);
-		
+
 		$Course = new Course();
  		$Course->setID($row['CourseID']);
 		$Result_course = $this->_CourseDAO->readCourse($Course)->getResultObject();
 		$this->_CourseTeacher->setCourse($Result_course);
-	    
+
 		$User = new User();
 		$User->setID($row['TeacherID']);
 
@@ -240,7 +238,7 @@ Class CourseTeacherDAO{
 		$Result_Session = $this->_RegistrationSessionDAO->
 									readRegistrationSession($Session)->getResultObject();
 	    $this->_CourseTeacher->setSession($Result_Session);
-	    
+
 	    $Year = new Year();
 	    $Year->setID($row['YearID']);
 
@@ -265,7 +263,7 @@ Class CourseTeacherDAO{
 		return $Result;
 	}
 
-	//update an Course object based on its 
+	//update an Course object based on its
 	public function updateCourseTeacher($CourseTeacher){
 
 		$SQL = "UPDATE reg_course_teacher SET CourseID='".$CourseTeacher->getCourse().
@@ -273,7 +271,6 @@ Class CourseTeacherDAO{
 		"',SessionID='".$CourseTeacher->getSession().
 		"',YearID='".$CourseTeacher->getYear().
 		"',TermID='".$CourseTeacher->getTerm().
-		"',NoOfTests='".$CourseTeacher->getNoOfTests().
 		"' WHERE ID='".$CourseTeacher->getID()."'";
 
 
@@ -292,7 +289,7 @@ Class CourseTeacherDAO{
 
 
 		$SQL = "DELETE from reg_course_teacher where ID ='".$CourseTeacher->getID()."'";
-	
+
 		$SQL = $this->_DB->doQuery($SQL);
 
 	 	$Result = new Result();
@@ -301,6 +298,39 @@ Class CourseTeacherDAO{
 
 		return $Result;
 
+	}
+	public function getAllOfMyCourses($CourseTeacher){
+
+		$TeacherID=$CourseTeacher->getTeacher();
+
+		$CourseTeacherList = array();
+
+		$SQL = "SELECT * FROM reg_course_teacher where TeacherID='$TeacherID'";
+
+		$SQL = $this->_DB->doQuery($SQL);
+
+		$rows = $this->_DB->getAllRows();
+
+		for($i = 0; $i < sizeof($rows); $i++) {
+			$row = $rows[$i];
+			$this->_CourseTeacher = new CourseTeacher();
+			$this->_CourseTeacher->setID($row['ID']);
+
+			$Course = new Course();
+	 		$Course->setID($row['CourseID']);
+			$Result_course = $this->_CourseDAO->readCourse($Course)->getResultObject();
+			$this->_CourseTeacher->setCourse($Result_course);
+
+		    $CourseTeacherList[]=$this->_CourseTeacher;
+
+
+		}
+
+		$Result = new Result();
+		$Result->setIsSuccess(1);
+		$Result->setResultObject($CourseTeacherList);
+
+		return $Result;
 	}
 
 }

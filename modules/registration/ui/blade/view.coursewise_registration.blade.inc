@@ -5,12 +5,16 @@ include_once MODULES_REGISTRATION.'bao/class.coursebao.inc';
 include_once MODULES_REGISTRATION.'bao/class.registration_sessionbao.inc';
 include_once MODULES_REGISTRATION.'bao/class.yearbao.inc';
 include_once MODULES_REGISTRATION.'bao/class.termbao.inc';
+include_once MODULES_REGISTRATION.'bao/class.course_teacherbao.inc';
+
 
 
 $_CourseBAO = new CourseBAO();
 $_RegistrationSessionBAO = new RegistrationSessionBAO();
 $_YearBAO = new YearBAO();
 $_TermBAO = new TermBAO();
+$_CourseTeacherBAO = new CourseTeacherBAO();
+
 
 $_DB = DBUtil::getInstance();
 
@@ -22,9 +26,7 @@ $globalUser = $_SESSION['globalUser'];
 if(isset($_POST['search']))
 {
     
-    $Course = new Course();
-    $CourseNo = $_DB->secureInput($_POST['txtCourseNo']);
-    $CourseNo = strtolower($CourseNo);
+    $CourseID = $_DB->secureInput($_POST['CourseID']);
 
     $Session = $_DB->secureInput($_POST['session']);
 
@@ -32,7 +34,7 @@ if(isset($_POST['search']))
 
     $Term = $_DB->secureInput($_POST['term']);
   
-    $Result_Search_Course = $_CourseBAO->searchAllStudents($CourseNo,$Session,$Year,$Term);
+    $Result_Search_Course = $_CourseBAO->searchAllStudents($CourseID,$Session,$Year,$Term);
 
  
     if($Result_Search_Course->getIsSuccess())

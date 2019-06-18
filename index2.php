@@ -6,7 +6,6 @@ include_once COMMON.'class.common.inc';
 include_once COMMON.'class.common.course.inc';
 include_once COMMON.'class.common.result.inc';
 include_once COMMON.'class.common.user.inc';
-include_once COMMON.'class.common.club.inc';
 
 //current template path
 $template_link= TEMPLATE.'basic/';
@@ -35,29 +34,31 @@ elseif (strpos($_URI, '.php')!==false) {
 
 
 
-//finding the page description such as login.php, index.php, user.php, home.php etc. 
+//finding the page description such as login.php, index.php, user.php, home.php etc.
 $page = unparse_url(parse_url($_URI));
 
 //////// check whether current user has permission to access  the browser entered link
-//if the page is not accessible by everyone 
+//if the page is not accessible by everyone
 if(isset($_SESSION["globalPermission"])&& !every_one_has_access($page) ){
 
    // or the page access permission is not given to current user
-   if(userHasAccessToLink($page)==false)  
+   if(userHasAccessToLink($page)==false)
         $page=PageUtil::$ERROR;
-   
+
 }
 
 /////////////////
 
 if(isset($page)){
     //TODO: check whether middleware application is active
-    //apply middleware 
+    //apply middleware
     $page = apply_middleware($page);
 }
+if(!(isset($_GET['ajax']))){
+include_once $template_link.'menu.inc'; 
 
 // adding menu code here
-include_once $template_link.'menu.inc'; 
+
 
 ?>
 
@@ -69,11 +70,14 @@ include_once $template_link.'menu.inc';
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Digital University</title>
         <link rel="stylesheet" href="resources/css/bootstrap.min.css">
-        <link rel="stylesheet" href="resources/css/style.css" type="text/css" />        
+        <link rel="stylesheet" href="resources/css/style.css" type="text/css" />
+        <link rel="stylesheet" href="resources/css/result.css" type="text/css" />
         <script src="resources/js/jquery.min.js"></script>
         <script src="resources/js/bootstrap.min.js"></script>
         <script src="resources/js/myscript.js"></script>
-        <script src="resources/js/question_js_2.js" rel="script"></script>                            
+        <script src="resources/js/registrationScript.js" rel="script"></script>
+        <script src="resources/js/question_js_2.js" rel="script"></script>
+         <script src="resources/js/task.main.js"></script>
     </head>
 
 <body>
@@ -82,44 +86,47 @@ include_once $template_link.'menu.inc';
     <div class="row">
         <div class="col-sm-12">
         <div id="menu" style="background-color:LightSteelBlue">
-            <?php 
+            <?php
                 //do not show the menu for pages like login, new user, forget password, print regs etc
                 if(!no_layout_page($page))
                     echo print_top_menu($globalMenu,$logoutMenu);
-                    
-                
+
+
             ?>
         </div>
         <div id="header">
-            <?php 
+            <?php
 
                 //do not show the header for login page
                 if(!no_layout_page($page))
-                    include $template_link.'header.inc'; 
-                
-            ?>        
-        </div>        
-      
-        <div id="body" style="background-color:AliceBlue"> 
-            <?php 
-                include $template_link.'body.inc'; 
+                    include $template_link.'header.inc';
+            }
+            ?>
+        </div>
 
-            ?>	                    
+        <div id="body" style="background-color:AliceBlue">
+            <?php
+                include $template_link.'body.inc';
+
+            ?>
         </div>
 
         <div id="footer" style="background-color:LightSteelBlue">
 
-        	<?php 
+        	<?php
+            if(!(isset($_GET['ajax']))){
                 if(strcasecmp($page, PageUtil::$PRINT_REGISTRATION)!=0){
 
-        		      include $template_link.'footer.inc'; 
+
+        		      include $template_link.'footer.inc';
 
                 }
+            }
 
         	?>
-        </div>  
-        </div>   
-    </div>      
-</div>    
+        </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -221,8 +221,9 @@ include_once 'blade/view.my_registration.blade.inc';
 						} ?>
 		</table>
 
-		<div> 
+		<div class="row">
 
+			<div class="pull-left" style="margin-left: 20px; margin-right: 30px"> 
 			<button type="submit" class="btn btn-info" onclick="window.open('print_registration.php?print=true&&session=<?php 
 							if(isset($Print_Session)) echo $Print_Session->getID();?>&&year=<?php 
 							if(isset($Print_Year))echo $Print_Year->getID();?>&&term=<?php 
@@ -230,8 +231,19 @@ include_once 'blade/view.my_registration.blade.inc';
 			>
 			Print Registration
 			</button> 
+		</div>
 
+		<div class="pull-left"> 
+
+			<button type="submit" class="btn btn-info" onclick="window.open('print_grade.php?print=true&&session=<?php 
+							if(isset($Print_Session)) echo $Print_Session->getID();?>&&year=<?php 
+							if(isset($Print_Year))echo $Print_Year->getID();?>&&term=<?php 
+							if(isset($Print_Term))echo $Print_Term->getID();?>')" 
+			>
+			Print Result
+			</button> 
 		</div>	
+		</div>
 	
 		<?php				
 		}
@@ -244,8 +256,6 @@ include_once 'blade/view.my_registration.blade.inc';
 	?>
 
 
-
-	
 </div>
 </div>
 

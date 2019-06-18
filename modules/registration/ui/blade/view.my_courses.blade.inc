@@ -16,20 +16,20 @@ $CourseTeacher = new CourseTeacher();
 
 $globalUser = $_SESSION["globalUser"];
 
-if(isset($_POST['find_courses']))
+if(isset($_GET['find_courses']))
 {
-    
+
     $CourseTeacher->setTeacher($globalUser->getID());
-    $CourseTeacher->setSession($_POST['session']);
-    
+    $CourseTeacher->setSession($_GET['session']);
+
     $Result_My_Courses = $_CourseTeacherBAO->getAllMyCourses($CourseTeacher);
-     
+
 }
 
 if(isset($_GET['edit'])){
 
     $CourseTeacher->setID($_GET['edit']);
-    $getROW = $_CourseTeacherBAO->readCourseTeacher($CourseTeacher)->getResultObject();  
+    $getROW = $_CourseTeacherBAO->readCourseTeacher($CourseTeacher)->getResultObject();
 
     $CourseTeacher->setTeacher($getROW->getTeacher()->getID());
     $CourseTeacher->setSession($getROW->getSession()->getID());
@@ -39,19 +39,17 @@ if(isset($_GET['edit'])){
     $Result_My_Courses = $_CourseTeacherBAO->getAllMyCourses($CourseTeacher);
 }
 
-if(isset($_POST['update'])){
+if(isset($_GET['update'])){
 
-    $CourseTeacher->setCourse($_POST['txtCourseID']);
-    $CourseTeacher->setTeacher($globalUser->getID());
-    $CourseTeacher->setSession($_POST['session']);
-    $CourseTeacher->setYear($_POST['yearid']);
-    $CourseTeacher->setTerm($_POST['termid']);
-    $CourseTeacher->setNoOfTests($_POST['txtTestCount']);
-    $CourseTeacher->setID($_POST['txtRowID']);
+    $NoOfTests=$_GET['txtTestCount'];
+    $IdRT=$_GET['txtRowID'];
+    echo $NoOfTests;
 
-    $Result = $_CourseTeacherBAO->updateCourseTeacher($CourseTeacher);   
+    $Result = $_CourseTeacherBAO->updateCourseNoOfTests($IdRT,$NoOfTests);
 
     $Result_My_Courses = $_CourseTeacherBAO->getAllMyCourses($CourseTeacher);
+    $getROW = $_CourseTeacherBAO->readCourseTeacher($CourseTeacher)->getResultObject();
+
 
 }
 

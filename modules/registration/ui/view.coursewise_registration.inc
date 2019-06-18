@@ -13,10 +13,47 @@ include_once 'blade/view.coursewise_registration.blade.inc';
 		<form method="post" class="form-horizontal">
 
 			<div class="form-group">
-          	<label class="control-label col-sm-4" for="txtCourseNo">Course No:</label>
-          		<div class="col-sm-6">       
-				<input type="text" name="txtCourseNo" class="form-control"  placeholder="Example: cse-3310 or cse-4112 or cse-3200"/>
-			 	</div>
+          	<label class="control-label col-sm-4" for="CourseID">Course No:</label>
+			 	<div class="col-sm-6">	
+							<?php
+                                $Result = $_CourseBAO->getAllCourses();
+							if ($Result->getIsSuccess())
+							{
+								$Courses = $Result->getResultObject();							}
+							?>
+							<select name="CourseID" class="form-control" style="width:170px">
+								<?php
+								for ($i = 0; $i<sizeof($Courses); $i++){
+									$Course = $Courses[$i];
+
+									if (isset($_POST['CourseID'])){
+
+										if ($_POST['CourseID'] == $Course->getCourseNo()){
+											?>
+											<option selected value = "<?php echo $Course->getID();?>" > <?php echo $Course->getCourseNo();?> 
+											</option>
+											<?php
+										}
+										else {
+
+											?>
+											<option value="<?php echo $Course->getID();?>" > <?php echo $Course->getCourseNo(); ?> 
+											</option>
+											<?php
+										}
+									}	
+									else {
+
+											?>
+											<option value="<?php echo $Course->getID();?>" > <?php echo $Course->getCourseNo();?> 
+											</option>
+											<?php
+									}	
+								
+								}
+								?>	
+							</select>
+				</div>
 			</div>
 
 			<div class="form-group">
@@ -183,11 +220,12 @@ include_once 'blade/view.coursewise_registration.blade.inc';
 					<?php echo $CourseStudentRegistration->getStudent()->getUniversityID(); ?>				
 					</td>
 					<td><?php echo $CourseStudentRegistration->getStudent()->getFullName(); ?></td>
-
+<!--
 					<td>
 					<a href="course_student_registration.php?id=
 					<?php echo $CourseStudentRegistration->getStudent()->getID();?>&mode=admin">Admin</a>
 					</td>
+				-->
 
 				</tr>
 				<?php

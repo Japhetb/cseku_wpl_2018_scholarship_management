@@ -31,10 +31,10 @@ Class CourseBAO{
 	}
 
 	//get all Courses that match the course no
-	public function searchAllCourses($CourseNo){
+	public function searchAllCourses($CourseNo,$userDiscipline){
 
 		$Result = new Result();	
-		$Result = $this->_CourseDAO->searchAllCourses($CourseNo);
+		$Result = $this->_CourseDAO->searchAllCourses($CourseNo,$userDiscipline);
 		
 		if(!$Result->getIsSuccess())
 			$Result->setResultObject("Database failure in CourseDAO.searchAllCourses()");		
@@ -69,13 +69,13 @@ Class CourseBAO{
 	}
 
 	//get all Students that have registered a certain course on specificied session, year, term
-	public function searchAllStudents($CourseNo,$Session,$Year,$Term){
+	public function searchAllStudents($CourseID,$Session,$Year,$Term){
 
 		$Result = new Result();	
-		$Result = $this->_CourseDAO->searchAllStudents($CourseNo,$Session,$Year,$Term);
+		$Result = $this->_CourseDAO->searchAllStudents($CourseID,$Session,$Year,$Term);
 		
 		if(!$Result->getIsSuccess())
-			$Result->setResultObject("Database failure in CourseDAO.searchAllStudents($CourseNo,$Session,$Year,$Term)");		
+			$Result->setResultObject("Database failure in CourseDAO.searchAllStudents($CourseID,$Session,$Year,$Term)");		
 
 		return $Result;
 	}

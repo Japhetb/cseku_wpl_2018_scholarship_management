@@ -143,6 +143,7 @@ class CourseStudentRegistration
     private $_Term;
     private $_Status;
     private $_IsRetake;
+    private $_PreRetake;
 
 
     public function setID($ID)
@@ -225,6 +226,14 @@ class CourseStudentRegistration
     public function getIsRetake () {
         return $this->_IsRetake;
     }
+    public function setPreRetake( $IsRetake)
+    {
+        $this->_IsRetake = $IsRetake;
+    }
+
+    public function getPreRetake () {
+        return $this->_IsRetake;
+    }
 
 }
 
@@ -268,6 +277,7 @@ class Course
     private $_Credit;
     private $_CourseTypeID;
     private $_DisciplineID;
+    private $_Prequisite;
     private $_ISdeleted;
 
     public function setID ( $ID ) {
@@ -318,6 +328,14 @@ class Course
         return $this->_DisciplineID;
     }
 
+    public function setPrequisite ( $Prequisite ) {
+        $this->_Prequisite = $Prequisite;
+    }
+
+    public function getPrequisite () {
+        return $this->_Prequisite;
+    }
+    
     public function setISdeleted ( $ISdeleted ) {
         $this->_ISdeleted = $ISdeleted;
     }

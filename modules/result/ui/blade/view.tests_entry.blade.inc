@@ -1,7 +1,6 @@
 <?php
 
 include_once UTILITY.'class.util.inc';
-
 include_once MODULES_REGISTRATION.'bao/class.coursebao.inc';
 include_once MODULES_REGISTRATION.'bao/class.course_student_registrationbao.inc';
 include_once MODULES_REGISTRATION.'bao/class.registration_sessionbao.inc';
@@ -35,7 +34,7 @@ $globalUser = $_SESSION['globalUser'];
 if(isset($_GET['update']))
 {
   
-    $CourseNo = $_DB->secureInput($_GET['course']);
+    $CourseID = $_DB->secureInput($_GET['course']);
 
     $TeacherID = $_DB->secureInput($_GET['teacher']);    
  
@@ -46,22 +45,23 @@ if(isset($_GET['update']))
     $TermID = $_DB->secureInput($_GET['term']);
   
     //read all registered students to this course
-    $Result_Course_Students = $_CourseBAO->searchAllStudents($CourseNo,$SessionID,$YearID,$TermID);
 
-
+    $Result_Course_Students = $_CourseBAO->searchAllStudents($CourseID,$SessionID,$YearID,$TermID);
     //read the class tests of the students for this course, session, year, term
-    $Result_Course_Student_Tests = $_MarksEntryBAO->getCourseStudentTests($CourseNo,$SessionID,$YearID,
+    if($Result_Course_Students->getIsSuccess())
+    {
+    $Result_Course_Student_Tests = $_MarksEntryBAO->getCourseStudentTests($CourseID,$SessionID,$YearID,
         $TermID,$Result_Course_Students->getResultObject());
 
 
     //read the course teacher row to get the no of tests
-    $Result_Course_Teacher = $_MarksEntryBAO->readCourseTeacher($CourseNo,$TeacherID,$SessionID,$YearID,$TermID)->getResultObject();
+    $Result_Course_Teacher = $_MarksEntryBAO->readCourseTeacher($CourseID,$TeacherID,$SessionID,$YearID,$TermID)->getResultObject();
 
-   
+   }
 
     $Course = new Course();
-    $Course->setCourseNo($CourseNo);
-    $Course = $_CourseBAO->readCourseFromCourseNo($Course)->getResultObject();
+    $Course->setID($CourseID);
+    $Course = $_CourseBAO->readCourse($Course)->getResultObject();
 
 
     $Teacher = new User();
@@ -90,8 +90,8 @@ if(isset($_GET['update']))
 if(isset($_POST['save_marks']))
 {
     
-    $StudentIDList=null;
-    $CourseNo=null;
+    $StudentIDList= array();
+    $CourseID=null;
     $SessionID=null;
     $YearID=null;
     $TermID=null;
@@ -102,8 +102,8 @@ if(isset($_POST['save_marks']))
     if(isset($_POST['hidden_all_students']))
         $StudentIDList = explode(",", $_POST['hidden_all_students']);
 
-    if(isset($_POST['hiddenCourseNo']))
-        $CourseNo = $_POST['hiddenCourseNo'];
+    if(isset($_POST['hiddenCourseID']))
+        $CourseID = $_POST['hiddenCourseID'];
 
     if(isset($_POST['hiddenSession']))
         $SessionID = $_POST['hiddenSession'];
@@ -143,7 +143,7 @@ if(isset($_POST['save_marks']))
 
         $MarksEntry  = new MarksEntry();
         
-        $MarksEntry->setCourse ( $CourseNo);        
+        $MarksEntry->setCourse ( $CourseID);        
 
         $MarksEntry->setSession ( $SessionID);
 
@@ -158,10 +158,9 @@ if(isset($_POST['save_marks']))
         $MarksEntry->setMarksValue( $MarksValue);
 
         $MarksEntryList[] = $MarksEntry;
-
-        
+       
    }
-
+   
    //update the tests entry in to the database for this course, session, year and term
 
     $Result_Marks_Entry = $_MarksEntryBAO->updateCourseAllTestsEntry($MarksEntryList);
@@ -169,23 +168,24 @@ if(isset($_POST['save_marks']))
     //*****reload the UI********
 
  //read all registered students to this course
-    $Result_Course_Students = $_CourseBAO->searchAllStudents($CourseNo,$SessionID,$YearID,$TermID);
+    $Result_Course_Students = $_CourseBAO->searchAllStudents($CourseID,$SessionID,$YearID,$TermID);
 
 
     //read the class tests of the students for this course, session, year, term
-    $Result_Course_Student_Tests = $_MarksEntryBAO->getCourseStudentTests($CourseNo,$SessionID,$YearID,
+    $Result_Course_Student_Tests = $_MarksEntryBAO->getCourseStudentTests($CourseID,$SessionID,$YearID,
         $TermID,$Result_Course_Students->getResultObject());
 
 
     //read the course teacher row to get the no of tests
-    $Result_Course_Teacher = $_MarksEntryBAO->readCourseTeacher($CourseNo,$TeacherID,$SessionID,$YearID,
+    $Result_Course_Teacher = $_MarksEntryBAO->readCourseTeacher($CourseID,$TeacherID,$SessionID,$YearID,
         $TermID)->getResultObject();
 
    
 
+    
     $Course = new Course();
-    $Course->setCourseNo($CourseNo);
-    $Course = $_CourseBAO->readCourseFromCourseNo($Course)->getResultObject();
+    $Course->setID($CourseID);
+    $Course = $_CourseBAO->readCourse($Course)->getResultObject();
 
 
     $Teacher = new User();
@@ -227,7 +227,7 @@ if(isset($_POST['publish_marks']))
     $MarksID=null;
     $StudentIDList=null;
 
-    $CourseNo=null;
+    $CourseID=null;
     $Session=null;
     $Year=null;
     $Term=null;
@@ -254,8 +254,8 @@ if(isset($_POST['publish_marks']))
         $StudentIDList = explode(",", $_POST['all_students']);
 
 
-    if(isset($_POST['txtCourseNo']))
-        $CourseNo = $_POST['txtCourseNo'];
+    if(isset($_POST['hiddenCourseID']))
+        $CourseID = $_POST['hiddenCourseID'];
 
     if(isset($_POST['session']))
         $Session = $_POST['session'];
@@ -297,7 +297,7 @@ if(isset($_POST['publish_marks']))
         $MarksEntry  = new MarksEntry();
        
   
-        $MarksEntry->setCourse ( $CourseNo);        
+        $MarksEntry->setCourse ( $CourseID);        
 
         $MarksEntry->setSession ( $Session);
 
@@ -335,13 +335,13 @@ if(isset($_POST['publish_marks']))
     //*****reload the UI********
 
      //read all registered students to this course
-    $Result_Course_Students = $_CourseBAO->searchAllStudents($CourseNo,$Session,$Year,$Term);
+    $Result_Course_Students = $_CourseBAO->searchAllStudents($CourseID,$Session,$Year,$Term);
 
     //read the marks of the students for this course, session, year, term
-    $Result_Course_Student_Marks = $_MarksEntryBAO->getCourseStudentMarks($CourseNo,$Session,$Year,$Term,$Result_Course_Students->getResultObject());
+    $Result_Course_Student_Marks = $_MarksEntryBAO->getCourseStudentMarks($CourseID,$Session,$Year,$Term,$Result_Course_Students->getResultObject());
 
     //read the marks setup for this course
-    $Result_Marks_Setup = $_MarksEntryBAO->getCourseMarksSetup($CourseNo);   
+    $Result_Marks_Setup = $_MarksEntryBAO->getCourseMarksSetup($CourseID);   
 
    //read default grade
     $Result_Grade_Setup = $_GradeSetupBAO->readDefaultGradeSetup();
@@ -356,7 +356,7 @@ if(isset($_POST['delete_marks']))
     $HeaderIDList=null;
     $MarksID=null;
     $StudentIDList=null;
-    $CourseNo=null;
+    $CourseID=null;
     $Session=null;
     $Year=null;
     $Term=null;
@@ -371,8 +371,8 @@ if(isset($_POST['delete_marks']))
     if(isset($_POST['all_students']))
         $StudentIDList = explode(",", $_POST['all_students']);
 
-    if(isset($_POST['txtCourseNo']))
-        $CourseNo = $_POST['txtCourseNo'];
+    if(isset($_POST['hiddenCourseID']))
+        $CourseID = $_POST['hiddenCourseID'];
 
     if(isset($_POST['session']))
         $Session = $_POST['session'];
@@ -392,7 +392,7 @@ if(isset($_POST['delete_marks']))
         $MarksEntry  = new MarksEntry();
        
   
-        $MarksEntry->setCourse ( $CourseNo);        
+        $MarksEntry->setCourse ( $CourseID);        
 
         $MarksEntry->setSession ( $Session);
 
@@ -415,13 +415,13 @@ if(isset($_POST['delete_marks']))
     //*****reload the UI********
 
      //read all registered students to this course
-    $Result_Course_Students = $_CourseBAO->searchAllStudents($CourseNo,$Session,$Year,$Term);
+    $Result_Course_Students = $_CourseBAO->searchAllStudents($CourseID,$Session,$Year,$Term);
 
     //read the marks of the students for this course, session, year, term
-    $Result_Course_Student_Marks = $_MarksEntryBAO->getCourseStudentMarks($CourseNo,$Session,$Year,$Term,$Result_Course_Students->getResultObject());
+    $Result_Course_Student_Marks = $_MarksEntryBAO->getCourseStudentMarks($CourseID,$Session,$Year,$Term,$Result_Course_Students->getResultObject());
 
     //read the marks setup for this course
-    $Result_Marks_Setup = $_MarksEntryBAO->getCourseMarksSetup($CourseNo);   
+    $Result_Marks_Setup = $_MarksEntryBAO->getCourseMarksSetup($CourseID);   
 
    //read default grade
     $Result_Grade_Setup = $_GradeSetupBAO->readDefaultGradeSetup();

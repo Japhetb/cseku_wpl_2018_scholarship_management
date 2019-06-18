@@ -4,12 +4,15 @@ include_once MODULES_REGISTRATION.'bao/class.coursebao.inc';
 include_once MODULES_REGISTRATION.'bao/class.registration_sessionbao.inc';
 include_once MODULES_REGISTRATION.'bao/class.yearbao.inc';
 include_once MODULES_REGISTRATION.'bao/class.termbao.inc';
+include_once MODULES_USER.'bao/class.userbao.inc';//depenency with modules
 
 
 $_CourseBAO = new CourseBAO();
 $_RegistrationSessionBAO = new RegistrationSessionBAO();
 $_YearBAO = new YearBAO();
 $_TermBAO = new TermBAO();
+$_UserBAO = new UserBAO();
+
 
 $_DB = DBUtil::getInstance();
 
@@ -28,6 +31,7 @@ if(isset($_GET['print']))
 {
     
     $StudentID =  $globalUser->getUniversityID(); //getting current logged students university id
+    $UserID =$globalUser->getID();
 
     $Session = $_DB->secureInput($_GET['session']);
 
@@ -55,6 +59,10 @@ if(isset($_GET['print']))
         $Print_Term = new Term();
         $Print_Term->setID($Term);
         $Print_Term = $_TermBAO->readTerm($Print_Term)->getResultObject();
+
+        $Print_Student_Details=new UserDetails();
+        $Print_Student_Details->setID($UserID);
+        $Print_Student_Details=$_UserBAO->readUserDetails($Print_Student)->getResultObject();
 
     }
 }

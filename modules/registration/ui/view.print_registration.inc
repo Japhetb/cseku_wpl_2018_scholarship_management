@@ -6,34 +6,6 @@ include_once COMMON.'class.common.inc';
 include_once 'blade/view.print_registration.blade.inc';
 
 ?>
-
-<style>
-table.courses {
-    border-collapse: collapse;
-    border: 1px solid black;
-}
-
-.courses td, th {
-    border: 1px solid black;
-}
-
-table.years {
-    border-collapse: collapse;
-    border: 1px solid black;
-}
-
-.years td, th {
-    border: 1px solid black;
-}
-
-table, td, th{
-	border-collapse: collapse;
-	border: 0px solid black;
-}
-
-
-</style>
-
  <table align="center" width="100%">
       	
       	<tr>
@@ -281,7 +253,6 @@ table, td, th{
 			{
 				$Result_Search_Course = $_SESSION['Result_Search_Course'];
 				$CourseStudentRegistrations = $Result_Search_Course->getResultObject();
-				
 				//have to print fixed number of courses 
 				$totalCredit=0;
 				for($i = 0; $i < 11; $i++) {
@@ -290,6 +261,9 @@ table, td, th{
 
 					if(isset($CourseStudentRegistrations[$i]))
 						$CourseStudentRegistration = $CourseStudentRegistrations[$i];
+					//if(isset($CourseStudentRegistration))
+						//echo $CourseStudentRegistration->getPreRetake();
+
 
 				?>
 				<tr>
@@ -322,7 +296,17 @@ table, td, th{
 						?>
 						
 					</td>
-					<td><?php //echo $CourseStudentRegistration->getStatus(); ?></td>
+					<td>
+					 <?php
+					 if(isset($CourseStudentRegistration)){
+							if($CourseStudentRegistration->getPreRetake()==1)
+					        {
+					          echo "Retake";
+					        } 
+						}
+						else
+							 echo '<br>';
+					      ?></td>
 				</tr>
 					<?php
 
@@ -480,9 +464,8 @@ table, td, th{
     					<td> 
     						<strong>Contact No :</strong>
     					</td>
-
     					<td style="border-bottom: 1px solid black; line-height: 1.8em;">
-    						
+    						<?php $Print_Student_Details->getMobilePhone()?>
     						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     					</td>
     					

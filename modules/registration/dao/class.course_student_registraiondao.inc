@@ -103,15 +103,27 @@ Class CourseStudentRegistrationDAO{
 		$StudentID=$CourseStudentRegistration->getStudent()->getID();
 		$CourseID=$CourseStudentRegistration->getCourse()->getID();		
 		$Status=$CourseStudentRegistration->getStatus();
-		
+		$PreRetake=0;
+
+
+		$SQL2 = "Select * from reg_course_student_registration where StudentID='$StudentID' AND 
+			CourseID='$CourseID' AND IsRetake = 1 LIMIT 1";
+		$SQL2 = $this->_DB->doQuery($SQL2);
+		if($this->_DB->getNumRows()!=0)
+		{
+			$PreRetake=1;
+		}
+
 		$SQL = "Select * from reg_course_student_registration where StudentID='$StudentID' AND 
-			CourseID='$CourseID' LIMIT 1";
+			CourseID='$CourseID' AND IsRetake!=1 LIMIT 1";
+
 
 		$SQL = $this->_DB->doQuery($SQL);		
 
 		if($this->_DB->getNumRows()==0){
+			$Flag=0;
 		
-			$SQL = "INSERT INTO reg_course_student_registration(ID, StudentID, CourseID, Status) VALUES ('$ID','$StudentID','$CourseID','$Status')";
+			$SQL = "INSERT INTO reg_course_student_registration(ID, StudentID, CourseID,IsRetake,PreRetake,Status) VALUES ('$ID','$StudentID','$CourseID','$Flag','$PreRetake','$Status')";
 			
 			$SQL = $this->_DB->doQuery($SQL);		
 			
@@ -211,7 +223,6 @@ Class CourseStudentRegistrationDAO{
 			$Result_year = $this->_YearDAO->readYear($Year)->getResultObject();
 		    $this->_CourseStudentRegistration->setYear($Result_year);
 
-		    
 		    $Term = new Term();
 		    $Term->setID($row['TermID']);
 			$Result_term = $this->_TermDAO->readTerm($Term)->getResultObject();
@@ -223,8 +234,6 @@ Class CourseStudentRegistrationDAO{
 		}
 
 		//todo: LOG util with level of log
-
-
 		$Result = new Result();
 		$Result->setIsSuccess(1);
 		$Result->setResultObject($CourseStudentRegistrationList);
@@ -232,7 +241,7 @@ Class CourseStudentRegistrationDAO{
 		return $Result;
 	}
 
-	//search all the courses a student has sent registration request
+ 	//search all the courses a student has sent registration request
 	public function searchRegistrationCart($CourseStudentRegistration){
 		
 		
@@ -249,14 +258,11 @@ Class CourseStudentRegistrationDAO{
 		}
 		$Status = rtrim($Status,',');
 
-
 		$SQL = "SELECT * ".
 			   " FROM reg_course_student_registration csr ".
 			   " Where ". 
 			   " csr.StudentID='$StudentID' AND ".
 			   " csr.Status in ($Status)";
- 
-		
 	
 
 		$this->_DB->doQuery($SQL);
@@ -304,8 +310,10 @@ Class CourseStudentRegistrationDAO{
 			 $Result_term = $this->_TermDAO->readTerm($Term)->getResultObject();
 		     $this->_CourseStudentRegistration->setTerm($Result_term);
 
+		     $this->_CourseStudentRegistration->setIsRetake($row['IsRetake']);
+		     $this->_CourseStudentRegistration->setPreRetake($row['PreRetake']);
 		     $this->_CourseStudentRegistration->setStatus($row['Status']);
-		    
+
 		    
 		    $CourseStudentRegistrationList[]=$this->_CourseStudentRegistration;
   
@@ -476,7 +484,11 @@ Class CourseStudentRegistrationDAO{
 		$Result_term = $this->_TermDAO->readTerm($Term)->getResultObject();
 	    $this->_CourseStudentRegistration->setTerm($Result_term);
 
-	    $this->_CourseStudentRegistration->setStatus($row['Status']);
+	    $this->_CourseStudentRegistration->setIsRetake($row['IsRetake']);
+	    $this->_CourseStudentRegistration->setPreRetake($row['PreRetake']);
+		$this->_CourseStudentRegistration->setStatus($row['Status']);
+
+
 
 
 	 	$Result = new Result();
@@ -484,7 +496,7 @@ Class CourseStudentRegistrationDAO{
 		$Result->setResultObject($this->_CourseStudentRegistration);
 
 
-		$this->send_email_to_student_for_registration_status($this->_CourseStudentRegistration);
+		//$this->send_email_to_student_for_registration_status($this->_CourseStudentRegistration);
 
 		return $Result;
 
@@ -506,8 +518,6 @@ Class CourseStudentRegistrationDAO{
 		$headers = 'From: kucse@dgted.com';
 
 		mail($student->getEmail(),$subject,$msg,$headers);
-
-	
 	}
 
 	//update registration status of a course for a student who has a particular status already
@@ -528,9 +538,7 @@ Class CourseStudentRegistrationDAO{
 				TermID='$TermID' AND
 				Regs_TeacherID='$CoordinatorID' AND
 				Status='$Prev_Status'";
-
 		//echo $SQL;		
-	
 		$SQL = $this->_DB->doQuery($SQL);
 
 	 	$Result = new Result();
@@ -539,9 +547,27 @@ Class CourseStudentRegistrationDAO{
 		$Result->setResultObject($msg);
 
 		return $Result;
-
 	}
+	//for retake
+	public function setRetakeStatus($StudentID,$IsRetake,$CourseID,$Status)
+	{
 
+		$SQL = "SELECT * FROM ums_user WHERE UniversityID='$StudentID'";
+		$this->_DB->doQuery($SQL);
+
+		$row = $this->_DB->getTopRow();
+	    $ID= $row['ID'];
+
+		$SQL = "UPDATE reg_course_student_registration SET IsRetake='$IsRetake',Status='$Status' where StudentID ='$ID' AND CourseID='$CourseID'";
+		
+		$SQL = $this->_DB->doQuery($SQL);
+
+        $this->_CourseStudentRegistration->setIsRetake($IsRetake);
+		$Result = new Result();
+		$Result->setIsSuccess(1);
+		$Result->setResultObject($this->_CourseStudentRegistration);
+		return $Result;
+	}
 }
 
 //$_Log->log(LogUtil::$DEBUG," exit the class.Coursedao.inc");

@@ -44,9 +44,9 @@ Class MarksEntryDAO{
 	}
 
 	// get marks setup of a course
-	public function getCourseMarksSetup($CourseNo){
+	public function getCourseMarksSetup($CourseID){
 
-		$SQL = "SELECT m.* FROM reg_course c, rms_marks_setup m where c.CourseNo like'$CourseNo' AND 
+		$SQL = "SELECT m.* FROM reg_course c, rms_marks_setup m where c.ID like'$CourseID' AND 
 				c.CourseTypeID=m.CourseTypeID AND m.IsDefault=1 LIMIT 1";
 
 		$this->_DB->doQuery($SQL);
@@ -94,7 +94,7 @@ Class MarksEntryDAO{
 				//update
 				$ID = $Result->getResultObject(); //id of the row
 				$MarksEntry->setID($ID);
-				$this->updateTestsEntry($MarksEntry); //update with the content
+				$this->updateMarksEntry($MarksEntry); //update with the content
  			}
 			else{
 				//insert
@@ -103,7 +103,6 @@ Class MarksEntryDAO{
 
 		}
 
-		
 		$Result->setIsSuccess(1);
 		$Result->setResultObject("bulk operation successful");
 
@@ -122,16 +121,14 @@ Class MarksEntryDAO{
 				//update
 				$ID = $Result->getResultObject(); //id of the row
 				$MarksEntry->setID($ID);
-				$this->updateTestsEntry($MarksEntry); //update with the content
+				$Result=$this->updateTestsEntry($MarksEntry); //update with the content
  			}
 			else{
 				//insert
-			  $this->createTestsEntry($MarksEntry);
+			  $Result=$this->createTestsEntry($MarksEntry);
 			}
 
 		}
-
-		
 		$Result->setIsSuccess(1);
 		$Result->setResultObject("bulk operation successful");
 
@@ -198,18 +195,11 @@ Class MarksEntryDAO{
 	public function getAStudentCoursePublishedMarks($CourseID,$Session,$Year,$Term,$Student){
 	
 		//retrieving course no of the course id
-		$SQL ="SELECT CourseNo from reg_course where ID='$CourseID' LIMIT 1";
-		$SQL = $this->_DB->doQuery($SQL);
-		$row = $this->_DB->getTopRow();
 
 	 	$Result = new Result();		
 
-		if($this->_DB->getNumRows()>0) 
-		{
-			$CourseNo = $row['CourseNo'];
-
 			$SQL = "SELECT * FROM rms_course_marks_result_publish cmrp WHERE 
-					cmrp.CourseNo='$CourseNo' AND
+					cmrp.CourseID='$CourseID' AND
 					cmrp.SessionID='$Session' AND
 					cmrp.YearID='$Year' AND
 					cmrp.TermID='$Term' AND
@@ -247,6 +237,11 @@ Class MarksEntryDAO{
 
 				$MarksEntry->setFinalGrade ( $row['FinalGrade'] );
 
+				$MarksEntry->setGradePoint ( $row['GradePoint'] );
+
+				$MarksEntry->setIsRetake ( $row['IsRetake'] );
+
+
 				$Result->setIsSuccess(1);	
 				$Result->setResultObject($MarksEntry);	
 			}
@@ -256,8 +251,6 @@ Class MarksEntryDAO{
 				$Result->setResultObject("Marks not found!");
 			}
 
-		}
-
 		return $Result;
 
 	}
@@ -265,26 +258,16 @@ Class MarksEntryDAO{
 
 	//get tests marks of a specific student
 	public function getAStudentCourseTestMarks($CourseID,$Session,$Year,$Term,$Student){
-	
-		//retrieving course no of the course id
-		$SQL ="SELECT CourseNo from reg_course where ID='$CourseID' LIMIT 1";
-		$SQL = $this->_DB->doQuery($SQL);
-		$row = $this->_DB->getTopRow();
 
-	 	$Result = new Result();		
-
-		if($this->_DB->getNumRows()>0) 
-		{
-			$CourseNo = $row['CourseNo'];
-
+			$Result = new Result();
 			$SQL = "SELECT * FROM rms_course_marks_tests WHERE 
-					CourseNo='$CourseNo' AND
+					CourseID='$CourseID' AND
 					SessionID='$Session' AND
 					YearID='$Year' AND
 					TermID='$Term' AND
 					StudentID='$Student' LIMIT 1";
 
-				
+			
 			$SQL = $this->_DB->doQuery($SQL);
 
 			if($this->_DB->getNumRows()>0) 
@@ -316,7 +299,50 @@ Class MarksEntryDAO{
 				$Result->setResultObject("Marks not found!");
 			}
 
-		}
+		return $Result;
+
+	}
+
+	public function getAStudentCourseMarks($CourseID,$Session,$Year,$Term,$Student){
+
+			$Result = new Result();
+			$SQL = "SELECT * FROM rms_course_marks_result WHERE 
+					CourseID='$CourseID' AND
+					SessionID='$Session' AND
+					YearID='$Year' AND
+					TermID='$Term' AND
+					StudentID='$Student' LIMIT 1";
+			
+			$SQL = $this->_DB->doQuery($SQL);
+
+			if($this->_DB->getNumRows()>0) 
+			{
+
+				$row = $this->_DB->getTopRow();
+
+				$MarksEntry = new MarksEntry();
+
+				$MarksEntry->setID ( $row['ID']);
+
+				$MarksEntry->setSession ( $row['SessionID']);
+
+				$MarksEntry->setYear ( $row['YearID']);			
+
+				$MarksEntry->setTerm ( $row['TermID']);	
+
+				$MarksEntry->setStudent ( $row['StudentID']);	
+
+				$MarksEntry->setMarksValue( $row['MarksValue']);
+
+	
+				$Result->setIsSuccess(1);	
+				$Result->setResultObject($MarksEntry);	
+			}
+			else{ 
+
+				$Result->setIsSuccess(0);
+				$Result->setResultObject("Marks not found!");
+			}
 
 		return $Result;
 
@@ -324,20 +350,20 @@ Class MarksEntryDAO{
 
 
 	// get marks for course of the students
-	public function getCourseStudentMarks($CourseNo,$Session,$Year,$Term,$StudentList){
+	public function getCourseStudentMarks($CourseID,$Session,$Year,$Term,$StudentList){
 
 		$MarksEntryList = array();
 
-		for ($i=0; $i < sizeof($StudentList) ; $i++) { 
+		for ($i=0; $i < sizeof($StudentList); $i++) { 
 
 			$Student = $StudentList[$i];
 
 			$Student = $Student->getStudent()->getUniversityID(); // inside the object wrapped
 
-			
+
 			$SQL = "SELECT cmr.*, ms.HeaderID, ms.HeaderName, ms.HeaderMax
 					FROM rms_marks_setup ms, rms_course_marks_result cmr 
-					Where cmr.CourseNo='$CourseNo' AND
+					Where cmr.CourseID='$CourseID' AND
 					cmr.SessionID='$Session'AND
 					cmr.YearID='$Year' AND
 					cmr.TermID='$Term' AND
@@ -388,7 +414,7 @@ Class MarksEntryDAO{
 	}
 
 	// get class tests for course of the students
-	public function getCourseStudentTests($CourseNo,$Session,$Year,$Term,$StudentList){
+	public function getCourseStudentTests($CourseID,$Session,$Year,$Term,$StudentList){
 
 		$MarksEntryList = array();
 
@@ -400,7 +426,7 @@ Class MarksEntryDAO{
 
 			
 			$SQL = "SELECT * FROM rms_course_marks_tests 
-					WHERE CourseNo='$CourseNo' AND
+					WHERE CourseID='$CourseID' AND
 					SessionID='$Session'AND
 					YearID='$Year' AND
 					TermID='$Term' AND
@@ -440,32 +466,20 @@ Class MarksEntryDAO{
 	}
 
 	//return course teacher row from the table based on the given criteria
-	public function readCourseTeacher($CourseNo,$TeacherID,$SessionID,$YearID,$TermID){
+	public function readCourseTeacher($CourseID,$TeacherID,$SessionID,$YearID,$TermID){
 
-		$Result = new Result();
+		$SQL = "SELECT * FROM reg_course_teacher where TeacherID='$TeacherID' AND
+			CourseID='$CourseID' AND
+			SessionID='$SessionID' AND
+			YearID='$YearID' AND
+			TermID='$TermID' LIMIT 1";
 
-		$SQL = "SELECT * FROM reg_course WHERE CourseNo='$CourseNo' LIMIT 1";
-
-		$SQL = $this->_DB->doQuery($SQL);
-
-		if($this->_DB->getNumRows()>0)
-		{
-			
-			$row = $this->_DB->getTopRow();
-
-			$CourseID=$row['ID'];	
-
-
-			$SQL = "SELECT * FROM reg_course_teacher where TeacherID='$TeacherID' AND
-					CourseID='$CourseID' AND
-					SessionID='$SessionID' AND
-					YearID='$YearID' AND
-					TermID='$TermID' LIMIT 1";
-
-			$this->_DB->doQuery($SQL);
+		$this->_DB->doQuery($SQL);
 
 			//reading the top row for this Course from the database
-			$row = $this->_DB->getTopRow();
+		$row = $this->_DB->getTopRow();
+		if(isset($row))
+		{
 
 			$this->_CourseTeacher = new CourseTeacher();
 
@@ -504,11 +518,17 @@ Class MarksEntryDAO{
 
 		    $this->_CourseTeacher->setNoOfTests($row['NoOfTests']);
 
-		}
+		    $Result = new Result();
+		    $Result->setIsSuccess(1);
+		    $Result->setResultObject($this->_CourseTeacher);
 
-	 	$Result = new Result();
-		$Result->setIsSuccess(1);
-		$Result->setResultObject($this->_CourseTeacher);
+		}
+		else
+		{
+			$Result = new Result();
+		    $Result->setIsSuccess(0);
+		    $Result->setResultObject("error in  MarksEntryDao->readCourseTeacher()");
+		}
 
 		return $Result;
 
@@ -519,7 +539,7 @@ Class MarksEntryDAO{
 	public function createMarksEntry($MarksEntry){
 
 		$ID=Util::getGUID();	   
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Teacher=$MarksEntry->getTeacher();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
@@ -529,8 +549,9 @@ Class MarksEntryDAO{
 	    $MarksValue=$MarksEntry->getMarksValue();
 	    $Status=$MarksEntry->getStatus();
 
-		$SQL = "INSERT INTO rms_course_marks_result(ID,CourseNo,TeacherID,SessionID,YearID,TermID,StudentID,MarksID,MarksValue,Status) 
-							VALUES('$ID','$CourseNo','$Teacher','$Session','$Year','$Term','$Student','$MarksID',
+
+		$SQL = "INSERT INTO rms_course_marks_result(ID,CourseID,TeacherID,SessionID,YearID,TermID,StudentID,MarksID,MarksValue,Status) 
+							VALUES('$ID','$CourseID','$Teacher','$Session','$Year','$Term','$Student','$MarksID',
 							'$MarksValue','$Status')";
 
 		//echo $SQL;
@@ -548,7 +569,7 @@ Class MarksEntryDAO{
 	public function createTestsEntry($MarksEntry){
 
 		$ID=Util::getGUID();	   
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Teacher=$MarksEntry->getTeacher();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
@@ -556,8 +577,8 @@ Class MarksEntryDAO{
 	    $Student = $MarksEntry->getStudent();
 	    $MarksValue=$MarksEntry->getMarksValue();
 	 
-		$SQL = "INSERT INTO rms_course_marks_tests(ID,CourseNo,TeacherID,SessionID,YearID,TermID,StudentID,MarksValue) 
-							VALUES('$ID','$CourseNo','$Teacher','$Session','$Year','$Term','$Student',
+		$SQL = "INSERT INTO rms_course_marks_tests(ID,CourseID,TeacherID,SessionID,YearID,TermID,StudentID,MarksValue) 
+							VALUES('$ID','$CourseID','$Teacher','$Session','$Year','$Term','$Student',
 							'$MarksValue')";
 
 		//echo $SQL;
@@ -581,7 +602,7 @@ Class MarksEntryDAO{
 								->getResultObject();
 
 		//send email to the student about update in the course
-		$this->send_email_to_student_for_tests_update($User_Student,$User_Session,$CourseNo);		
+		//$this->send_email_to_student_for_tests_update($User_Student,$User_Session,$CourseNo);		
 
 
 		return $Result;
@@ -604,11 +625,12 @@ Class MarksEntryDAO{
 	public function createMarksEntry_to_Publish($MarksEntry){
 
 		$ID=Util::getGUID();	   
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
 	    $Term=$MarksEntry->getTerm();
 	    $Student = $MarksEntry->getStudent();
+	    $TeacherID=$MarksEntry->getTeacher();
 
 	    $HeaderID=$MarksEntry->getHeaderID();
 	    $HeaderName=$MarksEntry->getHeaderName();
@@ -621,13 +643,23 @@ Class MarksEntryDAO{
 	    $Grades=$MarksEntry->getGrades();
 	    $GradeRanges=$MarksEntry->getGradeRanges();
 	    $FinalGrade=$MarksEntry->getFinalGrade();
+	    $GradePoint=$MarksEntry->getGradePoint();
 
-		$SQL = "INSERT INTO rms_course_marks_result_publish(ID,CourseNo,SessionID,YearID,TermID,
+	    $PreRetake=0;
+	    var_dump($this->checkPreRetake($Student,$CourseID));
+
+		if($this->checkPreRetake($Student,$CourseID)==1) 
+		{
+			$PreRetake=1;
+		}
+
+
+		$SQL = "INSERT INTO rms_course_marks_result_publish(ID,CourseID,TeacherID,SessionID,YearID,TermID,
 						StudentID,HeaderID,HeaderName,HeaderMax,MarksValue,MarksTotal,
-						Grades,GradeRanges,FinalGrade) 
-							VALUES('$ID','$CourseNo','$Session','$Year','$Term',
+						Grades,GradeRanges,FinalGrade,GradePoint,IsRetake) 
+							VALUES('$ID','$CourseID','$TeacherID','$Session','$Year','$Term',
 							'$Student','$HeaderID','$HeaderName','$HeaderMax','$MarksValue','$MarksTotal',
-							'$Grades','$GradeRanges','$FinalGrade')";
+							'$Grades','$GradeRanges','$FinalGrade','$GradePoint','$PreRetake')";
 
 		//echo $SQL;
 							
@@ -645,16 +677,17 @@ Class MarksEntryDAO{
 	public function existsMarksEntry($MarksEntry){
 		
 		$ID=$MarksEntry->getID();	   
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
 	    $Term=$MarksEntry->getTerm();
 	    $Student = $MarksEntry->getStudent();
 	    $MarksID = $MarksEntry->getMarksID();
-	    $MarksValue=$MarksEntry->getMarksValue();		
+	    $MarksValue=$MarksEntry->getMarksValue();
+	    $Status=$MarksEntry->getStatus();
 		
 		$SQL = "SELECT * FROM rms_course_marks_result cmr WHERE 
-				cmr.CourseNo='$CourseNo' AND
+				cmr.CourseID='$CourseID' AND
 				cmr.SessionID='$Session'AND
 				cmr.YearID='$Year' AND
 				cmr.TermID='$Term' AND
@@ -682,11 +715,10 @@ Class MarksEntryDAO{
 	}
 
 
-	//read an MarksEntry object based on its details from the tests table
 	public function existsTestsEntry($MarksEntry){
 		
    
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
 	    $Term=$MarksEntry->getTerm();
@@ -694,7 +726,7 @@ Class MarksEntryDAO{
 	    $MarksValue=$MarksEntry->getMarksValue();		
 		
 		$SQL = "SELECT * FROM rms_course_marks_tests WHERE 
-				CourseNo='$CourseNo' AND
+				CourseID='$CourseID' AND
 				SessionID='$Session'AND
 				YearID='$Year' AND
 				TermID='$Term' AND
@@ -725,7 +757,7 @@ Class MarksEntryDAO{
 	public function existsMarksEntry_to_Publish($MarksEntry){
 		
 		$ID=$MarksEntry->getID();	   
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
 	    $Term=$MarksEntry->getTerm();
@@ -733,7 +765,7 @@ Class MarksEntryDAO{
 	    $MarksID = $MarksEntry->getMarksID();	
 		
 		$SQL = "SELECT * FROM rms_course_marks_result_publish cmrp WHERE 
-				cmrp.CourseNo='$CourseNo' AND
+				cmrp.CourseID='$CourseID' AND
 				cmrp.SessionID='$Session'AND
 				cmrp.YearID='$Year' AND
 				cmrp.TermID='$Term' AND
@@ -766,7 +798,7 @@ Class MarksEntryDAO{
 
 		$ID=$MarksEntry->getID();	   
 	    
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Teacher=$MarksEntry->getTeacher();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
@@ -776,7 +808,7 @@ Class MarksEntryDAO{
 	    $MarksValue=$MarksEntry->getMarksValue();
 	    $Status=$MarksEntry->getStatus();
 
-		$SQL = "UPDATE rms_course_marks_result SET CourseNo='$CourseNo',TeacherID='$Teacher',
+		$SQL = "UPDATE rms_course_marks_result SET CourseID='$CourseID',TeacherID='$Teacher',
 				SessionID='$Session',YearID='$Year',TermID='$Term',StudentID='$Student',
 				MarksValue='$MarksValue',Status='$Status' WHERE ID='$ID'"; 
 
@@ -797,8 +829,7 @@ Class MarksEntryDAO{
 	public function updateTestsEntry($MarksEntry){
 
 		$ID=$MarksEntry->getID();	   
-	    
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Teacher=$MarksEntry->getTeacher();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
@@ -820,7 +851,7 @@ Class MarksEntryDAO{
 	    	if(strcasecmp($Value, $MarksValue)!=0) //if marks changed
 	    	{
 
-				$SQL = "UPDATE rms_course_marks_tests SET CourseNo='$CourseNo',TeacherID='$Teacher',
+				$SQL = "UPDATE rms_course_marks_tests SET CourseID='$CourseID',TeacherID='$Teacher',
 					SessionID='$Session',YearID='$Year',TermID='$Term',StudentID='$Student',
 					MarksValue='$MarksValue' WHERE ID='$ID'"; 
 
@@ -840,7 +871,7 @@ Class MarksEntryDAO{
 									->getResultObject();
 
 				//send email to the student about update in the course
-				$this->send_email_to_student_for_tests_update($User_Student,$User_Session,$CourseNo);	
+				//$this->send_email_to_student_for_tests_update($User_Student,$User_Session,$CourseNo);	
 
 			}
 			
@@ -860,7 +891,7 @@ Class MarksEntryDAO{
 
 		$ID=$MarksEntry->getID();	   
 	    
-	    $CourseNo=$MarksEntry->getCourse();
+	    $CourseID=$MarksEntry->getCourse();
 	    $Session=$MarksEntry->getSession();
 	    $Year=$MarksEntry->getYear();
 	    $Term=$MarksEntry->getTerm();
@@ -877,14 +908,16 @@ Class MarksEntryDAO{
 	    $Grades=$MarksEntry->getGrades();
 	    $GradeRanges=$MarksEntry->getGradeRanges();
 	    $FinalGrade=$MarksEntry->getFinalGrade();
+	    $GradePoint=$MarksEntry->getGradePoint();
+
 
 
 		$SQL = "UPDATE rms_course_marks_result_publish 
-				SET CourseNo='$CourseNo', 
+				SET CourseID='$CourseID', 
 				SessionID='$Session',YearID='$Year',TermID='$Term',StudentID='$Student',
 				HeaderID='$HeaderID',HeaderName='$HeaderName',HeaderMax='$HeaderMax',
 				MarksValue='$MarksValue',MarksTotal='$MarksTotal',
-				Grades='$Grades',GradeRanges='$GradeRanges',FinalGrade='$FinalGrade'
+				Grades='$Grades',GradeRanges='$GradeRanges',FinalGrade='$FinalGrade',GradePoint='$GradePoint'
 				WHERE ID='$ID'"; 
 
 		$SQL = $this->_DB->doQuery($SQL);
@@ -902,13 +935,6 @@ Class MarksEntryDAO{
 	public function deleteMarksEntry($MarksEntry){
  
 	    $ID=$MarksEntry->getID();	   
-	    $CourseNo=$MarksEntry->getCourse();
-	    $Session=$MarksEntry->getSession();
-	    $Year=$MarksEntry->getYear();
-	    $Term=$MarksEntry->getTerm();
-	    $Student = $MarksEntry->getStudent();
-	    $MarksID = $MarksEntry->getMarksID();
-
 
 		$SQL = "DELETE from rms_course_marks_result WHERE ID='$ID'"; 
 
@@ -920,7 +946,34 @@ Class MarksEntryDAO{
 		$Result->setResultObject($SQL);
 
 		return $Result;
+	}
+	public function checkPreRetake($StudentID,$CourseID)
+	{
+		$val=1;
 
+	    $SQL = "SELECT * FROM ums_user WHERE UniversityID='$StudentID'";
+		$this->_DB->doQuery($SQL);
+
+		$row = $this->_DB->getTopRow();
+	    $StudentMail= $row['Email'];
+
+	   $SQL = "SELECT * FROM reg_course_student_registration where StudentID='$StudentMail' AND
+					CourseID='$CourseID' AND
+					IsRetake !='$val' AND
+					PreRetake='$val'
+					 LIMIT 1";
+
+		$this->_DB->doQuery($SQL);
+		$row = $this->_DB->getTopRow();
+
+		if($this->_DB->getNumRows()>0) 
+		{
+			return $val;
+		}
+		else
+		{
+			return "0";
+		}
 	}
 
 }
